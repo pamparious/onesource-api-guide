@@ -1,0 +1,3521 @@
+Links:
+https://developers.thomsonreuters.com/pages/api-catalog/3e578529-098f-42ba-9eb7-8d15dfdb53e4#Overview
+https://developers.thomsonreuters.com/pages/api-catalog/3e578529-098f-42ba-9eb7-8d15dfdb53e4#Authentication
+https://developers.thomsonreuters.com/pages/api-reference/73048a3a-eb7a-59f7-865f-abf951abe8d6
+https://developers.thomsonreuters.com/pages/api-catalog/2638d12c-c7f8-4274-9793-00415e51f084#Overview
+https://developers.thomsonreuters.com/pages/api-reference/b1d88171-7560-583f-ab9b-1ee8dcb332e5
+https://pagero.github.io/puf-billing/
+https://pagero.github.io/partners/partner-integration-guidelines/
+https://github.com/pagero/puf-billing/tree/master/examples
+https://github.com/pagero/puf-billing/tree/master/examples/country-specific-examples
+
+
+I want to build a very in detail and easy to follow website to present a clear partner guide on how to implement the ONESOURCE APIs. Below is the reserach information and then the guide itself.
+Think about how to best present this in a way that is very user friendly clear to follow and structured.
+I also want to inlcude a chat ai to be able to ask questions to the guide and for it to give good and informed answers both from the material and from general knowledge online.
+Here is the base research as the foundational information:
+Comprehensive Deep Dive: Pagero, TR ONESOURCE, E-Invoicing & API Integration
+PAGERO & THOMSON REUTERS ONESOURCE: THE STRATEGIC UNION
+Pagero Background
+Pagero is a global leader in e-invoicing and indirect tax solutions, which it delivers through its Smart Business Network. The Company links customers, suppliers, and institutions, allowing for the automated, compliant, and secure exchange of digital orders, invoices, and other business documents.
+Thomson Reuters Acquisition
+With over 80 countries planning or implementing e-invoicing regulations, the acquisition is set to accelerate the companies' shared vision for a globally connected suite of e-invoicing capabilities. The network is compliant with the mandates in over 75 of these countries, with opportunity for growth.
+Thomson Reuters has announced it has closed its acquisition of Pagero, a global leader in e-invoicing and indirect tax solutions, for $800 million.
+Brand Integration
+Now integrated as ONESOURCE Pagero, these combined capabilities create a powerful foundation for compliance that is uniquely scalable and ready to meet the fast-changing demands of business digitalization.
+Strategic Value
+The combination of Pagero's e-invoicing compliance capabilities with the indirect tax determination and reporting from Thomson Reuters' ONESOURCE should yield significant benefits for customers, including enhanced compliance capabilities, workflow automation, and global scale through a single trusted vendor.
+E-INVOICING FUNDAMENTALS & COMPLEXITIES
+What is E-Invoicing?
+E-invoicing, or electronic invoicing, is the digital exchange of invoice documents between suppliers and buyers in a structured, machine-readable format. Unlike PDF invoices or scanned documents, true e-invoicing involves the direct transmission of structured invoice data between financial systems — eliminating manual processing entirely.
+The E-Invoicing Process
+The process begins with the creation of an electronic invoice within an ERP system or e-invoicing platform. This invoice is used to bill the customer for the goods or services they have provided. The e-invoice is transmitted to the customer via an operator in a structured data format using secure, integrated solutions. Before reaching the customer, the e-invoice undergoes automated validation to ensure it meets regulatory requirements and compliance standards. Once validated, the e-invoice is sent to the customer in their preferred format.
+Why Governments Are Mandating E-Invoicing
+Many countries worldwide are implementing mandatory e-invoicing requirements as part of digital transformation initiatives to increase tax compliance, reduce fraud, and improve economic transparency. These regulations vary significantly by region, creating complex compliance challenges for businesses operating internationally.
+E-invoicing mandates are being used by countries that want to improve VAT tax compliance for government revenue collection and reduce fraud. E-invoicing mandates include legislation with specific format standards and system requirements including digital invoice storage with document management. These systems give governments more visibility into transactions in real-time, generating tax revenue increases for the countries.
+CONTINUOUS TRANSACTION CONTROLS (CTC): THE GAME CHANGER
+What are CTCs?
+Continuous Transaction Controls (CTCs) require real-time or near real-time reporting of transaction data to tax authorities.
+Continuous transaction controls (CTC) enable law enforcement agencies, such as tax administrations, to collect data on business activity in their countries. Unlike traditional invoice reporting, data is obtained directly from business transaction processes or data management systems in real time or near-real time. CTC addresses the inefficiencies that have always characterized the use of retroactive audits, wherein auditors obtain information on transactions long after their conclusion.
+CTC Models Worldwide
+Real-Time Invoice Reporting (RTIR)
+Under this model, the supplier is required to report a portion of the invoice to their tax authority in real time after issuing it to the buyer. The invoice must adhere to a mandatory format and include specific required data fields.
+Clearance Model
+Under Clearance models, businesses need to 'clear' or 'authorize' invoices via tax authority platforms before they can send them on to their customer.
+In Latin America, countries like Mexico, Brazil and Chile utilise a clearance model built on automation, by which businesses authorise transactions with the government before they reach the client. The principal aim of the clearance model is the prevention of fraud.
+Centralized Exchange
+Countries that use a centralized exchange system for e-invoicing typically require all invoices to pass through a single government-controlled platform for validation before they are sent to trading partners. Examples of centralized exchange for e-invoicing include the AFIP platform in Argentina and FACe for B2G transactions in Spain.
+PEPPOL CTC
+Peppol is a network that enables the electronic exchange of various documents, including electronic invoices. To participate in this network, taxpayers must utilize the services of a Peppol Service Provider, which facilitates the secure exchange of documents between parties within the Peppol network. This is a 4-corner model, ensuring standardized and compliant communication across different systems.
+Hybrid Models
+This hybrid model combines elements of Decentralized Continuous Transaction Controls and Exchange (DCTCE), like Peppol, with a Centralized Exchange (CE) system. It allows for flexibility in document exchange through decentralized networks, offering businesses the choice of different technical standards, while still maintaining centralized oversight and control via a government-managed platform. This approach provides the best of both worlds—enabling automation through decentralized processes while ensuring compliance through centralized mechanisms.
+The VAT Gap Problem
+Countries introducing CTCs see them as a way of reducing the so-called VAT gap (the difference between expected VAT revenues and the amount actually collected through VAT returns). In Europe, the VAT gap is estimated to be approximately €140 billion every year (according to the latest report from the European Commission). This figure is equivalent to a loss of 11% of the expected VAT revenue each year in Europe.
+GLOBAL E-INVOICING MANDATE LANDSCAPE
+Current State
+Globally, there's a growing shift toward mandatory e-invoicing as governments recognize its potential to streamline tax collection and combat fraud. According to KPMG, 55 countries worldwide have adopted or are considering adopting e-invoice mandates.
+As of today, more than 70 countries have introduced some form of CTC mandate.
+Regional Examples
+Europe:
+France is actively moving towards implementing CTCs with its upcoming e-invoicing legislation. Set to phase in starting July 2026, the mandate requires all companies operating in France to issue and receive invoices electronically. This initiative aims to enhance tax compliance through real-time or near-real-time data transmission to tax authorities, reduce tax fraud, and increase the efficiency of the tax system.
+Germany: Companies must accept e-invoices starting January 2025. Sending becomes mandatory 24 months later, in January 2027.
+Latin America:
+Chile and Mexico were the first and soon others followed. Over time, transaction-based reporting has proved to be efficient in contrasting VAT fraud. For instance, Brazil saw an increase of US$58 billion in tax revenues, while Chile and Mexico reduced their VAT gap by 50%.
+ONESOURCE PAGERO SOLUTION ARCHITECTURE
+Platform Capabilities
+ONESOURCE Pagero offers a robust solution for global e-invoicing, covering over 80 countries with support for all Post-Audit and Continuous Transaction Controls (CTC) models. ONESOURCE Pagero offers a robust solution for global e-invoicing, covering over 80 countries with support for all Post-Audit and Continuous Transaction Controls (CTC) models. This includes connections to mandatory tax administration platforms, so your business is prepared to meet demands in any regulatory landscape.
+Technical Differentiators
+ONESOURCE Pagero's global network supports businesses with international operations by ensuring document compliance across multiple jurisdictions. Our technology: Validates documents against country-specific legal requirements in real-time · Adapts to local formatting, tax rules, and regulatory frameworks · Connects seamlessly with trading partners worldwide through our network · Maintains compliance with evolving e-invoicing mandates across different regions · Provides centralized management of cross-border document flows · This multi-country capability eliminates the need for separate systems while ensuring all your business documents meet local requirements — anywhere your company operates.
+Format Flexibility
+The ONESOURCE Pagero Network accepts invoices in virtually any format and converts them to the recipient's required format automatically. The system supports all electronic formats including PEPPOL BIS, UBL, cXML, and EDI, as well as PDF and paper invoices via our scanning service. When an invoice enters our network, it undergoes format validation and is converted to the specific format required by the recipient — ensuring compliance with local regulations and the receiver's technical specifications.
+API INTEGRATION: UNDERSTANDING THE COMPLEXITY
+Why API Integration is Complex
+Country-Specific Requirements
+Every country has decided to reinvent e-invoicing in their own special way. Italy wants FatturaPA format through their SDI system. Mexico demands CFDI with digital stamps. Brazil requires pre-authorization before you can even issue an invoice.
+Multiple Data Formats
+XML advantages include rich document structure and widespread adoption in tax authority frameworks. JSON flexibility offers reduced overhead and easier parsing for web applications, while established EDI standards provide robust transaction security for high-volume exchanges.
+Real-Time Validation Requirements
+Near-real time Validation: E-Invoices are validated in near real-time, ensuring accuracy and decreasing the likelihood of disputes. Near-real time Validation: E-Invoices are validated in near real-time, ensuring accuracy and decreasing the likelihood of disputes. Improved Traceability: Each e-Invoice is assigned a unique identifier, allowing for straightforward traceability and mitigating the risk of tampering.
+Authentication & Security
+Integration challenges often arise from data mapping inconsistencies and authentication mechanisms. Organizations can overcome these by implementing standardized data schemas and employing OAuth 2.0 for secure authentication flows.
+ONESOURCE API ARCHITECTURE (Based on Your Documentation)
+Authentication Flow
+Your documentation shows the API uses OAuth 2.0 client credentials flow:
+Endpoint: POST https://api-uat.onesourcetax.com/oauth2/v1/token
+Grant Type: client_credentials
+Scope: urn:tr:onesource:auth:api:einvoicing
+Token Validity: 1799 seconds (approximately 30 minutes)
+Core API Endpoints
+Company Management
+GET /companies: Retrieve all legal entities (companies) the user has access to
+Returns companyId which is mandatory for all subsequent operations
+Each company represents a distinct legal entity with unique VAT/tax identifiers
+2. Document Submission (AR - Accounts Receivable)
+POST /documents: Submit invoices and other documents
+Key parameters:
+payload: The document content (XML/JSON)
+documentType: Invoice, Credit Note, etc.
+senderReference: Unique identifier from sender system
+sendingCompanyId: The company sending the document
+systemType: Oracle, SAP, SAP Ariba, or Other
+documentIdentifier: Optional searchable identifier
+3. Status Monitoring
+GET /documents: Poll for document status updates
+Query parameters:
+companyId: Filter by legal entity
+direction: Sent or Received
+documentType: Invoice, Credit Note, etc.
+modifiedTimeFrom: Get documents modified after timestamp
+pageIndex and pageSize: Pagination
+sort: Sort order (typically by modifiedTime)
+4. Document Actions
+POST /documents/{id}/action: Take action on errored documents
+Actions: Cancel, Resume, Restart, RestartWithReplacements
+5. Document Retrieval (AP - Accounts Payable)
+GET /documents/{id}/target-document: Fetch the agreed-upon format for AP processing
+GET /documents/{id}/source-document: Original sender format
+GET /documents/{id}/presentation: PDF representation
+Status Workflow
+Documents progress through multiple statuses:
+sendStatus: Done, Error, Cancelled, Processing
+clearanceStatus: For countries with clearance models (e.g., Brazil, Mexico)
+businessStatus: Business-level acceptance/rejection
+externalStatus: External party responses
+8. INTEGRATION BEST PRACTICES (From Pagero Guidelines)
+Partner Authentication Model
+Partners receive universal client credentials for all their clients
+End-users authenticate via OAuth 2.0 Authorization Code Grant
+This enables SSO and multi-factor authentication
+companyId mapping is critical for multi-tenant operations
+Accounts Receivable (Outbound) Flow
+Post Document
+Send one document per API call
+Use unique senderReference for each document
+Store the returned fileId locally
+Link fileId to senderReference in your system
+2. Error Checking Job Queue
+Regularly poll GET /fileparts endpoint
+Check for processing errors
+Map fileId to identify problematic documents
+Take appropriate action (cancel/restart)
+3. Delivered Documents Job Queue
+Poll GET /documents endpoint
+Filter by showFetchedOnly=false to exclude already processed
+Store documentId linked to fileId
+Download required formats (source/target/presentation)
+4. Mark as Fetched
+POST /documents/fetch with list of documentIds
+Prevents re-processing same documents
+5. Application Responses
+For CTC countries, structured responses are required
+Poll for documentType=ApplicationResponse
+Extract senderReference from response content
+Link response to original invoice
+Accounts Payable (Inbound) Flow
+Receive Documents Job Queue
+Poll GET /documents endpoint
+Filter: direction=Received, documentType=Invoice
+Use createTimeFrom and createTimeTo for incremental polling
+Store documentId for each received document
+2. Fetch Document Formats
+GET /documents/{id}/target-document: For AP processing (configured format)
+GET /documents/{id}/presentation: PDF for archival
+Target format is typically XML (UBL, PEPPOL, country-specific)
+3. Mark as Fetched
+POST /documents/fetch after successfully importing
+Prevents reprocessing
+4. Send Structured Responses (if required)
+For mandates requiring confirmation
+POST /files with ApplicationResponse document type
+Polling Strategy
+The documentation emphasizes a specific polling approach:
+Always use modifiedTimeFrom set to the latest modifiedTime from previous poll
+Sort by modifiedTime ascending
+Don't use offset-based pagination for status polling (documents can be modified at any time)
+Store the latest modifiedTime for next poll iteration
+9. E-INVOICING COMPLEXITY FACTORS
+Format Complexity
+Every country/mandate has different requirements:
+Italy: FatturaPA XML through SDI (Sistema di Interscambio)
+France: Chorus Pro for B2G, upcoming Factur-X for B2B
+Germany: XRechnung or ZUGFeRD
+Spain: Facturae for B2G, upcoming TicketBAI/Verifactu for B2B
+PEPPOL: UBL format across multiple European countries
+Latin America: Each country has unique XML schemas (CFDI in Mexico, NFe in Brazil, etc.)
+2. Validation Rules
+In countries with e-invoicing and Continuous Transaction Controls (CTCs), AP departments often face additional steps, such as validating incoming invoices for compliance before processing, and ensuring that data accuracy and regulatory standards are met before payment. Our e-invoicing compliance solution supports these needs by integrating directly with your AP systems, allowing incoming invoices to be validated, enriched and pre-cleared if required by local regulations. This ensures that all invoices are compliant before they enter your workflow, reducing the risk of delayed payments, penalties, or errors.
+Clearance vs. Reporting
+Clearance: Invoice must be approved by tax authority BEFORE sending to buyer (Brazil, Mexico, Chile, etc.)
+Reporting: Invoice sent to buyer, then reported to tax authority (Hungary, Spain SII)
+Post-Audit: No real-time reporting, periodic submissions (traditional model)
+Timing Requirements
+Real-time: Immediate submission (Italy SDI)
+Near-real-time: Within hours (Malaysia - within 72 hours)
+Batch: Within days (Spain SII - 4 days)
+Digital Signatures & Certificates
+Many countries require:
+Qualified electronic signatures
+Digital certificates from approved authorities
+Timestamp authorities
+Hash validation
+6. Business Rules
+Beyond technical validation:
+VAT rate validation
+Tax classification codes
+Party identification (VAT numbers, tax IDs)
+Currency and amount validations
+Line item details requirements
+10. WHY THIS IS CHALLENGING FOR BUSINESSES
+Constant Regulatory Changes
+ONESOURCE Pagero's e-invoicing compliance solution is built to handle the complexity of multi-jurisdictional requirements, automating updates and adjustments as regulations change. Our Regulatory Affairs team continuously monitors each jurisdiction for regulatory updates. New specifications are then integrated into our internal format, enabling over-the-air updates that have no impact on your workflows.
+Multiple System Integration Points
+Connect to tax authorities: Each with unique APIs and authentication · Handle rejections: Real-time validation means real-time failures ... We've seen talented teams spend over a year building e-invoicing for a single country, only to realize they need to start from scratch for the next market. Meanwhile, competitors who integrated specialized APIs launched across multiple countries in weeks.
+Error Handling Complexity
+From your documentation, the API returns various error scenarios:
+Document validation errors
+Recipient not found errors
+Format errors
+Clearance rejections
+Business rule violations
+Each requires different handling:
+Some can be restarted
+Some need cancellation and resubmission
+Some require buyer directory updates
+Some need format corrections
+4. State Management
+Need to track:
+Document submission state
+Clearance state (for CTC countries)
+Delivery state
+Business acceptance state
+Application response state
+5. Asynchronous Processing
+E-invoicing is inherently asynchronous:
+Submit document → Processing → Validation → Clearance → Delivery → Acknowledgment
+Each step can fail independently
+Requires robust polling and state management
+Need to handle timeouts and retries
+11. HOW ONESOURCE/PAGERO SOLVES THE COMPLEXITY
+Universal Format Abstraction
+With a flexible internal format at the core of our technology, ONESOURCE Pagero is able to connect to all platforms — from major or minor — giving your business a truly scalable, future-proof foundation for growth.
+Automated Format Conversion
+When an invoice enters our network, it undergoes format validation and is converted to the specific format required by the recipient — ensuring compliance with local regulations and the receiver's technical specifications. For businesses dealing with multiple formats across different countries, Pagero manages these conversions seamlessly, eliminating the need for manual intervention or maintaining multiple integration points.
+Real-Time Validation
+With real-time content validation, content enrichment and format conversion, your data is consistently accurate and aligned not only with the latest governmental requirements, but also your trading partners' standards.
+Regulatory Monitoring
+We continually deploy regulatory updates and proactively engage with governmental bodies on planned developments to ensure we're ready to meet compliance requirements.
+Network Effects
+The secure network connects customers to suppliers, customers and authorities regardless of the system they use - linking 90,000 customers to a platform reaching 14 million companies.
+PRACTICAL API INTEGRATION CONSIDERATIONS
+Testing Strategy
+From your documentation:
+Certification Mode: Documents never leave Pagero platform, tests validation only
+Test Mode: Documents tagged as "Test" and sent through full flow
+Production Mode: Real production documents
+Polling Intervals
+Error checking: Based on document volume (hourly for low volume, more frequent for high volume)
+Delivered documents: Every 15-30 minutes typical
+Inbound documents: Every 5-15 minutes for time-sensitive operations
+Application responses: Every 30 minutes to 1 hour
+Data Retention
+From documentation: Documents kept for 90 days standard
+Must fetch and archive locally within this period
+Some countries require longer archival (10+ years)
+Need local archival strategy
+Idempotency
+Use unique senderReference to prevent duplicates
+API should handle duplicate submissions gracefully
+Store API responses to avoid resubmission
+Error Recovery
+Implement exponential backoff for retries
+Distinguish between retriable and non-retriable errors
+Alert on persistent errors
+Maintain error logs for compliance audits
+13. KEY TAKEAWAYS FOR DEVELOPERS
+E-invoicing is NOT just PDF invoicing - it's structured data exchange with real-time government validation
+Each country is different - what works for Italy won't work for Mexico or France
+CTCs are the future - moving from periodic reporting to real-time/near-real-time transaction controls
+Clearance models add latency - invoices must be approved before sending to buyer (can take seconds to minutes)
+Status polling is critical - asynchronous nature requires robust polling strategy with proper state management
+Format conversion is complex - mapping business data to 50+ different XML/JSON schemas requires deep expertise
+Regulatory changes are constant - need automated updates or constant maintenance burden
+Network reach matters - ability to reach 14 million businesses through Pagero network vs. building point-to-point connections
+Authentication is multi-layered - partner credentials + user authorization + company context
+Error handling is sophisticated - different error types require different remediation strategies
+This is the Partner guidance:
+ONESOURCE E-INVOICING API: PARTNER IMPLEMENTATION GUIDE
+Document Purpose & Audience
+This guide is designed for ERP systems, workflow providers, and technology partners integrating ONESOURCE E-Invoicing services into their platforms. Our goal is to provide you with a comprehensive, touchless integration framework that enables your clients to achieve global e-invoicing compliance with minimal manual intervention.
+What you'll achieve:
+Seamless integration with ONESOURCE E-Invoicing APIs
+Automated document exchange for Accounts Receivable (AR) and Accounts Payable (AP)
+Multi-tenant architecture supporting multiple client legal entities
+Compliance with 80+ country-specific e-invoicing mandates
+Robust error handling and status management
+TABLE OF CONTENTS
+Understanding the ONESOURCE E-Invoicing Ecosystem
+Partner Onboarding & Prerequisites
+Authentication & Authorization
+Multi-Tenancy & Company Management
+Document Format: Pagero Universal Format (PUF)
+Accounts Receivable (AR) - Outbound Invoice Flow
+Accounts Payable (AP) - Inbound Invoice Flow
+Error Handling & Recovery
+Application Responses & Business Acknowledgments
+Testing & Certification
+Production Deployment
+Monitoring & Operations
+Performance Optimization
+Troubleshooting Guide
+Security Best Practices
+Appendices
+UNDERSTANDING THE ONESOURCE E-INVOICING ECOSYSTEM
+1.1 What is ONESOURCE E-Invoicing?
+ONESOURCE E-Invoicing is a centralized platform designed to streamline electronic invoicing management for multinational businesses, offering pre-built integrations connecting financial systems, including common enterprise resource planning (ERP) systems.
+1.2 The Value Proposition
+For Your Clients:
+Compliance with e-invoicing mandates in 80+ countries
+Support for all Continuous Transaction Control (CTC) models
+Automatic format conversion between 50+ e-invoicing formats
+Real-time validation and clearance with tax authorities
+Connectivity to 14 million businesses globally
+For You as a Partner:
+Single API integration supporting all global markets
+No need to build country-specific integrations
+Automatic regulatory updates without code changes
+Pre-built format conversion (your system → PUF → country-specific formats)
+Reduced development and maintenance costs
+1.3 Architecture Overview
+┌─────────────────────────────────────────────────────────────────┐
+│ YOUR PLATFORM (Partner System) │
+│ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ │
+│ │ ERP/System │ │ ERP/System │ │ ERP/System │ │
+│ │ Client A │ │ Client B │ │ Client C │ │
+│ └──────┬───────┘ └──────┬───────┘ └──────┬───────┘ │
+│ │ │ │ │
+│ └──────────────────┼──────────────────┘ │
+│ │ │
+│ ┌─────────▼─────────┐ │
+│ │ Partner API Layer │ │
+│ │ (Your Integration)│ │
+│ └─────────┬─────────┘ │
+└────────────────────────────┼─────────────────────────────────────┘
+│
+│ OAuth 2.0 + REST API
+│
+┌────────────────────────────▼─────────────────────────────────────┐
+│ ONESOURCE E-INVOICING PLATFORM │
+│ ┌──────────────────────────────────────────────────────┐ │
+│ │ Universal Format Conversion Engine │ │
+│ │ (PUF → 50+ Formats) │ │
+│ └──────────────────┬───────────────────────────────────┘ │
+│ │ │
+│ ┌──────────────────▼───────────────────────────────────┐ │
+│ │ Validation & Enrichment Engine │ │
+│ │ (Country-specific rules, Tax validation) │ │
+│ └──────────────────┬───────────────────────────────────┘ │
+│ │ │
+│ ┌──────────────────▼───────────────────────────────────┐ │
+│ │ Routing & Delivery Engine │ │
+│ │ (14M business network + Tax authorities) │ │
+│ └──────────────────┬───────────────────────────────────┘ │
+└─────────────────────┼───────────────────────────────────────────┘
+│
+┌─────────────┼─────────────┐
+│ │ │
+┌───────▼───────┐ ┌──▼─────┐ ┌────▼──────────┐
+│ Tax Authority │ │ Peppol │ │ Trading │
+│ Portals │ │Network │ │ Partners │
+│ (80+ countries│ │ │ │ (14M entities)│
+└───────────────┘ └────────┘ └───────────────┘
+1.4 Key Concepts
+Partner: Your organization (ERP vendor, workflow provider, etc.)
+Receives one set of universal credentials for all clients
+Builds integration once, serves many clients
+No client-specific credentials to manage
+Client/Customer: Your end-users (businesses using your platform)
+Each has one or more legal entities (companies)
+Each legal entity has a unique companyId in ONESOURCE
+Users authenticate via OAuth 2.0 to grant your platform access
+Legal Entity/Company: A distinct business entity with unique tax identifiers
+Identified by companyId (UUID format)
+Has VAT/tax registration numbers
+Can be grouped in hierarchical structures (global enterprise → regions → entities)
+Document: An e-invoice, credit note, or other business document
+Submitted in Pagero Universal Format (PUF) XML
+Automatically converted to recipient's required format
+Tracked through multiple statuses (send, clearance, business, external)
+2. PARTNER ONBOARDING & PREREQUISITES
+2.1 Onboarding Process
+Step 1: Contact ONESOURCE Team
+Reach out to Thomson Reuters ONESOURCE team
+Express interest in becoming an integration partner
+Discuss your client base, use cases, and geographic scope
+Step 2: Receive Partner Credentials
+ONESOURCE will generate universal partner credentials:
+client_id (consumer key)
+client_secret (consumer secret)
+These credentials are partner-specific, not client-specific
+Keep them confidential and secure
+Step 3: Register Redirect URIs
+Provide your OAuth 2.0 redirect URIs to ONESOURCE
+These must be registered before authentication will work
+Examples:
+https://yourplatform.com/onesource/callback
+https://yourplatform.com/auth/onesource/return
+Step 4: Receive Test Accounts
+ONESOURCE will provision test accounts simulating:
+Supplier account (for testing AR/outbound flow)
+Buyer account (for testing AP/inbound flow)
+Each test account has a companyId and test users
+Step 5: Access Developer Portal
+Public documentation available at: https://developers.thomsonreuters.com
+API reference, swagger documentation, and examples
+2.2 Environment URLs
+Environment Base URL Purpose
+UAT (Testing) https://api-uat.onesourcetax.com Development and testing
+PROD (EMEA) https://api-emea.onesourcetax.com Production for EMEA region
+Note: There is no separate sandbox environment. Testing is done in UAT using test accounts and send modes (Certification/Test/Production).
+2.3 Prerequisites Checklist
+Before beginning integration:
+Partner credentials received (client_id + client_secret)
+Redirect URIs registered with ONESOURCE
+Test accounts received with companyId values
+Test user credentials received
+Access to developer portal documentation
+Understanding of your clients' geographic scope (which countries?)
+Understanding of document types in scope (Invoice, Credit Note, etc.)
+Decision on authentication flow (where users will authenticate)
+3. AUTHENTICATION & AUTHORIZATION
+3.1 Authentication Model
+ONESOURCE uses OAuth 2.0 with two different grant types:
+Client Credentials Grant - For partner-level API access (getting tokens)
+Authorization Code Grant - For end-user authorization (granting access to client data)
+3.2 Client Credentials Flow (Getting Access Tokens)
+This flow is used to obtain an access_token for making API calls.
+Endpoint:
+POST https://api-uat.onesourcetax.com/oauth2/v1/token
+Headers:
+Content-Type: application/x-www-form-urlencoded
+Body Parameters:
+client_id={your_consumer_key}
+client_secret={your_consumer_secret}
+grant_type=client_credentials
+scope=urn:tr:onesource:auth:api:einvoicing
+Response:
+{
+"success": "approved",
+"access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+"token_type": "Bearer",
+"expires_in": "1799",
+"issued_at": "1744125241833"
+}
+Implementation Notes:
+Token expires in 1799 seconds (~30 minutes)
+Implement token caching and refresh logic
+Do not request a new token for every API call
+Store token with expiry timestamp and refresh when needed
+Pseudocode Example:
+class ONESOURCEAuthManager:
+def init(self, client_id, client_secret, base_url):
+self.client_id = client_id
+self.client_secret = client_secret
+self.base_url = base_url
+self.token = None
+self.token_expiry = None
+code
+Code
+def get_access_token(self):  
+    # Check if token is still valid  
+    if self.token and self.token_expiry > current_time() + 60:  # 60s buffer  
+        return self.token
+      
+    # Request new token  
+    response = http_post(  
+        url=f"{self.base_url}/oauth2/v1/token",  
+        headers={"Content-Type": "application/x-www-form-urlencoded"},  
+        data={  
+            "client_id": self.client_id,  
+            "client_secret": self.client_secret,  
+            "grant_type": "client_credentials",  
+            "scope": "urn:tr:onesource:auth:api:einvoicing"  
+        }  
+    )
+      
+    if response.status_code == 200:  
+        data = response.json()  
+        self.token = data["access_token"]  
+        self.token_expiry = current_time() + int(data["expires_in"])  
+        return self.token  
+    else:  
+        raise AuthenticationError(f"Failed to get token: {response.text}")
+3.3 Authorization Code Grant (End-User Authorization)
+This flow is used when an end-user needs to authorize your platform to access their ONESOURCE account.
+When to use:
+First-time setup for a new client
+When user credentials expire or are revoked
+When user needs to grant access to additional companies
+Flow Diagram:
+┌─────────────┐ ┌─────────────┐
+│ Your │ │ ONESOURCE │
+│ Platform │ │ Server │
+└──────┬──────┘ └──────┬──────┘
+│ │
+│ 1. User clicks "Connect to ONESOURCE" │
+│ │
+│ 2. Redirect to authorization URL │
+├─────────────────────────────────────────────────>│
+│ with client_id, redirect_uri, scope │
+│ │
+│ 3. User logs in
+│ & authorizes
+│ │
+│ 4. Redirect back with authorization code │
+│<─────────────────────────────────────────────────┤
+│ https://yourplatform.com/callback?code=ABC │
+│ │
+│ 5. Exchange code for access token │
+├─────────────────────────────────────────────────>│
+│ POST /oauth2/v1/token │
+│ │
+│ 6. Return access token + refresh token │
+│<─────────────────────────────────────────────────┤
+│ │
+│ 7. Store tokens for this user/tenant │
+│ │
+Step 1: Redirect User to Authorization URL
+https://api-uat.onesourcetax.com/oauth2/v1/authorize?
+response_type=code&
+client_id={your_client_id}&
+redirect_uri={your_registered_redirect_uri}&
+scope=urn:tr:onesource:auth:api:einvoicing&
+state={random_state_string}
+Parameters:
+response_type: Always code
+client_id: Your partner client ID
+redirect_uri: Must match registered URI
+scope: urn:tr:onesource:auth:api:einvoicing
+state: Random string for CSRF protection (verify on callback)
+Step 2: Handle Callback
+User will be redirected back to your URI with:
+https://yourplatform.com/callback?code=AUTHORIZATION_CODE&state=YOUR_STATE
+Verify the state parameter matches what you sent.
+Step 3: Exchange Code for Token
+POST https://api-uat.onesourcetax.com/oauth2/v1/token
+Headers:
+Content-Type: application/x-www-form-urlencoded
+Body:
+grant_type=authorization_code
+code={authorization_code_from_callback}
+redirect_uri={same_redirect_uri_as_before}
+client_id={your_client_id}
+client_secret={your_client_secret}
+Response:
+{
+"access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+"refresh_token": "dGhpcyBpcyBhIHJlZnJlc2ggdG9rZW4...",
+"token_type": "Bearer",
+"expires_in": "1799"
+}
+Store these tokens securely associated with the user/tenant in your system.
+3.4 Token Management Best Practices
+Secure Storage:
+Store tokens encrypted in your database
+Never log tokens or expose in URLs
+Associate tokens with user/tenant ID
+Token Refresh:
+Implement automatic refresh before expiry
+Use refresh token to get new access token without user interaction
+Handle refresh token expiration (require re-authorization)
+Error Handling:
+401 Unauthorized: Token expired or invalid → refresh or re-authorize
+403 Forbidden: User doesn't have permission → check company access
+Implement exponential backoff for retries
+Token Refresh Pseudocode:
+def refresh_access_token(refresh_token):
+response = http_post(
+url=f"{base_url}/oauth2/v1/token",
+headers={"Content-Type": "application/x-www-form-urlencoded"},
+data={
+"grant_type": "refresh_token",
+"refresh_token": refresh_token,
+"client_id": client_id,
+"client_secret": client_secret
+}
+)
+code
+Code
+if response.status_code == 200:  
+    data = response.json()  
+    # Update stored tokens  
+    save_tokens(data["access_token"], data.get("refresh_token"))  
+    return data["access_token"]  
+else:  
+    # Refresh token expired - user must re-authorize  
+    trigger_reauthorization()
+MULTI-TENANCY & COMPANY MANAGEMENT
+4.1 Understanding the Company Model
+In Pagero Online you can choose whether you want to have an open or closed customer directory. When your customer directory is closed, you will have to add every e-invoice recipient to your customer directory. If you don't want to add every e-invoice recipient, you can choose to have an open customer directory and the system will look for the recipient directly in the public directory.
+Each legal entity (company) your client operates has a unique companyId in ONESOURCE. This ID is mandatory for all API calls involving documents.
+Example Scenario:
+Your client: "Global Manufacturing Corp"
+Legal entities:
+Global Manufacturing Corp Sweden AB → companyId: 89d671a5-a02f-4cd0-b1db-5c516f1791aa
+Global Manufacturing Corp Germany GmbH → companyId: f3bdf6bf-31a5-430e-cc27-a3c78b8cc4e9
+Global Manufacturing Corp USA Inc → companyId: a1234567-89ab-cdef-0123-456789abcdef
+4.2 Company Provisioning
+Companies (legal entities) are created in the Pagero Online backend (not via API). There are two approaches:
+Option 1: Pagero Delivery Team Creates Accounts
+When onboarding a new client, coordinate with ONESOURCE team
+Provide company details (name, country, VAT number, etc.)
+ONESOURCE creates accounts and provides companyId values
+You store these companyId values in your system
+Option 2: Signup API (If Available)
+For high-volume partner scenarios
+Discuss with ONESOURCE if Signup API is available for your use case
+Allows programmatic creation of new accounts
+Reduces onboarding time
+4.3 Retrieving Companies
+After a user authorizes your platform, retrieve the list of companies they have access to.
+Endpoint:
+GET https://api-uat.onesourcetax.com/einvoicing/company/v1/companies
+Headers:
+Authorization: Bearer {access_token}
+Content-Type: application/json
+Response:
+[
+{
+"id": "89d671a5-a02f-4cd0-b1db-5c516f1791aa",
+"name": "Global Manufacturing Corp Sweden AB",
+"address": {
+"countryCode": "SE"
+},
+"identifiers": [
+{
+"idType": "UNDEFINED_VAT",
+"value": "SE556123456701"
+}
+],
+"contact": {
+"email": "accounting@globalmanuf.se"
+}
+},
+{
+"id": "f3bdf6bf-31a5-430e-cc27-a3c78b8cc4e9",
+"name": "Global Manufacturing Corp Germany GmbH",
+"address": {
+"countryCode": "DE"
+},
+"identifiers": [
+{
+"idType": "UNDEFINED_VAT",
+"value": "DE123456789"
+}
+],
+"contact": {
+"email": "buchhaltung@globalmanuf.de"
+}
+}
+]
+4.4 Company Mapping Strategy
+You must map ONESOURCE companyId values to your internal tenant/company identifiers.
+Option A: Automatic Mapping (Recommended)
+Match based on VAT number or other identifiers:
+def map_companies_automatically(onesource_companies, internal_companies):
+mappings = {}
+code
+Code
+for os_company in onesource_companies:  
+    # Extract VAT number from ONESOURCE company  
+    vat_number = None  
+    for identifier in os_company["identifiers"]:  
+        if "VAT" in identifier["idType"]:  
+            vat_number = identifier["value"]  
+            break
+      
+    # Find matching internal company  
+    for internal_company in internal_companies:  
+        if internal_company["vat_number"] == vat_number:  
+            mappings[internal_company["id"]] = os_company["id"]  
+            save_company_mapping(  
+                internal_id=internal_company["id"],  
+                onesource_company_id=os_company["id"],  
+                company_name=os_company["name"]  
+            )  
+            break
+  
+return mappings
+Option B: Manual Mapping
+Provide UI for users to manually select/confirm company mappings:
+Your System ONESOURCE
+───────────────── ─────────────────────
+[Manufacturing Sweden] ←──→ [Global Manufacturing Corp Sweden AB]
+companyId: 89d671a5-...
+[Manufacturing Germany] ←──→ [Global Manufacturing Corp Germany GmbH]
+companyId: f3bdf6bf-...
+Store mapping in your database:
+CREATE TABLE onesource_company_mappings (
+internal_company_id VARCHAR(50) PRIMARY KEY,
+onesource_company_id VARCHAR(36) NOT NULL,
+onesource_company_name VARCHAR(255),
+created_at TIMESTAMP,
+updated_at TIMESTAMP
+);
+4.5 Multi-Company Scenarios
+Scenario 1: User has access to multiple companies
+Call GET /companies returns multiple items
+User must select which company to operate on
+Store selected companyId in session or context
+Scenario 2: Hierarchical company structures
+Global enterprise → Regional groups → Individual entities
+Each entity still has unique companyId
+Grouping is managed in Pagero Online backend
+Your integration treats each as separate entity
+Scenario 3: Single company per tenant
+Simplest case: 1-to-1 mapping
+Store companyId at tenant level
+All API calls use same companyId
+5. DOCUMENT FORMAT: PAGERO UNIVERSAL FORMAT (PUF)
+5.1 What is PUF?
+Pagero Universal Format (PUF) is a set of specifications based on Universal Business Language (UBL) that enables the exchange of compliant business documents worldwide via our e-business platform Pagero Online.
+Why PUF?
+Single format for all countries and recipients
+Based on UBL 2.1 (widely adopted standard)
+ONESOURCE automatically converts PUF to 50+ country-specific formats
+You don't need to know about FatturaPA (Italy), CFDI (Mexico), Factur-X (France), etc.
+5.2 PUF Document Types
+Document Type Purpose PUF Specification
+Invoice Standard commercial invoice PUF Billing 2.0
+Credit Note Credit memo/adjustment PUF Billing 2.0
+Application Response Business acknowledgment from buyer PUF Invoice Response 1.0
+Technical Acknowledgement Message-level response PUF Technical Acknowledgement 1.0
+Clearance Notification Response from tax authority PUF Clearance Notification 1.0
+5.3 PUF Invoice Structure
+Minimal PUF Invoice Example:
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns:cac="urn:pagero:CommonAggregateComponents:1.0"
+xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+xmlns="urn:pagero:PageroUniversalFormat:Invoice:1.0">
+code
+Code
+<!-- Document Identification -->  
+<cbc:CustomizationID>urn:pagero.com:puf:billing:2.0</cbc:CustomizationID>  
+<cbc:ProfileID>urn:pagero.com:puf:billing:1.0</cbc:ProfileID>  
+<cbc:ID>INV-2025-001234</cbc:ID>  
+<cbc:IssueDate>2025-01-15</cbc:IssueDate>  
+<cbc:DueDate>2025-02-15</cbc:DueDate>  
+<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>  
+<cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+  
+<!-- Supplier (Seller) Party -->  
+<cac:AccountingSupplierParty>  
+    <cac:Party>  
+        <cbc:EndpointID schemeID="0088">7300010000001</cbc:EndpointID>  
+        <cac:PartyIdentification>  
+            <cbc:ID schemeID="0184">SE556123456701</cbc:ID>  
+        </cac:PartyIdentification>  
+        <cac:PartyName>  
+            <cbc:Name>Supplier Company AB</cbc:Name>  
+        </cac:PartyName>  
+        <cac:PostalAddress>  
+            <cbc:StreetName>Main Street 123</cbc:StreetName>  
+            <cbc:CityName>Stockholm</cbc:CityName>  
+            <cbc:PostalZone>11122</cbc:PostalZone>  
+            <cac:Country>  
+                <cbc:IdentificationCode>SE</cbc:IdentificationCode>  
+            </cac:Country>  
+        </cac:PostalAddress>  
+        <cac:PartyTaxScheme>  
+            <cbc:CompanyID>SE556123456701</cbc:CompanyID>  
+            <cac:TaxScheme>  
+                <cbc:ID>VAT</cbc:ID>  
+            </cac:TaxScheme>  
+        </cac:PartyTaxScheme>  
+        <cac:PartyLegalEntity>  
+            <cbc:RegistrationName>Supplier Company AB</cbc:RegistrationName>  
+        </cac:PartyLegalEntity>  
+    </cac:Party>  
+</cac:AccountingSupplierParty>
+  
+<!-- Customer (Buyer) Party -->  
+<cac:AccountingCustomerParty>  
+    <cac:Party>  
+        <cbc:EndpointID schemeID="0088">7315458756328</cbc:EndpointID>  
+        <cac:PartyIdentification>  
+            <cbc:ID schemeID="0184">SE556987654301</cbc:ID>  
+        </cac:PartyIdentification>  
+        <cac:PartyName>  
+            <cbc:Name>Customer Company AB</cbc:Name>  
+        </cac:PartyName>  
+        <cac:PostalAddress>  
+            <cbc:StreetName>Customer Street 456</cbc:StreetName>  
+            <cbc:CityName>Gothenburg</cbc:CityName>  
+            <cbc:PostalZone>41301</cbc:PostalZone>  
+            <cac:Country>  
+                <cbc:IdentificationCode>SE</cbc:IdentificationCode>  
+            </cac:Country>  
+        </cac:PostalAddress>  
+        <cac:PartyTaxScheme>  
+            <cbc:CompanyID>SE556987654301</cbc:CompanyID>  
+            <cac:TaxScheme>  
+                <cbc:ID>VAT</cbc:ID>  
+            </cac:TaxScheme>  
+        </cac:PartyTaxScheme>  
+    </cac:Party>  
+</cac:AccountingCustomerParty>
+  
+<!-- Payment Terms -->  
+<cac:PaymentMeans>  
+    <cbc:PaymentMeansCode>30</cbc:PaymentMeansCode>  
+    <cac:PayeeFinancialAccount>  
+        <cbc:ID>SE1234567890123456789012</cbc:ID>  
+    </cac:PayeeFinancialAccount>  
+</cac:PaymentMeans>
+  
+<!-- Tax Total -->  
+<cac:TaxTotal>  
+    <cbc:TaxAmount currencyID="EUR">250.00</cbc:TaxAmount>  
+    <cac:TaxSubtotal>  
+        <cbc:TaxableAmount currencyID="EUR">1000.00</cbc:TaxableAmount>  
+        <cbc:TaxAmount currencyID="EUR">250.00</cbc:TaxAmount>  
+        <cac:TaxCategory>  
+            <cbc:ID>S</cbc:ID>  
+            <cbc:Percent>25</cbc:Percent>  
+            <cac:TaxScheme>  
+                <cbc:ID>VAT</cbc:ID>  
+            </cac:TaxScheme>  
+        </cac:TaxCategory>  
+    </cac:TaxSubtotal>  
+</cac:TaxTotal>
+  
+<!-- Monetary Totals -->  
+<cac:LegalMonetaryTotal>  
+    <cbc:LineExtensionAmount currencyID="EUR">1000.00</cbc:LineExtensionAmount>  
+    <cbc:TaxExclusiveAmount currencyID="EUR">1000.00</cbc:TaxExclusiveAmount>  
+    <cbc:TaxInclusiveAmount currencyID="EUR">1250.00</cbc:TaxInclusiveAmount>  
+    <cbc:PayableAmount currencyID="EUR">1250.00</cbc:PayableAmount>  
+</cac:LegalMonetaryTotal>
+  
+<!-- Invoice Line -->  
+<cac:InvoiceLine>  
+    <cbc:ID>1</cbc:ID>  
+    <cbc:InvoicedQuantity unitCode="EA">10</cbc:InvoicedQuantity>  
+    <cbc:LineExtensionAmount currencyID="EUR">1000.00</cbc:LineExtensionAmount>  
+    <cac:Item>  
+        <cbc:Name>Product ABC</cbc:Name>  
+        <cac:ClassifiedTaxCategory>  
+            <cbc:ID>S</cbc:ID>  
+            <cbc:Percent>25</cbc:Percent>  
+            <cac:TaxScheme>  
+                <cbc:ID>VAT</cbc:ID>  
+            </cac:TaxScheme>  
+        </cac:ClassifiedTaxCategory>  
+    </cac:Item>  
+    <cac:Price>  
+        <cbc:PriceAmount currencyID="EUR">100.00</cbc:PriceAmount>  
+    </cac:Price>  
+</cac:InvoiceLine>
+</Invoice>
+5.4 Key PUF Elements
+Document Header:
+cbc:ID: Your invoice number (must be unique per sender)
+cbc:IssueDate: Invoice issue date (YYYY-MM-DD)
+cbc:DueDate: Payment due date
+cbc:InvoiceTypeCode: 380 = Invoice, 381 = Credit Note
+cbc:DocumentCurrencyCode: ISO 4217 currency code
+Party Identification:
+cbc:EndpointID: Electronic address (e.g., GLN, Peppol ID)
+schemeID="0088" = GLN
+schemeID="0192" = Norwegian organization number
+cac:PartyIdentification/cbc:ID: Organization number, VAT number
+schemeID="0184" = Norwegian organization number
+cac:PartyTaxScheme/cbc:CompanyID: VAT registration number
+Customer Number (Important for Routing):
+cac:AccountingCustomerParty
+cac:Party
+cbc:SupplierAssignedAccountIDCUST-12345</cbc:SupplierAssignedAccountID>
+<!-- Rest of party details -->
+</cac:Party>
+</cac:AccountingCustomerParty>
+This customer number helps route the invoice if recipient has multiple receiving points.
+5.5 PUF Resources
+Full specification: https://pagero.github.io/puf-billing/
+Example files: https://github.com/pagero/puf-billing/tree/master/examples
+Code lists: https://pagero.github.io/puf-code-lists/
+Validation tool: https://pagero.validex.net/
+5.6 Building PUF from Your Data Model
+Mapping Strategy:
+def build_puf_invoice(internal_invoice):
+"""
+Convert your internal invoice format to PUF XML
+"""
+puf = PUFInvoiceBuilder()
+code
+Code
+# Header  
+puf.set_id(internal_invoice.invoice_number)  
+puf.set_issue_date(internal_invoice.invoice_date)  
+puf.set_due_date(internal_invoice.due_date)  
+puf.set_currency(internal_invoice.currency)
+  
+# Supplier (your client's company)  
+puf.set_supplier(  
+    name=internal_invoice.supplier.name,  
+    vat_number=internal_invoice.supplier.vat_number,  
+    address=internal_invoice.supplier.address,  
+    country_code=internal_invoice.supplier.country  
+)
+  
+# Customer (invoice recipient)  
+puf.set_customer(  
+    name=internal_invoice.customer.name,  
+    vat_number=internal_invoice.customer.vat_number,  
+    customer_number=internal_invoice.customer.customer_id,  
+    address=internal_invoice.customer.address,  
+    country_code=internal_invoice.customer.country  
+)
+  
+# Payment details  
+puf.set_payment_means(  
+    payment_means_code="30",  # Credit transfer  
+    bank_account=internal_invoice.supplier.bank_account  
+)
+  
+# Line items  
+for line in internal_invoice.lines:  
+    puf.add_line(  
+        id=line.line_number,  
+        name=line.product_name,  
+        quantity=line.quantity,  
+        unit_code=line.unit_of_measure,  
+        price=line.unit_price,  
+        tax_percent=line.vat_rate,  
+        tax_category="S"  # Standard rate  
+    )
+  
+# Totals (calculated from lines)  
+puf.calculate_totals()
+  
+return puf.to_xml()
+Validation Before Sending:
+Use Pagero Validex tool: https://pagero.validex.net/
+Upload your PUF XML to check for errors
+Fix any validation errors before submitting via API
+6. ACCOUNTS RECEIVABLE (AR) - OUTBOUND INVOICE FLOW
+This section covers sending invoices FROM your clients TO their customers.
+6.1 AR Flow Overview
+┌──────────────────────────────────────────────────────────────────┐
+│ YOUR PLATFORM │
+│ │
+│ 1. Invoice Created → 2. Generate PUF → 3. POST /documents │
+│ │
+└───────────────────────────┬──────────────────────────────────────┘
+│
+▼
+┌──────────────────────────────────────────────────────────────────┐
+│ ONESOURCE PLATFORM │
+│ │
+│ 4. Validate → 5. Convert → 6. Clear (if CTC) → 7. Deliver│
+│ │
+└───────────────────────────┬──────────────────────────────────────┘
+│
+▼
+┌───────────────────┴───────────────────┐
+│ │
+▼ ▼
+┌─────────────────┐ ┌─────────────────┐
+│ Tax Authority │ │ Customer │
+│ (if CTC) │ │ (Recipient) │
+└─────────────────┘ └─────────────────┘
+│ │
+│ │
+└───────────────┬───────────────────────┘
+│
+▼
+┌──────────────────────────────────────────────────────────────────┐
+│ YOUR PLATFORM │
+│ │
+│ 8. Poll Status → 9. Handle Errors → 10. Mark as Fetched │
+│ │
+└──────────────────────────────────────────────────────────────────┘
+6.2 Step-by-Step Implementation
+Step 1: POST Document
+Endpoint:
+POST https://api-uat.onesourcetax.com/einvoicing/document/v1/documents
+Headers:
+Authorization: Bearer {access_token}
+Content-Type: application/json
+Request Body:
+{
+"payload": "<Invoice xmlns:cac="urn:pagero:CommonAggregateComponents:1.0"...",
+"documentType": "Invoice",
+"senderReference": "INV-2025-001234-UNIQUE",
+"sendingCompanyId": "89d671a5-a02f-4cd0-b1db-5c516f1791aa",
+"systemType": "Other",
+"systemName": "YourPlatformName",
+"documentIdentifier": "INV-2025-001234"
+}
+Field Descriptions:
+Field Required Description
+payload Yes PUF XML as string (entire XML document)
+documentType Yes Invoice, CreditNote, ApplicationResponse
+senderReference Yes Unique identifier from your system. Must be unique per sending company.
+sendingCompanyId Yes The companyId of the legal entity sending this invoice
+systemType No Oracle, SAP, SAP Ariba, or Other
+systemName No Name of your platform (for tracking)
+documentIdentifier No Invoice number (searchable in UI, shown even if processing fails)
+Critical: senderReference
+Must be globally unique for each document from a sending company
+Recommendation: {InvoiceNumber}-{Timestamp}-{RandomSuffix}
+Example: INV-2025-001234-20250115143022-a7f3
+Store this value in your database linked to the invoice
+Response (Success):
+{
+"id": "97963ff9-4d74-4c2d-ad17-d7d5abccb606"
+}
+The id is the documentId. Store this linked to your senderReference.
+Response (Error):
+{
+"error": "InvalidPayload",
+"message": "XML validation failed: Element 'cbc:ID' is required"
+}
+Step 2: Store Document Mapping
+In your database:
+CREATE TABLE onesource_documents (
+internal_invoice_id VARCHAR(50) PRIMARY KEY,
+sender_reference VARCHAR(255) UNIQUE NOT NULL,
+document_id VARCHAR(36), -- UUID from ONESOURCE
+company_id VARCHAR(36) NOT NULL,
+document_type VARCHAR(50),
+send_status VARCHAR(50),
+clearance_status VARCHAR(50),
+business_status VARCHAR(50),
+error_message TEXT,
+created_at TIMESTAMP,
+modified_time TIMESTAMP,
+INDEX idx_sender_ref (sender_reference),
+INDEX idx_document_id (document_id)
+);
+def post_invoice(invoice):
+# Generate PUF XML
+puf_xml = build_puf_invoice(invoice)
+code
+Code
+# Generate unique sender reference  
+sender_reference = f"{invoice.invoice_number}-{current_timestamp()}-{random_suffix()}"
+  
+# POST to ONESOURCE  
+response = http_post(  
+    url=f"{base_url}/einvoicing/document/v1/documents",  
+    headers={  
+        "Authorization": f"Bearer {get_access_token()}",  
+        "Content-Type": "application/json"  
+    },  
+    json={  
+        "payload": puf_xml,  
+        "documentType": "Invoice",  
+        "senderReference": sender_reference,  
+        "sendingCompanyId": get_company_id(invoice.company),  
+        "systemType": "Other",  
+        "systemName": "YourPlatform",  
+        "documentIdentifier": invoice.invoice_number  
+    }  
+)
+  
+if response.status_code in [200, 201]:  
+    document_id = response.json()["id"]
+      
+    # Store mapping  
+    db.execute("""  
+        INSERT INTO onesource_documents   
+        (internal_invoice_id, sender_reference, document_id, company_id,   
+         document_type, send_status, created_at)  
+        VALUES (?, ?, ?, ?, ?, ?, ?)  
+    """, (invoice.id, sender_reference, document_id,   
+          get_company_id(invoice.company), "Invoice", "Processing", now()))
+      
+    return document_id  
+else:  
+    # Handle error  
+    log_error(f"Failed to post invoice: {response.text}")  
+    raise Exception(f"ONESOURCE API error: {response.text}")
+Step 3: Poll for Status Updates
+Documents go through multiple status changes. You need to poll regularly to track progress.
+Endpoint:
+GET https://api-uat.onesourcetax.com/einvoicing/document/v1/documents
+Query Parameters:
+companyId={company_id}
+direction=Sent
+documentType=Invoice
+modifiedTimeFrom=2025-01-15T10:00:00Z
+pageIndex=0
+pageSize=100
+sort=modifiedTime
+Parameter Descriptions:
+Parameter Required Description
+companyId No Filter by legal entity. Omit to get all companies user has access to.
+direction Yes Sent for AR, Received for AP
+documentType No Invoice, CreditNote, ApplicationResponse
+modifiedTimeFrom Critical Get documents modified after this timestamp. Use latest modifiedTime from previous poll.
+pageIndex No Page number (0-based). Default: 0
+pageSize No Items per page (max 1000). Default: 100
+sort Critical Set to modifiedTime for chronological order
+Response:
+{
+"meta": {
+"currentPageIndex": 0,
+"itemsPerPage": 100,
+"totalItems": 3,
+"totalPages": 1
+},
+"items": [
+{
+"id": "52939209-f454-498e-afd0-64b0827c4eb0",
+"sendStatus": "Done",
+"clearanceStatus": null,
+"businessStatus": null,
+"externalStatus": null,
+"documentType": "Invoice",
+"documentSubtype": "Debit",
+"direction": "Sent",
+"createTime": "2025-01-15T06:11:41Z",
+"modifiedTime": "2025-01-15T06:15:22Z",
+"companyId": "89d671a5-a02f-4cd0-b1db-5c516f1791aa",
+"senderReference": "INV-2025-001234-UNIQUE",
+"systemName": "YourPlatform",
+"documentInfo": {
+"documentIdentifier": "INV-2025-001234",
+"issueDate": "2025-01-15",
+"dueDate": "2025-02-15",
+"amounts": {
+"netAmount": "1000.00",
+"vatAmount": "250.00",
+"totalAmount": "1250.00",
+"currency": "EUR"
+},
+"senderParty": {
+"name": "Supplier Company AB",
+"ids": [{"idType": "UNDEFINED_VAT", "value": "SE556123456701"}]
+},
+"receiverParty": {
+"name": "Customer Company AB",
+"ids": [{"idType": "UNDEFINED_VAT", "value": "SE556987654301"}]
+}
+}
+},
+{
+"id": "c8383a36-3624-4d0e-8cc7-2ff321aa9fc7",
+"sendStatus": "Error",
+"documentType": "Invoice",
+"direction": "Sent",
+"createTime": "2025-01-15T07:09:34Z",
+"modifiedTime": "2025-01-15T07:35:04Z",
+"companyId": "89d671a5-a02f-4cd0-b1db-5c516f1791aa",
+"senderReference": "INV-2025-001235-UNIQUE",
+"errorMessage": "Recipient of document (Customer XYZ) did not match any recipient in Pagero public customer registry or in your customer directory. Verify that the recipient is added to your customer directory."
+}
+]
+}
+Status Fields:
+Status Field Values Meaning
+sendStatus Processing, Done, Error, Cancelled Overall sending status
+clearanceStatus Pending, Approved, Rejected Tax authority clearance (CTC countries)
+businessStatus Accepted, Rejected, UnderQuery Business-level acceptance from buyer
+externalStatus Various External party responses
+Step 4: Implement Polling Strategy
+Best Practice: Modified Time Polling
+class ARDocumentPoller:
+def init(self):
+# Store last poll time per company
+self.last_poll_times = {}
+code
+Code
+def poll_document_updates(self, company_id):  
+    # Get last poll time for this company  
+    last_poll = self.last_poll_times.get(  
+        company_id,  
+        (datetime.now() - timedelta(days=7)).isoformat() + "Z"  
+    )
+      
+    all_documents = []  
+    page_index = 0
+      
+    while True:  
+        response = http_get(  
+            url=f"{base_url}/einvoicing/document/v1/documents",  
+            headers={"Authorization": f"Bearer {get_access_token()}"},  
+            params={  
+                "companyId": company_id,  
+                "direction": "Sent",  
+                "documentType": "Invoice",  
+                "modifiedTimeFrom": last_poll,  
+                "pageIndex": page_index,  
+                "pageSize": 100,  
+                "sort": "modifiedTime"  
+            }  
+        )
+          
+        if response.status_code != 200:  
+            log_error(f"Polling failed: {response.text}")  
+            break
+          
+        data = response.json()  
+        documents = data["items"]
+          
+        if not documents:  
+            break  # No more documents
+          
+        all_documents.extend(documents)
+          
+        # Check if there are more pages  
+        if page_index + 1 >= data["meta"]["totalPages"]:  
+            break
+          
+        page_index += 1
+      
+    # Update last poll time to latest modifiedTime  
+    if all_documents:  
+        latest_modified = max(doc["modifiedTime"] for doc in all_documents)  
+        self.last_poll_times[company_id] = latest_modified  
+        save_last_poll_time(company_id, latest_modified)
+      
+    return all_documents
+  
+def process_document_updates(self, documents):  
+    for doc in documents:  
+        # Find internal invoice by senderReference  
+        internal_invoice = db.find_by_sender_reference(doc["senderReference"])
+          
+        if not internal_invoice:  
+            log_warning(f"Unknown senderReference: {doc['senderReference']}")  
+            continue
+          
+        # Update status in database  
+        db.execute("""  
+            UPDATE onesource_documents  
+            SET document_id = ?,  
+                send_status = ?,  
+                clearance_status = ?,  
+                business_status = ?,  
+                error_message = ?,  
+                modified_time = ?  
+            WHERE sender_reference = ?  
+        """, (  
+            doc["id"],  
+            doc.get("sendStatus"),  
+            doc.get("clearanceStatus"),  
+            doc.get("businessStatus"),  
+            doc.get("errorMessage"),  
+            doc["modifiedTime"],  
+            doc["senderReference"]  
+        ))
+          
+        # Take action based on status  
+        if doc["sendStatus"] == "Error":  
+            self.handle_error(doc)  
+        elif doc["sendStatus"] == "Done":  
+            self.handle_success(doc)
+Polling Frequency Recommendations:
+Scenario Frequency Rationale
+Low volume (<100/day) Every 15-30 minutes Balance between freshness and API load
+Medium volume (100-1000/day) Every 5-10 minutes More frequent updates needed
+High volume (>1000/day) Every 2-5 minutes Near real-time status updates
+Error checking Every 30-60 minutes Errors don't change frequently
+Step 5: Download Document Formats
+Once sendStatus is Done, you can download different document formats:
+Available Formats:
+Source Document - Original PUF XML you submitted
+Target Document - Format delivered to recipient (e.g., PEPPOL UBL, FatturaPA)
+Presentation Document - PDF for archival/printing
+Endpoints:
+GET /einvoicing/document/v1/documents/{id}/source-document
+GET /einvoicing/document/v1/documents/{id}/target-document
+GET /einvoicing/document/v1/documents/{id}/presentation
+Example:
+def download_document_formats(document_id):
+# Download PDF presentation
+pdf_response = http_get(
+url=f"{base_url}/einvoicing/document/v1/documents/{document_id}/presentation",
+headers={"Authorization": f"Bearer {get_access_token()}"}
+)
+code
+Code
+if pdf_response.status_code == 200:  
+    # Save PDF  
+    save_file(f"invoices/{document_id}.pdf", pdf_response.content)
+  
+# Download target format (what recipient received)  
+target_response = http_get(  
+    url=f"{base_url}/einvoicing/document/v1/documents/{document_id}/target-document",  
+    headers={"Authorization": f"Bearer {get_access_token()}"}  
+)
+  
+if target_response.status_code == 200:  
+    # Save target XML  
+    save_file(f"invoices/{document_id}_target.xml", target_response.content)
+Important: Documents are retained for 90 days in ONESOURCE. Download and archive locally for long-term retention.
+Step 6: Mark Documents as Fetched
+After processing a document, mark it as "fetched" to exclude from future polls.
+Endpoint:
+POST https://api-uat.onesourcetax.com/einvoicing/document/v1/documents/fetch
+Request Body:
+{
+"documentIds": [
+"52939209-f454-498e-afd0-64b0827c4eb0",
+"a297a938-2c3d-4051-1193-667b0ffa19ad"
+]
+}
+Usage:
+def mark_documents_as_fetched(document_ids):
+response = http_post(
+url=f"{base_url}/einvoicing/document/v1/documents/fetch",
+headers={
+"Authorization": f"Bearer {get_access_token()}",
+"Content-Type": "application/json"
+},
+json={"documentIds": document_ids}
+)
+code
+Code
+if response.status_code == 200:  
+    # Update local database  
+    for doc_id in document_ids:  
+        db.execute("""  
+            UPDATE onesource_documents   
+            SET is_fetched = TRUE   
+            WHERE document_id = ?  
+        """, (doc_id,))
+Then in future polls, use showFetchedOnly=false parameter:
+GET /documents?showFetchedOnly=false&...
+6.3 Complete AR Workflow Code
+class ONESOURCEARIntegration:
+def init(self, base_url, client_id, client_secret):
+self.base_url = base_url
+self.auth_manager = ONESOURCEAuthManager(client_id, client_secret, base_url)
+self.poller = ARDocumentPoller()
+code
+Code
+def send_invoice(self, invoice):  
+    """Send an invoice to ONESOURCE"""  
+    try:  
+        # 1. Generate PUF XML  
+        puf_xml = build_puf_invoice(invoice)
+          
+        # 2. Validate locally (optional but recommended)  
+        validate_puf_xml(puf_xml)
+          
+        # 3. Generate unique sender reference  
+        sender_reference = f"{invoice.invoice_number}-{int(time.time())}-{uuid.uuid4().hex[:8]}"
+          
+        # 4. Get company ID  
+        company_id = get_company_mapping(invoice.company_id)
+          
+        # 5. POST document  
+        response = requests.post(  
+            f"{self.base_url}/einvoicing/document/v1/documents",  
+            headers={  
+                "Authorization": f"Bearer {self.auth_manager.get_access_token()}",  
+                "Content-Type": "application/json"  
+            },  
+            json={  
+                "payload": puf_xml,  
+                "documentType": "Invoice",  
+                "senderReference": sender_reference,  
+                "sendingCompanyId": company_id,  
+                "systemType": "Other",  
+                "systemName": "YourPlatform",  
+                "documentIdentifier": invoice.invoice_number  
+            },  
+            timeout=30  
+        )
+          
+        response.raise_for_status()
+          
+        # 6. Store document mapping  
+        document_id = response.json()["id"]  
+        db.insert_document_mapping(  
+            invoice_id=invoice.id,  
+            sender_reference=sender_reference,  
+            document_id=document_id,  
+            company_id=company_id  
+        )
+          
+        log_info(f"Invoice {invoice.invoice_number} sent successfully. Document ID: {document_id}")  
+        return document_id
+          
+    except requests.HTTPError as e:  
+        log_error(f"HTTP error sending invoice: {e.response.text}")  
+        raise  
+    except Exception as e:  
+        log_error(f"Error sending invoice: {str(e)}")  
+        raise
+  
+def poll_and_update_statuses(self, company_id):  
+    """Poll for document status updates"""  
+    try:  
+        # Get updated documents  
+        documents = self.poller.poll_document_updates(company_id)
+          
+        log_info(f"Polled {len(documents)} document updates for company {company_id}")
+          
+        # Process each document  
+        processed_ids = []  
+        for doc in documents:  
+            self.process_document_update(doc)  
+            processed_ids.append(doc["id"])
+          
+        # Mark as fetched  
+        if processed_ids:  
+            self.mark_documents_as_fetched(processed_ids)
+          
+    except Exception as e:  
+        log_error(f"Error polling documents: {str(e)}")
+  
+def process_document_update(self, doc):  
+    """Process a single document update"""  
+    sender_ref = doc["senderReference"]
+      
+    # Update database  
+    db.update_document_status(  
+        sender_reference=sender_ref,  
+        send_status=doc.get("sendStatus"),  
+        clearance_status=doc.get("clearanceStatus"),  
+        business_status=doc.get("businessStatus"),  
+        error_message=doc.get("errorMessage"),  
+        modified_time=doc["modifiedTime"]  
+    )
+      
+    # Handle different statuses  
+    if doc["sendStatus"] == "Error":  
+        self.handle_error_document(doc)  
+    elif doc["sendStatus"] == "Done":  
+        self.handle_successful_document(doc)  
+    elif doc["sendStatus"] == "Cancelled":  
+        self.handle_cancelled_document(doc)
+  
+def handle_error_document(self, doc):  
+    """Handle document errors"""  
+    log_error(f"Document {doc['senderReference']} failed: {doc.get('errorMessage')}")
+      
+    # Notify user  
+    notify_user_of_error(  
+        invoice_number=doc["documentInfo"]["documentIdentifier"],  
+        error_message=doc.get("errorMessage")  
+    )
+      
+    # Determine if error is recoverable  
+    if "recipient was not found" in doc.get("errorMessage", "").lower():  
+        # Recipient not in directory - user must add recipient  
+        mark_invoice_as_recipient_not_found(doc["senderReference"])  
+    else:  
+        # Other error - may need to cancel and resubmit  
+        mark_invoice_as_failed(doc["senderReference"])
+  
+def handle_successful_document(self, doc):  
+    """Handle successfully delivered documents"""  
+    log_info(f"Document {doc['senderReference']} delivered successfully")
+      
+    # Download and archive PDF  
+    try:  
+        pdf_content = self.download_presentation(doc["id"])  
+        archive_pdf(doc["senderReference"], pdf_content)  
+    except Exception as e:  
+        log_warning(f"Failed to download PDF: {str(e)}")
+      
+    # Update invoice status in your system  
+    mark_invoice_as_sent(doc["senderReference"])
+      
+    # Notify user  
+    notify_user_of_success(  
+        invoice_number=doc["documentInfo"]["documentIdentifier"]  
+    )
+  
+def download_presentation(self, document_id):  
+    """Download PDF presentation"""  
+    response = requests.get(  
+        f"{self.base_url}/einvoicing/document/v1/documents/{document_id}/presentation",  
+        headers={"Authorization": f"Bearer {self.auth_manager.get_access_token()}"},  
+        timeout=30  
+    )  
+    response.raise_for_status()  
+    return response.content
+  
+def mark_documents_as_fetched(self, document_ids):  
+    """Mark documents as fetched"""  
+    response = requests.post(  
+        f"{self.base_url}/einvoicing/document/v1/documents/fetch",  
+        headers={  
+            "Authorization": f"Bearer {self.auth_manager.get_access_token()}",  
+            "Content-Type": "application/json"  
+        },  
+        json={"documentIds": document_ids},  
+        timeout=30  
+    )  
+    response.raise_for_status()
+ACCOUNTS PAYABLE (AP) - INBOUND INVOICE FLOW
+This section covers receiving invoices FROM suppliers TO your clients.
+7.1 AP Flow Overview
+┌─────────────────┐ ┌──────────────────────┐
+│ Supplier │──────────────────>│ ONESOURCE PLATFORM │
+│ (Sends Invoice)│ │ (Validates & Stores)│
+└─────────────────┘ └──────────┬───────────┘
+│
+│
+┌─────────▼──────────┐
+│ YOUR PLATFORM │
+│ │
+│ 1. Poll for new │
+│ invoices │
+│ │
+│ 2. Download │
+│ target format │
+│ │
+│ 3. Import into │
+│ AP system │
+│ │
+│ 4. Mark as fetched│
+│ │
+│ 5. Send response │
+│ (if required) │
+└────────────────────┘
+7.2 Step-by-Step Implementation
+Step 1: Poll for Received Invoices
+Endpoint:
+GET https://api-uat.onesourcetax.com/einvoicing/document/v1/documents
+Query Parameters:
+companyId={company_id}
+direction=Received
+documentType=Invoice
+createTimeFrom=2025-01-15T08:00:00Z
+createTimeTo=2025-01-15T09:00:00Z
+pageIndex=0
+pageSize=100
+sort=createTime
+Key Differences from AR Polling:
+Parameter AR (Sent) AP (Received)
+direction Sent Received
+Time parameter modifiedTimeFrom createTimeFrom + createTimeTo
+sort modifiedTime createTime
+Why createTimeFrom/To?
+Received documents don't change after initial receipt
+Use time windows to incrementally fetch new invoices
+Next poll: set createTimeFrom = previous createTimeTo
+Response:
+{
+"meta": {
+"currentPageIndex": 0,
+"itemsPerPage": 100,
+"totalItems": 1,
+"totalPages": 1
+},
+"items": [
+{
+"id": "a297a938-2c3d-4051-1193-667b0ffa19ad",
+"sendStatus": "Done",
+"documentType": "Invoice",
+"documentSubtype": "Debit",
+"direction": "Received",
+"createTime": "2025-01-15T08:16:13Z",
+"modifiedTime": "2025-01-15T08:16:13Z",
+"companyId": "89d671a5-a02f-4cd0-b1db-5c516f1791aa",
+"systemName": "API",
+"documentInfo": {
+"documentIdentifier": "SUPP-INV-98765",
+"issueDate": "2025-01-15",
+"dueDate": "2025-02-15",
+"amounts": {
+"netAmount": "500.00",
+"vatAmount": "125.00",
+"totalAmount": "625.00",
+"currency": "EUR"
+},
+"senderParty": {
+"name": "Supplier Company Ltd",
+"ids": [{"idType": "UNDEFINED_VAT", "value": "GB123456789"}]
+},
+"receiverParty": {
+"name": "Your Client Company AB",
+"ids": [{"idType": "UNDEFINED_VAT", "value": "SE556123456701"}]
+}
+}
+}
+]
+}
+Step 2: Download Target Document
+The target document is the format configured for your client to receive (typically UBL, PEPPOL, or another standard format).
+Endpoint:
+GET https://api-uat.onesourcetax.com/einvoicing/document/v1/documents/{id}/target-document
+Headers:
+Authorization: Bearer {access_token}
+Response:
+Content-Type: text/xml (if structured format configured)
+Content-Type: application/pdf (if no structured format configured)
+Example:
+def download_target_document(document_id):
+response = requests.get(
+f"{base_url}/einvoicing/document/v1/documents/{document_id}/target-document",
+headers={"Authorization": f"Bearer {get_access_token()}"},
+timeout=30
+)
+code
+Code
+response.raise_for_status()
+  
+content_type = response.headers.get("Content-Type")
+  
+if "xml" in content_type:  
+    # Parse XML and import into AP system  
+    return parse_xml(response.content)  
+elif "pdf" in content_type:  
+    # No structured format - save PDF for manual processing  
+    return response.content
+Step 3: Parse and Import Invoice
+Parse the target document (typically UBL XML) and import into your AP system.
+Example UBL Parsing:
+def parse_ubl_invoice(xml_content):
+"""Parse UBL invoice XML"""
+root = ET.fromstring(xml_content)
+code
+Code
+# Namespaces  
+ns = {  
+    'cbc': 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2',  
+    'cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',  
+    'ubl': 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'  
+}
+  
+invoice_data = {  
+    'invoice_number': root.find('.//cbc:ID', ns).text,  
+    'invoice_date': root.find('.//cbc:IssueDate', ns).text,  
+    'due_date': root.find('.//cbc:DueDate', ns).text,  
+    'currency': root.find('.//cbc:DocumentCurrencyCode', ns).text,
+      
+    # Supplier  
+    'supplier_name': root.find('.//cac:AccountingSupplierParty//cac:PartyName/cbc:Name', ns).text,  
+    'supplier_vat': root.find('.//cac:AccountingSupplierParty//cac:PartyTaxScheme/cbc:CompanyID', ns).text,
+      
+    # Totals  
+    'net_amount': float(root.find('.//cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount', ns).text),  
+    'vat_amount': float(root.find('.//cac:TaxTotal/cbc:TaxAmount', ns).text),  
+    'total_amount': float(root.find('.//cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount', ns).text),
+      
+    # Line items  
+    'lines': []  
+}
+  
+# Parse line items  
+for line in root.findall('.//cac:InvoiceLine', ns):  
+    invoice_data['lines'].append({  
+        'line_number': line.find('.//cbc:ID', ns).text,  
+        'description': line.find('.//cac:Item/cbc:Name', ns).text,  
+        'quantity': float(line.find('.//cbc:InvoicedQuantity', ns).text),  
+        'unit_price': float(line.find('.//cac:Price/cbc:PriceAmount', ns).text),  
+        'line_total': float(line.find('.//cbc:LineExtensionAmount', ns).text)  
+    })
+  
+return invoice_data
+def import_to_ap_system(invoice_data, document_id):
+"""Import invoice into your AP system"""
+# Create supplier invoice in your system
+ap_invoice_id = create_ap_invoice(
+supplier_name=invoice_data['supplier_name'],
+supplier_vat=invoice_data['supplier_vat'],
+invoice_number=invoice_data['invoice_number'],
+invoice_date=invoice_data['invoice_date'],
+due_date=invoice_data['due_date'],
+currency=invoice_data['currency'],
+net_amount=invoice_data['net_amount'],
+vat_amount=invoice_data['vat_amount'],
+total_amount=invoice_data['total_amount']
+)
+code
+Code
+# Add line items  
+for line in invoice_data['lines']:  
+    create_ap_invoice_line(  
+        invoice_id=ap_invoice_id,  
+        description=line['description'],  
+        quantity=line['quantity'],  
+        unit_price=line['unit_price'],  
+        line_total=line['line_total']  
+    )
+  
+# Store ONESOURCE document ID for reference  
+db.execute("""  
+    INSERT INTO onesource_received_documents   
+    (ap_invoice_id, onesource_document_id, created_at)  
+    VALUES (?, ?, ?)  
+""", (ap_invoice_id, document_id, now()))
+  
+return ap_invoice_id
+Step 4: Mark as Fetched
+After successfully importing, mark the document as fetched.
+def mark_as_fetched(document_ids):
+response = requests.post(
+f"{base_url}/einvoicing/document/v1/documents/fetch",
+headers={
+"Authorization": f"Bearer {get_access_token()}",
+"Content-Type": "application/json"
+},
+json={"documentIds": document_ids},
+timeout=30
+)
+response.raise_for_status()
+7.3 Complete AP Workflow Code
+class ONESOURCEAPIntegration:
+def init(self, base_url, client_id, client_secret):
+self.base_url = base_url
+self.auth_manager = ONESOURCEAuthManager(client_id, client_secret, base_url)
+# Store last poll time per company
+self.last_poll_times = {}
+code
+Code
+def poll_received_invoices(self, company_id):  
+    """Poll for newly received invoices"""  
+    try:  
+        # Get last poll time  
+        last_poll = self.last_poll_times.get(  
+            company_id,  
+            (datetime.now() - timedelta(hours=1)).isoformat() + "Z"  
+        )
+          
+        # Set current time as end of window  
+        current_time = datetime.now().isoformat() + "Z"
+          
+        all_invoices = []  
+        page_index = 0
+          
+        while True:  
+            response = requests.get(  
+                f"{self.base_url}/einvoicing/document/v1/documents",  
+                headers={"Authorization": f"Bearer {self.auth_manager.get_access_token()}"},  
+                params={  
+                    "companyId": company_id,  
+                    "direction": "Received",  
+                    "documentType": "Invoice",  
+                    "createTimeFrom": last_poll,  
+                    "createTimeTo": current_time,  
+                    "pageIndex": page_index,  
+                    "pageSize": 100,  
+                    "sort": "createTime"  
+                },  
+                timeout=30  
+            )
+              
+            response.raise_for_status()  
+            data = response.json()  
+            invoices = data["items"]
+              
+            if not invoices:  
+                break
+              
+            all_invoices.extend(invoices)
+              
+            if page_index + 1 >= data["meta"]["totalPages"]:  
+                break
+              
+            page_index += 1
+          
+        # Update last poll time  
+        self.last_poll_times[company_id] = current_time  
+        save_last_poll_time(company_id, "AP", current_time)
+          
+        log_info(f"Found {len(all_invoices)} new invoices for company {company_id}")  
+        return all_invoices
+          
+    except Exception as e:  
+        log_error(f"Error polling received invoices: {str(e)}")  
+        raise
+  
+def process_received_invoices(self, invoices):  
+    """Process received invoices"""  
+    processed_ids = []
+      
+    for invoice in invoices:  
+        try:  
+            # Download target document  
+            xml_content = self.download_target_document(invoice["id"])
+              
+            # Parse invoice  
+            invoice_data = parse_ubl_invoice(xml_content)
+              
+            # Import to AP system  
+            ap_invoice_id = import_to_ap_system(invoice_data, invoice["id"])
+              
+            log_info(f"Imported invoice {invoice_data['invoice_number']} as AP invoice {ap_invoice_id}")
+              
+            processed_ids.append(invoice["id"])
+              
+        except Exception as e:  
+            log_error(f"Error processing invoice {invoice['id']}: {str(e)}")  
+            # Continue with next invoice
+      
+    # Mark all successfully processed invoices as fetched  
+    if processed_ids:  
+        self.mark_as_fetched(processed_ids)
+      
+    return len(processed_ids)
+  
+def download_target_document(self, document_id):  
+    """Download target document XML"""  
+    response = requests.get(  
+        f"{self.base_url}/einvoicing/document/v1/documents/{document_id}/target-document",  
+        headers={"Authorization": f"Bearer {self.auth_manager.get_access_token()}"},  
+        timeout=30  
+    )  
+    response.raise_for_status()  
+    return response.content
+  
+def download_presentation(self, document_id):  
+    """Download PDF presentation for archival"""  
+    response = requests.get(  
+        f"{self.base_url}/einvoicing/document/v1/documents/{document_id}/presentation",  
+        headers={"Authorization": f"Bearer {self.auth_manager.get_access_token()}"},  
+        timeout=30  
+    )  
+    response.raise_for_status()  
+    return response.content
+  
+def mark_as_fetched(self, document_ids):  
+    """Mark documents as fetched"""  
+    response = requests.post(  
+        f"{self.base_url}/einvoicing/document/v1/documents/fetch",  
+        headers={  
+            "Authorization": f"Bearer {self.auth_manager.get_access_token()}",  
+            "Content-Type": "application/json"  
+        },  
+        json={"documentIds": document_ids},  
+        timeout=30  
+    )  
+    response.raise_for_status()
+ERROR HANDLING & RECOVERY
+8.1 Common Error Scenarios
+Error 1: Recipient Not Found
+Error Message:
+"Recipient of document (Customer Name) did not match any recipient in Pagero public customer registry or in your customer directory. Verify that the recipient is added to your customer directory."
+Cause:
+Recipient doesn't exist in Pagero network
+Recipient not added to sender's customer directory (if using closed directory)
+Identifier mismatch (VAT number, organization number, etc.)
+Resolution:
+If you are using Pagero's closed network, you need to add the recipient to your directory before you can send electronic documents to them. If you are using Pagero's open directory, there is no need to add the recipient to your customer directory, but you need to make sure you use at least one identifier in your documents so the system can find the correct routing to the recipient.
+Action Steps:
+Check if recipient exists in public directory:
+User must log into Pagero Online
+Navigate to Customer Directory → Search
+Search for recipient by name, VAT number, or organization number
+If recipient exists:
+Add to customer directory (if closed directory mode)
+Verify identifiers match (VAT number, GLN, etc.)
+Restart the document
+If recipient doesn't exist:
+Suggest new recipient via Pagero Online
+Wait for ONESOURCE to activate recipient
+Retry sending invoice
+Code Example:
+def handle_recipient_not_found_error(doc):
+"""Handle recipient not found error"""
+log_warning(f"Recipient not found for document {doc['senderReference']}")
+code
+Code
+# Update invoice status  
+db.execute("""  
+    UPDATE invoices   
+    SET status = 'recipient_not_found',  
+        error_message = ?  
+    WHERE invoice_number = ?  
+""", (doc.get("errorMessage"), doc["documentInfo"]["documentIdentifier"]))
+  
+# Notify user with actionable guidance  
+notify_user(  
+    title="Invoice Delivery Failed: Recipient Not Found",  
+    message=f"""  
+    Invoice {doc['documentInfo']['documentIdentifier']} could not be delivered   
+    because the recipient is not registered in the e-invoicing network.
+      
+    Recipient: {doc['documentInfo']['receiverParty']['name']}
+      
+    Action Required:  
+    1. Log into ONESOURCE portal  
+    2. Search for recipient in Customer Directory  
+    3. If found, add to your directory  
+    4. If not found, suggest new recipient  
+    5. Retry sending invoice after recipient is activated
+      
+    Alternatively, send invoice via email or traditional mail.  
+    """,  
+    action_url="/invoices/recipient-not-found"  
+)
+Error 2: Validation Errors
+Error Messages:
+"XML validation failed: Element 'cbc:ID' is required"
+"Invalid VAT number format"
+"Tax amount calculation mismatch"
+Cause:
+Malformed PUF XML
+Missing required fields
+Invalid data values
+Calculation errors
+Resolution:
+Validate PUF XML before submission using Validex tool
+Fix data issues in source system
+Cancel errored document
+Resubmit corrected document
+Code Example:
+def handle_validation_error(doc):
+"""Handle validation errors"""
+log_error(f"Validation error for document {doc['senderReference']}: {doc.get('errorMessage')}")
+code
+Code
+# Cancel the errored document  
+cancel_document(doc["id"], reason="Validation error - will resubmit with corrections")
+  
+# Parse error message to identify issue  
+error_msg = doc.get("errorMessage", "")
+  
+if "VAT number" in error_msg:  
+    issue = "invalid_vat_number"  
+elif "required" in error_msg:  
+    issue = "missing_required_field"  
+elif "calculation" in error_msg:  
+    issue = "calculation_error"  
+else:  
+    issue = "validation_error"
+  
+# Update invoice with specific issue  
+db.execute("""  
+    UPDATE invoices   
+    SET status = 'validation_failed',  
+        validation_issue = ?,  
+        error_message = ?  
+    WHERE invoice_number = ?  
+""", (issue, error_msg, doc["documentInfo"]["documentIdentifier"]))
+  
+# Notify user  
+notify_user_of_validation_error(  
+    invoice_number=doc["documentInfo"]["documentIdentifier"],  
+    error_message=error_msg  
+)
+Error 3: Clearance Rejection (CTC Countries)
+Error Scenario:
+Invoice submitted to tax authority (e.g., Italy SDI, Mexico SAT)
+Tax authority rejects invoice
+clearanceStatus = Rejected
+Cause:
+Tax calculation errors
+Invalid tax codes
+Missing mandatory country-specific fields
+Duplicate invoice number
+Resolution:
+Review clearance error details
+Cancel rejected document
+Correct issues in source system
+Resubmit with new invoice number (if duplicate)
+Code Example:
+def handle_clearance_rejection(doc):
+"""Handle tax authority clearance rejection"""
+log_error(f"Clearance rejected for document {doc['senderReference']}")
+code
+Code
+# Update status  
+db.execute("""  
+    UPDATE onesource_documents   
+    SET clearance_status = 'Rejected',  
+        clearance_error = ?  
+    WHERE document_id = ?  
+""", (doc.get("errorMessage"), doc["id"]))
+  
+# Notify user with country-specific guidance  
+country = doc["documentInfo"]["receiverParty"]["address"]["countryCode"]
+  
+notify_user(  
+    title=f"Invoice Rejected by {country} Tax Authority",  
+    message=f"""  
+    Invoice {doc['documentInfo']['documentIdentifier']} was rejected   
+    by the tax authority in {country}.
+      
+    Rejection Reason: {doc.get('errorMessage')}
+      
+    This invoice cannot be delivered and must be corrected.
+      
+    Action Required:  
+    1. Review rejection reason above  
+    2. Correct the invoice in your system  
+    3. Cancel this invoice in ONESOURCE (if not auto-cancelled)  
+    4. Create a new invoice with corrections  
+    5. Resubmit to ONESOURCE
+      
+    Note: In some countries, you may need to use a different invoice number.  
+    """,  
+    severity="high"  
+)
+8.2 Document Actions API
+When a document has sendStatus = Error, you can take action on it.
+Endpoint:
+POST https://api-uat.onesourcetax.com/einvoicing/document/v1/documents/{id}/action
+Headers:
+Authorization: Bearer {access_token}
+Content-Type: application/json
+Request Body:
+{
+"action": "Cancel",
+"message": "Cancelled due to validation error - will resubmit with corrections"
+}
+Available Actions:
+Action When to Use
+Cancel Unrecoverable error - will not retry this document
+Resume Temporary error resolved - retry processing
+Restart Retry processing from beginning
+RestartWithReplacements Retry with corrected payload (advanced)
+Most Common: Cancel
+In most cases, you'll cancel the errored document and POST a new document with corrections.
+Code Example:
+def cancel_document(document_id, reason):
+"""Cancel an errored document"""
+response = requests.post(
+f"{base_url}/einvoicing/document/v1/documents/{document_id}/action",
+headers={
+"Authorization": f"Bearer {get_access_token()}",
+"Content-Type": "application/json"
+},
+json={
+"action": "Cancel",
+"message": reason
+},
+timeout=30
+)
+code
+Code
+if response.status_code == 200:  
+    log_info(f"Document {document_id} cancelled successfully")
+      
+    # Update local database  
+    db.execute("""  
+        UPDATE onesource_documents   
+        SET send_status = 'Cancelled',  
+            cancelled_at = ?,  
+            cancellation_reason = ?  
+        WHERE document_id = ?  
+    """, (now(), reason, document_id))  
+else:  
+    log_error(f"Failed to cancel document: {response.text}")  
+    raise Exception(f"Cancel failed: {response.text}")
+8.3 Error Handling Best Practices
+Distinguish Error Types:
+User-actionable errors: Recipient not found, validation errors → Notify user
+System errors: Network timeouts, API errors → Retry automatically
+Permanent errors: Clearance rejection → Notify user, don't retry
+Implement Retry Logic:
+def post_document_with_retry(payload, max_retries=3):
+for attempt in range(max_retries):
+try:
+return post_document(payload)
+except requests.Timeout:
+if attempt < max_retries - 1:
+sleep(2 ** attempt) # Exponential backoff
+continue
+raise
+except requests.HTTPError as e:
+if e.response.status_code >= 500: # Server error
+if attempt < max_retries - 1:
+sleep(2 ** attempt)
+continue
+raise # Client error (4xx) - don't retry
+Log Everything:
+Log all API requests/responses
+Log error details for troubleshooting
+Include correlation IDs (senderReference, documentId)
+User Notifications:
+Provide actionable guidance
+Include specific error details
+Offer next steps
+Link to relevant documentation
+9. APPLICATION RESPONSES & BUSINESS ACKNOWLEDGMENTS
+9.1 What are Application Responses?
+Application Responses are structured acknowledgments sent in response to invoices. There are two types:
+Tax Authority Responses (Clearance Notifications)
+Automatic responses from tax authorities in CTC countries
+Examples: Italy SDI response, Mexico SAT response
+Indicate whether invoice was accepted or rejected by tax authority
+Business Level Responses (Invoice Responses)
+Acknowledgments from the invoice recipient (buyer)
+Indicate acceptance, rejection, or query of the invoice
+May be mandatory in some countries/scenarios
+9.2 Receiving Application Responses (AR)
+When you send an invoice, you may receive Application Responses back.
+How to Poll for Application Responses:
+GET /einvoicing/document/v1/documents?
+companyId={company_id}&
+direction=Received&
+documentType=ApplicationResponse&
+createTimeFrom={last_poll_time}&
+createTimeTo={current_time}
+Response Structure:
+{
+"items": [
+{
+"id": "b1234567-89ab-cdef-0123-456789abcdef",
+"documentType": "ApplicationResponse",
+"direction": "Received",
+"createTime": "2025-01-15T10:30:00Z",
+"linkingDocumentId": "52939209-f454-498e-afd0-64b0827c4eb0",
+"documentInfo": {
+"responseCode": "AP",
+"responseDescription": "Invoice accepted",
+"senderParty": {
+"name": "Customer Company AB"
+}
+}
+}
+]
+}
+Key Field: linkingDocumentId
+This links the Application Response to the original invoice documentId.
+Processing Application Responses:
+def process_application_response(response_doc):
+"""Process an application response"""
+# Get linked invoice
+linked_invoice_id = response_doc.get("linkingDocumentId")
+code
+Code
+if not linked_invoice_id:  
+    log_warning("Application Response has no linkingDocumentId")  
+    return
+  
+# Find original invoice in database  
+invoice = db.execute("""  
+    SELECT * FROM onesource_documents   
+    WHERE document_id = ?  
+""", (linked_invoice_id,)).fetchone()
+  
+if not invoice:  
+    log_warning(f"No invoice found for linkingDocumentId {linked_invoice_id}")  
+    return
+  
+# Download response content  
+response_xml = download_target_document(response_doc["id"])
+  
+# Parse response  
+response_data = parse_application_response(response_xml)
+  
+# Update invoice status  
+if response_data["response_code"] == "AP":  # Accepted  
+    db.execute("""  
+        UPDATE onesource_documents   
+        SET business_status = 'Accepted',  
+            business_response_received_at = ?  
+        WHERE document_id = ?  
+    """, (now(), linked_invoice_id))
+      
+    notify_user_invoice_accepted(invoice["internal_invoice_id"])
+      
+elif response_data["response_code"] == "RE":  # Rejected  
+    db.execute("""  
+        UPDATE onesource_documents   
+        SET business_status = 'Rejected',  
+            business_response_received_at = ?,  
+            business_rejection_reason = ?  
+        WHERE document_id = ?  
+    """, (now(), response_data.get("description"), linked_invoice_id))
+      
+    notify_user_invoice_rejected(  
+        invoice["internal_invoice_id"],  
+        reason=response_data.get("description")  
+    )
+Response Codes (PUF-018-APPLICATIONRESPONSECODE):
+Code Meaning
+AP Accepted
+RE Rejected
+AB Conditionally accepted
+UQ Under query
+CA Conditionally accepted (with changes)
+9.3 Sending Application Responses (AP)
+In some scenarios, your client (as invoice recipient) must send an Application Response back to the supplier.
+When Required:
+Peppol networks (optional but recommended)
+Some CTC countries (mandatory)
+Business agreements requiring acknowledgment
+PUF Application Response Format:
+<?xml version="1.0" encoding="UTF-8"?>
+<ApplicationResponse xmlns="urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2"
+xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+code
+Code
+<cbc:CustomizationID>urn:fdc:peppol.eu:poacc:trns:invoice_response:3</cbc:CustomizationID>  
+<cbc:ProfileID>urn:fdc:peppol.eu:poacc:bis:invoice_response:3</cbc:ProfileID>  
+<cbc:ID>IMR-2025-001</cbc:ID>  
+<cbc:IssueDate>2025-01-15</cbc:IssueDate>  
+<cbc:IssueTime>10:30:00</cbc:IssueTime>
+  
+<!-- Sender (Your client - the buyer) -->  
+<cac:SenderParty>  
+    <cbc:EndpointID schemeID="0088">7315458756328</cbc:EndpointID>  
+    <cac:PartyIdentification>  
+        <cbc:ID schemeID="0184">SE556987654301</cbc:ID>  
+    </cac:PartyIdentification>  
+    <cac:PartyLegalEntity>  
+        <cbc:RegistrationName>Your Client Company AB</cbc:RegistrationName>  
+    </cac:PartyLegalEntity>  
+</cac:SenderParty>
+  
+<!-- Receiver (The supplier) -->  
+<cac:ReceiverParty>  
+    <cbc:EndpointID schemeID="0088">7300010000001</cbc:EndpointID>  
+    <cac:PartyIdentification>  
+        <cbc:ID schemeID="0184">SE556123456701</cbc:ID>  
+    </cac:PartyIdentification>  
+</cac:ReceiverParty>
+  
+<!-- Document Response (links to original invoice) -->  
+<cac:DocumentResponse>  
+    <cac:Response>  
+        <cbc:ResponseCode>AP</cbc:ResponseCode>  
+        <cbc:Description>Invoice accepted for payment</cbc:Description>  
+    </cac:Response>  
+    <cac:DocumentReference>  
+        <cbc:ID>INV-2025-001234</cbc:ID>  
+        <cbc:IssueDate>2025-01-15</cbc:IssueDate>  
+    </cac:DocumentReference>  
+</cac:DocumentResponse>
+</ApplicationResponse>
+Sending Application Response:
+def send_application_response(received_invoice_doc, response_code, description):
+"""Send application response for a received invoice"""
+# Build PUF Application Response XML
+response_xml = build_application_response(
+response_id=f"IMR-{current_timestamp()}",
+issue_date=date.today().isoformat(),
+sender_party=received_invoice_doc["documentInfo"]["receiverParty"],
+receiver_party=received_invoice_doc["documentInfo"]["senderParty"],
+response_code=response_code, # "AP" = Accepted, "RE" = Rejected
+description=description,
+original_invoice_id=received_invoice_doc["documentInfo"]["documentIdentifier"],
+original_invoice_date=received_invoice_doc["documentInfo"]["issueDate"]
+)
+code
+Code
+# POST as new document  
+response = requests.post(  
+    f"{base_url}/einvoicing/document/v1/documents",  
+    headers={  
+        "Authorization": f"Bearer {get_access_token()}",  
+        "Content-Type": "application/json"  
+    },  
+    json={  
+        "payload": response_xml,  
+        "documentType": "ApplicationResponse",  
+        "senderReference": f"APPRESP-{received_invoice_doc['id']}-{int(time.time())}",  
+        "sendingCompanyId": get_company_id(received_invoice_doc["companyId"]),  
+        "systemType": "Other",  
+        "systemName": "YourPlatform",  
+        "linkingDocumentId": received_invoice_doc["id"]  # Link to received invoice  
+    },  
+    timeout=30  
+)
+  
+response.raise_for_status()  
+return response.json()["id"]
+When to Send Application Responses:
+def handle_invoice_approval(ap_invoice_id):
+"""User approved invoice for payment - send acceptance response"""
+# Get ONESOURCE document ID
+doc = db.execute("""
+SELECT onesource_document_id
+FROM onesource_received_documents
+WHERE ap_invoice_id = ?
+""", (ap_invoice_id,)).fetchone()
+code
+Code
+if not doc:  
+    return  # No ONESOURCE document (maybe manual invoice)
+  
+# Get full document details  
+received_invoice = get_document_details(doc["onesource_document_id"])
+  
+# Send acceptance response  
+send_application_response(  
+    received_invoice_doc=received_invoice,  
+    response_code="AP",  
+    description="Invoice accepted for payment"  
+)
+  
+log_info(f"Sent acceptance response for AP invoice {ap_invoice_id}")
+def handle_invoice_rejection(ap_invoice_id, rejection_reason):
+"""User rejected invoice - send rejection response"""
+doc = db.execute("""
+SELECT onesource_document_id
+FROM onesource_received_documents
+WHERE ap_invoice_id = ?
+""", (ap_invoice_id,)).fetchone()
+code
+Code
+if not doc:  
+    return
+  
+received_invoice = get_document_details(doc["onesource_document_id"])
+  
+# Send rejection response  
+send_application_response(  
+    received_invoice_doc=received_invoice,  
+    response_code="RE",  
+    description=rejection_reason  
+)
+  
+log_info(f"Sent rejection response for AP invoice {ap_invoice_id}")
+TESTING & CERTIFICATION
+10.1 Testing Environments
+ONESOURCE does not have separate sandbox/staging/production environments. Instead, it uses Send Modes to control document behavior.
+Send Modes:
+Mode Parameter Value Behavior
+Certification sendMode=certification Document never leaves ONESOURCE platform. Tests validation and transformation only. No delivery to recipient or tax authority.
+Test sendMode=test Document is tagged as "Test" and sent through full flow. Recipient must be able to handle test documents.
+Production sendMode=production (or omit) Real production document. Delivered to recipient and tax authorities.
+Setting Send Mode:
+When POSTing a document, include sendMode parameter:
+{
+"payload": "...",
+"documentType": "Invoice",
+"senderReference": "...",
+"sendingCompanyId": "...",
+"sendMode": "certification" // or "test" or "production"
+}
+10.2 Test Account Structure
+ONESOURCE will provide you with test accounts:
+Supplier Account (for testing AR flow):
+companyId: e.g., test-supplier-12345
+Use this to send test invoices
+Buyer Account (for testing AP flow):
+companyId: e.g., test-buyer-67890
+Use this to receive test invoices
+Connecting Test Accounts:
+Your test supplier account should have the test buyer account in its customer directory, and vice versa.
+10.3 Testing Checklist
+Phase 1: Authentication & Setup
+Obtain partner credentials (client_id, client_secret)
+Implement OAuth 2.0 client credentials flow
+Implement OAuth 2.0 authorization code flow
+Successfully authenticate test user
+Retrieve list of companies (GET /companies)
+Map test company IDs to your internal system
+Phase 2: AR (Outbound) Testing
+Generate valid PUF XML invoice
+Validate PUF XML using Validex tool
+POST invoice in Certification mode
+Verify validation passes
+Check for any transformation errors
+POST invoice in Test mode to test buyer
+Poll for status updates
+Verify sendStatus = "Done"
+Download source document
+Download target document
+Download presentation (PDF)
+Mark as fetched
+Test credit note
+Test error scenarios:
+Invalid XML (missing required field)
+Recipient not found
+Invalid VAT number
+Test document cancellation
+Test high volume (send 100+ invoices)
+Phase 3: AP (Inbound) Testing
+Have test supplier send invoice to your test buyer
+Poll for received invoices
+Download target document
+Parse target document XML
+Import into your AP system
+Download presentation PDF
+Mark as fetched
+Send Application Response (acceptance)
+Send Application Response (rejection)
+Phase 4: Application Responses
+Send invoice from test supplier
+Poll for Application Response
+Link Application Response to original invoice
+Parse response content
+Update invoice status based on response
+Phase 5: CTC Testing (if applicable)
+Send invoice to CTC country (e.g., Italy, Mexico)
+Monitor clearanceStatus
+Handle clearance approval
+Handle clearance rejection
+Test clearance notification responses
+Phase 6: Error Handling
+Test network timeout handling
+Test API error responses (401, 403, 500)
+Test token refresh
+Test retry logic
+Test error notification to users
+Phase 7: Performance & Scale
+Test concurrent document submissions
+Test polling with large result sets (1000+ documents)
+Test pagination handling
+Measure API response times
+Test under load (your expected volume × 2)
+Phase 8: Integration Testing
+End-to-end test: Create invoice in your system → Send to ONESOURCE → Deliver to recipient → Receive response → Update status
+Test multi-company scenarios
+Test multi-user scenarios
+Test user re-authorization flow
+Test company mapping (automatic and manual)
+10.4 Test Scenarios
+Scenario 1: Happy Path AR
+Create invoice in your system
+Generate PUF XML
+POST to ONESOURCE (test mode)
+Poll for status every 30 seconds
+Verify sendStatus = "Done" within 2 minutes
+Download PDF
+Mark as fetched
+Verify invoice shows as "Sent" in your system
+Expected Result: Invoice delivered successfully, PDF archived
+Scenario 2: Recipient Not Found
+Create invoice with non-existent recipient
+POST to ONESOURCE
+Poll for status
+Verify sendStatus = "Error"
+Verify error message contains "recipient was not found"
+Notify user with actionable guidance
+Cancel document
+Expected Result: Error handled gracefully, user notified
+Scenario 3: AP Import
+Have test supplier send invoice
+Poll for received invoices
+Find new invoice
+Download target document
+Parse XML
+Import to AP system
+Verify all fields mapped correctly
+Mark as fetched
+Expected Result: Invoice imported with correct data
+Scenario 4: High Volume
+Generate 100 invoices
+Submit all to ONESOURCE (use threading/async)
+Poll for status updates
+Verify all 100 reach "Done" status
+Download all PDFs
+Mark all as fetched
+Expected Result: All invoices processed successfully within reasonable time
+10.5 Certification Requirements
+Before going to production, you should be able to demonstrate:
+Successful AR flow for at least 3 different invoice scenarios
+Successful AP flow for at least 3 different invoice scenarios
+Proper error handling for all common error types
+Application Response handling (send and receive)
+Multi-company support (if applicable to your platform)
+Performance meeting your SLAs (e.g., invoice sent within 5 minutes of creation)
+Certification Checklist:
+All test scenarios passed
+Error handling verified
+Performance benchmarks met
+User notifications implemented
+Documentation reviewed
+Security review completed
+Data privacy compliance verified
+11. PRODUCTION DEPLOYMENT
+11.1 Pre-Production Checklist
+Infrastructure
+Production credentials received from ONESOURCE
+Production redirect URIs registered
+Database tables created for document mappings
+Secure token storage implemented (encrypted)
+API endpoints configured for PROD base URL
+Monitoring and alerting configured
+Logging infrastructure ready
+Backup and disaster recovery plan in place
+Security
+Credentials stored in secure vault (not in code)
+HTTPS enforced for all API calls
+OAuth state parameter validated (CSRF protection)
+Tokens encrypted at rest
+API timeouts configured
+Rate limiting implemented
+Input validation on all user data
+SQL injection prevention verified
+Functionality
+All test scenarios passed in UAT
+Error handling tested and verified
+User notifications implemented
+Multi-company support tested
+Token refresh logic tested
+Polling intervals optimized
+Document archival implemented
+Retry logic implemented
+Operational
+Runbooks created for common issues
+Support team trained
+User documentation created
+Admin documentation created
+Monitoring dashboards created
+Alert thresholds configured
+On-call rotation established
+Escalation procedures documented
+11.2 Pilot Phase
+Recommendation: Start with 1-3 pilot customers before full rollout.
+Pilot Selection Criteria:
+Willing to provide feedback
+Moderate invoice volume (not highest volume)
+Operates in countries you've tested
+Has technical contact available
+Understands this is pilot phase
+Pilot Process:
+Onboarding (Week 1)
+ONESOURCE creates production account(s)
+Receive companyId values
+Map companies in your system
+User authenticates and authorizes
+Verify company mapping
+Initial Testing (Week 1-2)
+Send 5-10 test invoices (certification mode)
+Verify all process correctly
+Send 5-10 real invoices (production mode)
+Monitor closely for errors
+Gather user feedback
+Ramp Up (Week 2-4)
+Increase to normal invoice volume
+Monitor performance and errors
+Refine error handling based on real scenarios
+Optimize polling intervals
+Document lessons learned
+Pilot Review (Week 4)
+Review metrics:
+Success rate (target: >95%)
+Average delivery time
+Error rate by type
+User satisfaction
+Identify improvements
+Decide on full rollout
+11.3 Production Rollout
+Phased Rollout Approach:
+Phase 1: Early Adopters (10% of customers)
+Customers who opt-in for early access
+Monitor closely for issues
+Duration: 2-4 weeks
+Phase 2: Expanded Rollout (50% of customers)
+Gradually enable for more customers
+Continue monitoring
+Duration: 4-8 weeks
+Phase 3: General Availability (100% of customers)
+Enable for all customers
+Maintain monitoring
+Ongoing optimization
+Rollout Checklist per Customer:
+ONESOURCE account(s) created
+companyId values received and mapped
+User authenticated and authorized
+Company mapping verified
+Test invoice sent successfully
+Customer trained on new functionality
+Customer support aware of activation
+11.4 Production Monitoring
+Key Metrics to Track:
+Metric Target Alert Threshold
+Invoice Success Rate >95% <90%
+Average Delivery Time <5 minutes >15 minutes
+API Error Rate <1% >5%
+Authentication Failures <0.1% >1%
+Polling Lag <5 minutes >15 minutes
+Document Fetch Rate >99% <95%
+Monitoring Dashboards:
+Real-Time Dashboard:
+Invoices sent (last hour)
+Current error rate
+API response times
+Active errors requiring attention
+Daily Dashboard:
+Total invoices sent/received
+Success rate by country
+Error breakdown by type
+Top errors
+Average processing time
+Customer Dashboard:
+Per-customer metrics
+Customers with errors
+Customers with low success rate
+Customers needing attention
+Alerting:
+Example alert conditions
+def check_alerts():
+# Alert 1: High error rate
+error_rate = get_error_rate(last_hour=True)
+if error_rate > 0.05: # 5%
+send_alert(
+severity="high",
+title="High Invoice Error Rate",
+message=f"Error rate is {error_rate*100:.1f}% in the last hour"
+)
+code
+Code
+# Alert 2: API failures  
+api_error_count = get_api_error_count(last_15_minutes=True)  
+if api_error_count > 10:  
+    send_alert(  
+        severity="critical",  
+        title="ONESOURCE API Failures",  
+        message=f"{api_error_count} API errors in last 15 minutes"  
+    )
+  
+# Alert 3: Polling lag  
+last_poll_time = get_last_successful_poll_time()  
+if (datetime.now() - last_poll_time).total_seconds() > 900:  # 15 minutes  
+    send_alert(  
+        severity="high",  
+        title="Polling Lag Detected",  
+        message=f"Last successful poll was {last_poll_time}"  
+    )
+  
+# Alert 4: Authentication issues  
+auth_failure_rate = get_auth_failure_rate(last_hour=True)  
+if auth_failure_rate > 0.01:  # 1%  
+    send_alert(  
+        severity="medium",  
+        title="Authentication Failures",  
+        message=f"Auth failure rate is {auth_failure_rate*100:.1f}%"  
+    )
+MONITORING & OPERATIONS
+12.1 Operational Best Practices
+Logging Strategy
+What to Log:
+All API requests (method, URL, status code, duration)
+All API responses (success and error)
+Authentication events (token requests, refreshes, failures)
+Document submissions (senderReference, documentId, status)
+Status updates (status changes, error messages)
+User actions (authorization, company mapping)
+System errors and exceptions
+Log Levels:
+DEBUG: Detailed technical information (dev/test only)
+INFO: Normal operations (invoice sent, status updated)
+WARNING: Unexpected but handled (token refresh failed, will retry)
+ERROR: Error requiring attention (API failure, validation error)
+CRITICAL: System failure (database down, can't connect to ONESOURCE)
+Log Format:
+{
+"timestamp": "2025-01-15T10:30:45.123Z",
+"level": "INFO",
+"component": "ONESOURCEIntegration",
+"action": "post_document",
+"sender_reference": "INV-2025-001234-...",
+"document_id": "97963ff9-4d74-4c2d-ad17-d7d5abccb606",
+"company_id": "89d671a5-a02f-4cd0-b1db-5c516f1791aa",
+"status": "success",
+"duration_ms": 1234,
+"message": "Invoice posted successfully"
+}
+Never Log:
+Access tokens (mask or omit)
+Client secrets
+User passwords
+Full document payloads (PII concerns)
+Health Checks
+Implement health check endpoint for monitoring:
+@app.route('/health/onesource')
+def onesource_health_check():
+"""Health check for ONESOURCE integration"""
+health = {
+"status": "healthy",
+"checks": {}
+}
+code
+Code
+# Check 1: Can authenticate  
+try:  
+    token = auth_manager.get_access_token()  
+    health["checks"]["authentication"] = "pass"  
+except Exception as e:  
+    health["status"] = "unhealthy"  
+    health["checks"]["authentication"] = f"fail: {str(e)}"
+  
+# Check 2: Can call API  
+try:  
+    response = requests.get(  
+        f"{base_url}/einvoicing/company/v1/companies",  
+        headers={"Authorization": f"Bearer {token}"},  
+        timeout=5  
+    )  
+    if response.status_code == 200:  
+        health["checks"]["api_connectivity"] = "pass"  
+    else:  
+        health["status"] = "degraded"  
+        health["checks"]["api_connectivity"] = f"degraded: HTTP {response.status_code}"  
+except Exception as e:  
+    health["status"] = "unhealthy"  
+    health["checks"]["api_connectivity"] = f"fail: {str(e)}"
+  
+# Check 3: Recent polling success  
+last_poll = get_last_successful_poll_time()  
+if (datetime.now() - last_poll).total_seconds() < 600:  # 10 minutes  
+    health["checks"]["polling"] = "pass"  
+else:  
+    health["status"] = "degraded"  
+    health["checks"]["polling"] = f"degraded: last poll {last_poll}"
+  
+# Check 4: Error rate  
+error_rate = get_error_rate(last_hour=True)  
+if error_rate < 0.05:  
+    health["checks"]["error_rate"] = "pass"  
+elif error_rate < 0.10:  
+    health["status"] = "degraded"  
+    health["checks"]["error_rate"] = f"degraded: {error_rate*100:.1f}%"  
+else:  
+    health["status"] = "unhealthy"  
+    health["checks"]["error_rate"] = f"fail: {error_rate*100:.1f}%"
+  
+status_code = 200 if health["status"] == "healthy" else 503  
+return jsonify(health), status_code
+12.2 Common Operational Issues
+Issue 1: Polling Lag
+Symptoms:
+Status updates delayed
+Users not seeing invoice delivery confirmations
+Application responses not received
+Causes:
+Polling job not running
+Polling job crashed
+Database lock preventing updates
+High API latency
+Resolution:
+Check polling job status
+Review polling job logs
+Verify database connectivity
+Check ONESOURCE API status page
+Restart polling job if necessary
+Prevention:
+Monitor polling job health
+Alert on polling lag >15 minutes
+Implement automatic restart on crash
+Use distributed locks to prevent duplicate polling
+Issue 2: High Error Rate
+Symptoms:
+Many invoices failing
+Multiple customers affected
+Specific error pattern
+Causes:
+ONESOURCE API issue
+Change in validation rules
+Bug in PUF generation
+Network connectivity issue
+Resolution:
+Check ONESOURCE status page: https://status.thomsonreuters.com
+Review error messages for patterns
+Check if specific to one customer/country
+Review recent code changes
+Contact ONESOURCE support if widespread
+Prevention:
+Monitor error rate continuously
+Alert on error rate >5%
+Validate PUF XML before submission
+Test thoroughly after code changes
+Issue 3: Authentication Failures
+Symptoms:
+API calls returning 401 Unauthorized
+Users unable to authorize
+Token refresh failing
+Causes:
+Expired refresh token
+Credentials revoked
+User access revoked
+Network issue
+Resolution:
+Check if credentials are still valid
+Verify redirect URIs haven't changed
+Test authentication in UAT
+Check if user still has access to companies
+Re-authorize user if necessary
+Prevention:
+Monitor authentication success rate
+Alert on auth failures >1%
+Implement graceful token refresh
+Prompt users to re-authorize when needed
+12.3 Support Runbooks
+Runbook: Invoice Stuck in Processing
+User Report: "My invoice has been 'sending' for 30 minutes"
+Steps:
+Get invoice number from user
+Look up senderReference in database
+Query ONESOURCE API for document status:
+GET /documents?senderReference={sender_ref}
+Check sendStatus:
+Processing: Normal if <5 minutes, escalate if >15 minutes
+Error: Review error message, guide user on resolution
+Done: Update local database, inform user
+Not found: Check if POST succeeded, may need to resend
+Resolution:
+If still processing after 15 minutes: Contact ONESOURCE support
+If error: Follow error-specific runbook
+If done: Update local status, apologize for delay
+Runbook: Recipient Not Found Error
+User Report: "Invoice failed - recipient not found"
+Steps:
+Confirm error message contains "recipient was not found"
+Ask user if this is a new customer or existing
+Guide user to check customer directory:
+Log into ONESOURCE portal
+Navigate to Customer Directory → Search
+Search for recipient by name or VAT number
+If recipient exists:
+Check if identifiers in invoice match directory
+Add recipient to customer directory (if closed directory)
+Cancel failed invoice
+Resubmit with correct identifiers
+If recipient doesn't exist:
+Suggest new recipient in ONESOURCE portal
+Wait for activation (usually 1-2 business days)
+Retry after activation
+Prevention:
+Implement recipient lookup before sending
+Validate VAT numbers before submission
+Maintain synced customer directory
+13. PERFORMANCE OPTIMIZATION
+13.1 API Call Optimization
+Token Caching
+Don't request a new token for every API call:
+class TokenCache:
+def init(self):
+self._token = None
+self._expiry = None
+self._lock = threading.Lock()
+code
+Code
+def get_token(self, auth_manager):  
+    with self._lock:  
+        if self._token and self._expiry > time.time() + 60:  
+            return self._token
+          
+        # Request new token  
+        self._token = auth_manager.request_new_token()  
+        self._expiry = time.time() + 1799  # 30 minutes  
+        return self._token
+Impact: Reduces authentication API calls by ~99%
+Batch Processing
+Instead of processing documents one-by-one, batch them:
+def process_outbound_invoices_batch():
+"""Process pending invoices in batch"""
+pending_invoices = get_pending_invoices(limit=100)
+code
+Code
+# Submit all invoices  
+submitted = []  
+for invoice in pending_invoices:  
+    try:  
+        doc_id = send_invoice(invoice)  
+        submitted.append((invoice.id, doc_id))  
+    except Exception as e:  
+        log_error(f"Failed to send invoice {invoice.id}: {str(e)}")
+  
+# Single poll for all submitted invoices  
+if submitted:  
+    time.sleep(30)  # Wait for processing  
+    poll_and_update_statuses()
+Impact: More efficient than processing one invoice, waiting, polling, repeat
+Pagination Optimization
+Use appropriate page sizes:
+Good: Use maximum page size to minimize requests
+response = get_documents(
+company_id=company_id,
+page_size=1000 # Maximum allowed
+)
+Bad: Small page size = many requests
+response = get_documents(
+company_id=company_id,
+page_size=10 # Too small!
+)
+Impact: Reduces API calls for large result sets
+Parallel Processing
+For high-volume scenarios, process companies in parallel:
+from concurrent.futures import ThreadPoolExecutor
+def poll_all_companies():
+"""Poll all companies in parallel"""
+companies = get_all_companies()
+code
+Code
+with ThreadPoolExecutor(max_workers=5) as executor:  
+    futures = [  
+        executor.submit(poll_company, company_id)  
+        for company_id in companies  
+    ]
+      
+    for future in futures:  
+        try:  
+            future.result()  
+        except Exception as e:  
+            log_error(f"Polling failed: {str(e)}")
+Impact: Reduces total polling time for multi-company scenarios
+Caution: Respect rate limits (if any)
+13.2 Database Optimization
+Indexes
+Create indexes on frequently queried columns:
+-- Index on sender_reference for lookups
+CREATE INDEX idx_sender_reference ON onesource_documents(sender_reference);
+-- Index on document_id for status updates
+CREATE INDEX idx_document_id ON onesource_documents(document_id);
+-- Index on modified_time for polling queries
+CREATE INDEX idx_modified_time ON onesource_documents(modified_time);
+-- Index on company_id for filtering
+CREATE INDEX idx_company_id ON onesource_documents(company_id);
+-- Composite index for common query pattern
+CREATE INDEX idx_company_status ON onesource_documents(company_id, send_status);
+Archival Strategy
+Don't keep all documents in active table forever:
+def archive_old_documents():
+"""Archive documents older than 90 days"""
+cutoff_date = datetime.now() - timedelta(days=90)
+code
+Code
+# Move to archive table  
+db.execute("""  
+    INSERT INTO onesource_documents_archive  
+    SELECT * FROM onesource_documents  
+    WHERE created_at < ?  
+""", (cutoff_date,))
+  
+# Delete from active table  
+db.execute("""  
+    DELETE FROM onesource_documents  
+    WHERE created_at < ?  
+""", (cutoff_date,))
+  
+log_info(f"Archived documents older than {cutoff_date}")
+Impact: Keeps active table small, improves query performance
+13.3 Polling Optimization
+Adaptive Polling Intervals
+Adjust polling frequency based on activity:
+class AdaptivePoller:
+def init(self):
+self.base_interval = 300 # 5 minutes
+self.min_interval = 60 # 1 minute
+self.max_interval = 900 # 15 minutes
+code
+Code
+def get_next_interval(self, documents_found):  
+    """Calculate next polling interval based on activity"""  
+    if documents_found > 10:  
+        # High activity - poll more frequently  
+        return self.min_interval  
+    elif documents_found > 0:  
+        # Some activity - use base interval  
+        return self.base_interval  
+    else:  
+        # No activity - back off  
+        return self.max_interval
+  
+def poll_loop(self):  
+    """Adaptive polling loop"""  
+    interval = self.base_interval
+      
+    while True:  
+        documents = poll_documents()  
+        process_documents(documents)
+          
+        # Adjust interval based on activity  
+        interval = self.get_next_interval(len(documents))
+          
+        log_debug(f"Next poll in {interval} seconds")  
+        time.sleep(interval)
+Impact: Reduces unnecessary API calls during quiet periods, increases responsiveness during busy periods
+Incremental Polling
+Always use modifiedTimeFrom (AR) or createTimeFrom (AP):
+Good: Incremental polling
+last_poll_time = get_last_poll_time(company_id)
+documents = get_documents(
+company_id=company_id,
+modified_time_from=last_poll_time
+)
+update_last_poll_time(company_id, max(doc["modifiedTime"] for doc in documents))
+Bad: Full scan every time
+documents = get_documents(company_id=company_id) # Returns ALL documents!
+Impact: Dramatically reduces data transfer and processing time
+13.4 Caching Strategies
+Company Mapping Cache
+Cache company mappings to avoid repeated lookups:
+class CompanyMappingCache:
+def init(self, ttl=3600): # 1 hour TTL
+self._cache = {}
+self._ttl = ttl
+code
+Code
+def get_company_id(self, internal_company_id):  
+    """Get ONESOURCE company ID from cache or database"""  
+    if internal_company_id in self._cache:  
+        cached_value, cached_time = self._cache[internal_company_id]  
+        if time.time() - cached_time < self._ttl:  
+            return cached_value
+      
+    # Cache miss - query database  
+    company_id = db.query_company_mapping(internal_company_id)  
+    self._cache[internal_company_id] = (company_id, time.time())  
+    return company_id
+Document Status Cache
+For user-facing queries, cache recent status:
+@cache(ttl=60) # Cache for 1 minute
+def get_invoice_status(invoice_id):
+"""Get invoice status (cached)"""
+return db.query("""
+SELECT send_status, modified_time, error_message
+FROM onesource_documents
+WHERE internal_invoice_id = ?
+""", (invoice_id,))
+Impact: Reduces database load for frequently accessed status information
+TROUBLESHOOTING GUIDE
+14.1 Authentication Issues
+Problem: 401 Unauthorized on API calls
+Possible Causes:
+Access token expired
+Invalid access token
+Credentials revoked
+Diagnostic Steps:
+Test authentication
+try:
+token = auth_manager.get_access_token()
+print(f"Token obtained: {token[:20]}...")
+code
+Code
+# Test API call  
+response = requests.get(  
+    f"{base_url}/einvoicing/company/v1/companies",  
+    headers={"Authorization": f"Bearer {token}"}  
+)  
+print(f"API call status: {response.status_code}")  
+print(f"Response: {response.text[:200]}")
+except Exception as e:
+print(f"Error: {str(e)}")
+Solutions:
+Refresh access token
+Re-authenticate user (authorization code flow)
+Verify credentials haven't been revoked
+Contact ONESOURCE support if credentials are invalid
+Problem: User authorization fails
+Possible Causes:
+Redirect URI not registered
+Invalid client_id
+User doesn't have ONESOURCE account
+Network connectivity issue
+Diagnostic Steps:
+Check redirect URI matches registered URI exactly
+Verify client_id is correct
+Test authorization URL in browser manually
+Check browser console for errors
+Solutions:
+Register correct redirect URI with ONESOURCE
+Verify client credentials
+Ensure user has active ONESOURCE account
+Check network connectivity
+14.2 Document Submission Issues
+Problem: POST /documents returns 400 Bad Request
+Possible Causes:
+Invalid PUF XML
+Missing required fields
+Invalid parameter values
+Diagnostic Steps:
+Validate PUF XML before submission
+def validate_puf_xml(xml_string):
+"""Validate PUF XML structure"""
+try:
+root = ET.fromstring(xml_string)
+code
+Code
+# Check namespace  
+    if "PageroUniversalFormat" not in root.tag:  
+        return False, "Invalid namespace - not PUF format"
+      
+    # Check required elements  
+    required = ["CustomizationID", "ProfileID", "ID", "IssueDate"]  
+    for elem in required:  
+        if root.find(f".//{{{root.nsmap[None]}}}{elem}") is None:  
+            return False, f"Missing required element: {elem}"
+      
+    return True, "Valid"  
+except ET.XMLSyntaxError as e:  
+    return False, f"XML syntax error: {str(e)}"
+Solutions:
+Validate XML using Validex tool: https://pagero.validex.net/
+Review API error message for specific issue
+Check PUF specification: https://pagero.github.io/puf-billing/
+Verify all required fields are present
+Problem: Documents stuck in "Processing" status
+Possible Causes:
+ONESOURCE platform delay (normal if <5 minutes)
+Recipient lookup taking time
+CTC clearance delay
+Platform issue
+Diagnostic Steps:
+Check how long document has been processing
+Check ONESOURCE status page for incidents
+Review document details for any warnings
+Solutions:
+Wait up to 15 minutes for normal processing
+If >15 minutes, contact ONESOURCE support with documentId
+Check status page: https://status.thomsonreuters.com
+14.3 Polling Issues
+Problem: Not receiving status updates
+Possible Causes:
+Polling not running
+Incorrect query parameters
+Documents already marked as fetched
+Time window issue
+Diagnostic Steps:
+Debug polling query
+def debug_polling(company_id):
+"""Debug polling query"""
+last_poll = get_last_poll_time(company_id)
+print(f"Last poll time: {last_poll}")
+code
+Code
+response = requests.get(  
+    f"{base_url}/einvoicing/document/v1/documents",  
+    headers={"Authorization": f"Bearer {get_access_token()}"},  
+    params={  
+        "companyId": company_id,  
+        "direction": "Sent",  
+        "modifiedTimeFrom": last_poll,  
+        "pageSize": 10  
+    }  
+)
+  
+print(f"Status: {response.status_code}")  
+print(f"Results: {len(response.json().get('items', []))}")  
+print(f"Response: {json.dumps(response.json(), indent=2)}")
+Solutions:
+Verify polling job is running
+Check modifiedTimeFrom is not in the future
+Try removing showFetchedOnly=false parameter
+Verify company_id is correct
+Problem: Missing documents in polling results
+Possible Causes:
+Documents created before modifiedTimeFrom
+Documents already marked as fetched
+Wrong company_id filter
+Pagination issue
+Solutions:
+Expand time window (set earlier modifiedTimeFrom)
+Check if documents are marked as fetched
+Remove company_id filter to see all companies
+Iterate through all pages
+14.4 Error Recovery
+Problem: How to recover from recipient not found error
+Steps:
+Identify the problematic document
+Check recipient details in error message
+Guide user to add recipient:
+Log into ONESOURCE portal
+Navigate to Customer Directory
+Search for recipient
+Add if found, or suggest new recipient if not found
+Cancel errored document
+Wait for recipient activation (if newly suggested)
+Resubmit invoice
+Problem: How to recover from validation error
+Steps:
+Review error message for specific validation issue
+Identify root cause in source data
+Cancel errored document
+Fix data in your system
+Regenerate PUF XML
+Validate using Validex tool
+Resubmit corrected invoice
+Problem: How to recover from clearance rejection
+Steps:
+Review clearance error details
+Identify country-specific issue
+Cancel rejected document (may be auto-cancelled)
+Correct invoice data per country requirements
+Create new invoice (may need new invoice number)
+Resubmit
+Note: Clearance rejections are serious - invoice was rejected by tax authority. User must correct and resubmit properly.
+SECURITY BEST PRACTICES
+15.1 Credential Management
+Secure Storage
+Never:
+Hard-code credentials in source code
+Store credentials in version control
+Log credentials
+Expose credentials in URLs or error messages
+Always:
+Use secure vault (e.g., AWS Secrets Manager, Azure Key Vault, HashiCorp Vault)
+Encrypt credentials at rest
+Rotate credentials regularly
+Use environment variables for configuration
+Example: Using Environment Variables
+import os
+Load from environment
+CLIENT_ID = os.environ.get('ONESOURCE_CLIENT_ID')
+CLIENT_SECRET = os.environ.get('ONESOURCE_CLIENT_SECRET')
+if not CLIENT_ID or not CLIENT_SECRET:
+raise ValueError("ONESOURCE credentials not configured")
+Token Security
+Access Tokens:
+Store encrypted in database
+Associate with user/tenant
+Expire after use (or 30 minutes)
+Never log token values
+Refresh Tokens:
+Store encrypted in database
+Rotate when used
+Revoke on user logout
+Expire after period of inactivity
+Example: Encrypted Token Storage
+from cryptography.fernet import Fernet
+class SecureTokenStore:
+def init(self, encryption_key):
+self.cipher = Fernet(encryption_key)
+code
+Code
+def store_token(self, user_id, access_token, refresh_token):  
+    """Store tokens encrypted"""  
+    encrypted_access = self.cipher.encrypt(access_token.encode())  
+    encrypted_refresh = self.cipher.encrypt(refresh_token.encode())
+      
+    db.execute("""  
+        INSERT OR REPLACE INTO user_tokens   
+        (user_id, access_token, refresh_token, updated_at)  
+        VALUES (?, ?, ?, ?)  
+    """, (user_id, encrypted_access, encrypted_refresh, now()))
+  
+def get_access_token(self, user_id):  
+    """Retrieve and decrypt access token"""  
+    row = db.execute("""  
+        SELECT access_token FROM user_tokens WHERE user_id = ?  
+    """, (user_id,)).fetchone()
+      
+    if not row:  
+        return None
+      
+    return self.cipher.decrypt(row['access_token']).decode()
+15.2 API Security
+HTTPS Only
+Always use HTTPS for API calls:
+Good
+base_url = "https://api-uat.onesourcetax.com"
+Bad - Never use HTTP
+base_url = "http://api-uat.onesourcetax.com" # Don't do this!
+Request Timeouts
+Always set timeouts to prevent hanging:
+Good - with timeout
+response = requests.post(
+url=api_url,
+json=payload,
+timeout=30 # 30 seconds
+)
+Bad - no timeout (can hang forever)
+response = requests.post(url=api_url, json=payload)
+Input Validation
+Validate all user inputs before using in API calls:
+def validate_company_id(company_id):
+"""Validate company ID format"""
+import re
+# UUID format: 8-4-4-4-12
+pattern = r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+if not re.match(pattern, company_id, re.IGNORECASE):
+raise ValueError("Invalid company ID format")
+return company_id
+def sanitize_sender_reference(reference):
+"""Sanitize sender reference"""
+# Remove any potentially dangerous characters
+import re
+sanitized = re.sub(r'[^\w\-.]', '', reference)
+if len(sanitized) > 255:
+sanitized = sanitized[:255]
+return sanitized
+Rate Limiting
+Implement rate limiting to prevent abuse:
+from time import time, sleep
+class RateLimiter:
+def init(self, max_calls, period):
+self.max_calls = max_calls
+self.period = period
+self.calls = []
+code
+Code
+def wait_if_needed(self):  
+    """Wait if rate limit would be exceeded"""  
+    now = time()  
+    # Remove calls outside the period  
+    self.calls = [call_time for call_time in self.calls   
+                  if now - call_time < self.period]
+      
+    if len(self.calls) >= self.max_calls:  
+        # Rate limit exceeded - wait  
+        sleep_time = self.period - (now - self.calls[0])  
+        if sleep_time > 0:  
+            sleep(sleep_time)  
+            self.calls = []
+      
+    self.calls.append(now)
+Example: Max 100 calls per minute
+rate_limiter = RateLimiter(max_calls=100, period=60)
+def call_api():
+rate_limiter.wait_if_needed()
+# Make API call
+response = requests.get(...)
+15.3 Data Privacy
+PII Handling
+Be careful with personally identifiable information in invoices:
+PII in Invoices:
+Customer names
+Addresses
+Email addresses
+Phone numbers
+Tax identification numbers
+Best Practices:
+Only log non-PII fields
+Encrypt PII at rest
+Anonymize logs and metrics
+Comply with GDPR/CCPA requirements
+Implement data retention policies
+Example: Logging Without PII
+def log_invoice_submission(invoice_data):
+"""Log invoice submission without PII"""
+log_info({
+"action": "invoice_submitted",
+"invoice_number": invoice_data["invoice_number"],
+"amount": invoice_data["total_amount"],
+"currency": invoice_data["currency"],
+"country": invoice_data["country_code"],
+# Do NOT log: customer name, address, email, etc.
+})
+Data Retention
+Implement data retention policies:
+def enforce_data_retention_policy():
+"""Delete old data per retention policy"""
+# Delete documents older than required retention period
+retention_days = 2555 # 7 years (common for tax documents)
+cutoff_date = datetime.now() - timedelta(days=retention_days)
+code
+Code
+# Delete from database  
+db.execute("""  
+    DELETE FROM onesource_documents  
+    WHERE created_at < ?  
+""", (cutoff_date,))
+  
+# Delete archived PDFs  
+delete_old_pdfs(cutoff_date)
+  
+log_info(f"Deleted documents older than {cutoff_date}")
+15.4 OAuth Security
+State Parameter
+Always use and validate the state parameter to prevent CSRF:
+import secrets
+def initiate_oauth_flow():
+"""Start OAuth authorization flow"""
+# Generate random state
+state = secrets.token_urlsafe(32)
+code
+Code
+# Store state in session  
+session['oauth_state'] = state
+  
+# Redirect to authorization URL with state  
+auth_url = (  
+    f"{base_url}/oauth2/v1/authorize?"  
+    f"response_type=code&"  
+    f"client_id={client_id}&"  
+    f"redirect_uri={redirect_uri}&"  
+    f"scope=urn:tr:onesource:auth:api:einvoicing&"  
+    f"state={state}"  
+)
+  
+return redirect(auth_url)
+def handle_oauth_callback(code, state):
+"""Handle OAuth callback"""
+# Validate state parameter
+expected_state = session.get('oauth_state')
+if not expected_state or state != expected_state:
+raise SecurityError("Invalid state parameter - possible CSRF attack")
+code
+Code
+# Clear state from session  
+session.pop('oauth_state', None)
+  
+# Exchange code for token  
+token = exchange_code_for_token(code)  
+return token
+Redirect URI Validation
+Ensure redirect URI is exactly registered:
+ALLOWED_REDIRECT_URIS = [
+"https://yourplatform.com/onesource/callback",
+"https://yourplatform.com/auth/onesource/return"
+]
+def validate_redirect_uri(redirect_uri):
+"""Validate redirect URI"""
+if redirect_uri not in ALLOWED_REDIRECT_URIS:
+raise SecurityError(f"Invalid redirect URI: {redirect_uri}")
+return redirect_uri
+16. APPENDICES
+16.1 API Quick Reference
+Authentication
+POST /oauth2/v1/token
+Grant Type: client_credentials
+Returns: access_token (30 min expiry)
+Company Management
+GET /einvoicing/company/v1/companies
+Returns: List of companies user has access to
+Document Submission (AR)
+POST /einvoicing/document/v1/documents
+Body: payload (PUF XML), documentType, senderReference, sendingCompanyId
+Returns: documentId
+Document Status (AR)
+GET /einvoicing/document/v1/documents
+Params: companyId, direction=Sent, modifiedTimeFrom, sort=modifiedTime
+Returns: List of documents with status updates
+Received Invoices (AP)
+GET /einvoicing/document/v1/documents
+Params: companyId, direction=Received, createTimeFrom, createTimeTo
+Returns: List of received documents
+Download Documents
+GET /einvoicing/document/v1/documents/{id}/source-document
+GET /einvoicing/document/v1/documents/{id}/target-document
+GET /einvoicing/document/v1/documents/{id}/presentation
+Mark as Fetched
+POST /einvoicing/document/v1/documents/fetch
+Body: {documentIds: []}
+Document Actions
+POST /einvoicing/document/v1/documents/{id}/action
+Body: {action: "Cancel|Resume|Restart", message: "..."}
+16.2 Status Values Reference
+sendStatus
+Processing: Document is being processed
+Done: Document successfully delivered
+Error: Processing error occurred
+Cancelled: Document was cancelled
+clearanceStatus (CTC countries only)
+Pending: Awaiting tax authority response
+Approved: Tax authority approved
+Rejected: Tax authority rejected
+businessStatus
+Accepted: Buyer accepted invoice
+Rejected: Buyer rejected invoice
+UnderQuery: Buyer has questions
+ConditionallyAccepted: Accepted with conditions
+16.3 Country-Specific Notes
+Italy (FatturaPA via SDI)
+Clearance Model: Yes
+Format: FatturaPA XML
+Clearance Time: Usually <5 minutes
+Common Issues: Invalid VAT numbers, incorrect tax codes
+Response Format: Clearance notification with acceptance/rejection
+Mexico (CFDI via SAT)
+Clearance Model: Yes
+Format: CFDI 4.0 XML
+Clearance Time: Usually <2 minutes
+Common Issues: Invalid RFC, incorrect tax regime codes
+Digital Signature: Required (handled by ONESOURCE)
+France (Chorus Pro for B2G)
+Clearance Model: No (for B2G), Yes (for B2B from 2026)
+Format: Factur-X or UBL
+Common Issues: Missing SIRET numbers, incorrect service codes
+Germany (XRechnung/ZUGFeRD)
+Clearance Model: No (currently), Yes (planned for future)
+Format: XRechnung or ZUGFeRD
+Mandatory From: B2B invoices must be acceptable electronically from 2025
+Spain (SII for large companies)
+Clearance Model: Reporting model (not clearance)
+Format: Varies
+Reporting Deadline: 4 days
+Common Issues: Missing tax registration numbers
+Peppol Countries
+Countries: Most EU countries, Singapore, Australia, New Zealand
+Format: PEPPOL BIS Billing 3.0 (UBL)
+Clearance Model: No
+Common Issues: Invalid endpoint IDs, missing party identifiers
+16.4 Error Code Reference
+Recipient Not Found
+Error: "Recipient of document did not match any recipient in Pagero public
+customer registry or in your customer directory."
+Action: Add recipient to customer directory or verify identifiers
+Validation Error
+Error: "XML validation failed: Element 'cbc:ID' is required"
+Action: Fix PUF XML structure, validate with Validex tool
+Clearance Rejection
+Error: "Invoice rejected by tax authority: [country-specific reason]"
+Action: Review rejection reason, correct invoice, resubmit with new number
+Authentication Error
+Error: "401 Unauthorized"
+Action: Refresh access token or re-authorize user
+Rate Limit Error
+Error: "429 Too Many Requests"
+Action: Implement exponential backoff, reduce request frequency
+16.5 Useful Links
+ONESOURCE Documentation
+Developer Portal: https://developers.thomsonreuters.com
+API Reference: (Provided by ONESOURCE team)
+Status Page: https://status.thomsonreuters.com
+Pagero Resources
+PUF Specification: https://pagero.github.io/puf/
+PUF Billing Spec: https://pagero.github.io/puf-billing/
+Integration Guidelines: https://pagero.github.io/partners/partner-integration-guidelines/
+Validex Tool: https://pagero.validex.net/
+Support Center: https://support.pagero.com/
+Standards & Specifications
+UBL 2.1: https://docs.oasis-open.org/ubl/UBL-2.3.html
+PEPPOL: https://peppol.org/
+EN 16931: https://ec.europa.eu/digital-building-blocks/wikis/display/DIGITAL/Compliance+with+eInvoicing+standard
+Regulatory Information
+EU VAT in the Digital Age (ViDA): https://ec.europa.eu/taxation_customs/vat-digital-age_en
+Regulatory Atlas (by Pagero): https://www.pagero.com/regulatory-atlas
+CONCLUSION
+This guide has provided you with a comprehensive foundation for integrating ONESOURCE E-Invoicing services into your platform. By following these guidelines, you'll be able to:
+✅ Seamlessly integrate with ONESOURCE APIs
+✅ Support your clients in achieving global e-invoicing compliance
+✅ Handle complex scenarios like CTC mandates and multi-country operations
+✅ Provide excellent user experience with robust error handling and clear notifications
+✅ Operate reliably with proper monitoring and operational procedures
+✅ Scale efficiently as your client base grows
+Next Steps
+Contact ONESOURCE Team - Reach out to Thomson Reuters to begin partner onboarding
+Receive Credentials - Obtain your partner credentials and test accounts
+Begin Development - Start with authentication and company management
+Test Thoroughly - Follow the testing checklist before production
+Launch Pilot - Start with 1-3 pilot customers
+Roll Out - Gradually enable for all customers
+Support
+For questions or issues during implementation:
+ONESOURCE Support: Contact through your partner channel
+Documentation: Refer to developer portal and this guide
+Community: Engage with other partners (if forum available)
+Feedback
+This guide is designed to evolve based on partner feedback. If you encounter scenarios not covered or have suggestions for improvement, please provide feedback to the ONESOURCE team.
+Document Version: 1.0
+Last Updated: December 2025
+Maintained By: Thomson Reuters ONESOURCE Team
+Good luck with your integration! You're building the future of global e-invoicing compliance. 🚀

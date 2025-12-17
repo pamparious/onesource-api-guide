@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TR ONESOURCE E-Invoicing FAQ - Common questions, troubleshooting, and best practices">
+    <title>FAQ | TR ONESOURCE E-Invoicing</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/chatbot.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="navbar-brand">
+                    <h1 class="logo">THOMSON REUTERS</h1>
+                    <span class="logo-subtitle">ONESOURCE API Guide</span>
+                </div>
+
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="getting-started.html">Getting Started</a></li>
+                    <li><a href="einvoicing-integration.html">E-Invoicing Integration</a></li>
+                    <li><a href="faq.html" class="active">FAQ</a></li>
+                    <li><a href="https://developers.thomsonreuters.com" target="_blank" class="external-link">
+                        Developer Portal <i class="fas fa-external-link-alt"></i>
+                    </a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Frequently Asked Questions</h1>
+                <p class="page-subtitle">Common questions, troubleshooting, and best practices</p>
+            </div>
+        </section>
+
+        <div class="container content-container">
+            <aside class="sidebar-toc">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#getting-started">Getting Started</a></li>
+                    <li><a href="#authentication">Authentication</a></li>
+                    <li><a href="#integration">Integration</a></li>
+                    <li><a href="#troubleshooting">Troubleshooting</a></li>
+                    <li><a href="#best-practices">Best Practices</a></li>
+                </ul>
+            </aside>
+
+            <article class="main-content">
+                <p class="intro">
+                    Find answers to common questions about TR ONESOURCE E-Invoicing API integration.
+                    Use our AI assistant (bottom-right corner) for personalized help.
+                </p>
+
+                <section id="getting-started">
+                    <h2>Getting Started</h2>
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What is TR ONESOURCE E-Invoicing?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>
+                                        TR ONESOURCE E-Invoicing is a centralized platform designed to streamline electronic invoicing
+                                        management for multinational businesses. It offers pre-built integrations connecting financial systems,
+                                        including common ERP systems, and provides compliance with e-invoicing mandates in 80+ countries.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How do I become a partner?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Contact the Thomson Reuters ONESOURCE team and express interest in becoming an integration partner.
+                                    Discuss your client base, use cases, and geographic scope. The team will provide you with:</p>
+                                    <ul>
+                                        <li>Universal partner credentials (client_id and client_secret)</li>
+                                        <li>Test accounts for development</li>
+                                        <li>Access to developer documentation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What is companyId and why is it important?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>
+                                        <code>companyId</code> is a unique identifier (UUID format) for each legal entity your client operates.
+                                        It's mandatory for all API calls involving documents. Each legal entity (e.g., "Global Manufacturing Sweden AB")
+                                        has its own companyId, VAT/tax identifiers, and can be grouped in hierarchical structures.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What testing environments are available?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>ONESOURCE provides two environments:</p>
+                                    <ul>
+                                        <li><strong>UAT (Testing):</strong> <code>https://api-uat.onesourcetax.com</code> for development and testing</li>
+                                        <li><strong>PROD (EMEA):</strong> <code>https://api-emea.onesourcetax.com</code> for production</li>
+                                    </ul>
+                                    <p>Note: There is no separate sandbox. Testing is done in UAT using test accounts and document send modes
+                                    (Certification/Test/Production).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="authentication">
+                    <h2>Authentication</h2>
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What OAuth 2.0 flows are supported?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>ONESOURCE supports two OAuth 2.0 grant types:</p>
+                                    <ul>
+                                        <li><strong>Client Credentials Grant:</strong> For partner-level API access (getting access tokens)</li>
+                                        <li><strong>Authorization Code Grant:</strong> For end-user authorization (granting access to client data)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How long do access tokens last?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>
+                                        Access tokens expire in 1799 seconds (~30 minutes). You should implement token caching and refresh logic.
+                                        Do NOT request a new token for every API call. Store the token with its expiry timestamp and refresh when needed.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How do I handle token expiration?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Implement automatic refresh before expiry:</p>
+                                    <ol>
+                                        <li>Check if token is still valid before each API call (with 60s buffer)</li>
+                                        <li>Use refresh token to get new access token without user interaction</li>
+                                        <li>Handle refresh token expiration (require re-authorization)</li>
+                                        <li>On 401 errors, attempt token refresh, then retry the request</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How should I store tokens securely?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Best practices for token storage:</p>
+                                    <ul>
+                                        <li>Store tokens encrypted in your database</li>
+                                        <li>Never log tokens or expose them in URLs</li>
+                                        <li>Associate tokens with user/tenant ID</li>
+                                        <li>Implement secure key management for encryption keys</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="integration">
+                    <h2>Integration</h2>
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What is PUF and why should I use it?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>
+                                        Pagero Universal Format (PUF) is a structured XML format based on UBL 2.1 that enables document exchange worldwide.
+                                        Submit once in PUF, and ONESOURCE automatically converts to 50+ country-specific formats (FatturaPA, CFDI, Factur-X, etc.).
+                                        This means you don't need country-specific expertise or separate integrations.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How do I generate PUF XML?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Options for generating PUF XML:</p>
+                                    <ol>
+                                        <li>Use an XML library to build the structure programmatically</li>
+                                        <li>Use XML templates with placeholders for your invoice data</li>
+                                        <li>Use PUF code libraries if available for your platform</li>
+                                        <li>Validate your XML using the <a href="https://pagero.validex.net/" target="_blank">Validex tool</a> before submission</li>
+                                    </ol>
+                                    <p>See the <a href="einvoicing-integration.html#puf-format">PUF Format section</a> for a complete example.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What is senderReference and why must it be unique?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>
+                                        <code>senderReference</code> is a unique identifier from your system that you provide when submitting documents.
+                                        It must be globally unique for each document from a sending company to prevent duplicates and enable tracking.
+                                    </p>
+                                    <p><strong>Recommendation:</strong> <code>{InvoiceNumber}-{Timestamp}-{RandomSuffix}</code></p>
+                                    <p><strong>Example:</strong> <code>INV-2025-001234-20250115143022-a7f3</code></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How often should I poll for status updates?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Polling frequency depends on volume:</p>
+                                    <ul>
+                                        <li><strong>Low volume (&lt;100/day):</strong> Every 15-30 minutes</li>
+                                        <li><strong>Medium volume (100-1000/day):</strong> Every 5-10 minutes</li>
+                                        <li><strong>High volume (&gt;1000/day):</strong> Every 2-5 minutes</li>
+                                        <li><strong>Error checking:</strong> Every 30-60 minutes</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What's the difference between AR and AP flows?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>
+                                        <strong>AR (Accounts Receivable) - Outbound:</strong> Sending invoices FROM your clients TO their customers.
+                                        You POST documents, poll for status changes, and handle errors.
+                                    </p>
+                                    <p>
+                                        <strong>AP (Accounts Payable) - Inbound:</strong> Receiving invoices FROM suppliers TO your clients.
+                                        You poll for received documents, download target format, import to your system, and mark as fetched.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="troubleshooting">
+                    <h2>Troubleshooting</h2>
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What does "Recipient not found" error mean?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>This error occurs when:</p>
+                                    <ul>
+                                        <li>Recipient doesn't exist in Pagero network</li>
+                                        <li>Recipient not added to sender's customer directory (if using closed directory)</li>
+                                        <li>Identifier mismatch (VAT number, organization number)</li>
+                                    </ul>
+                                    <p><strong>Resolution:</strong> User must log into Pagero Online, search for recipient in Customer Directory,
+                                    and either add them or suggest new recipient registration.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Why was my invoice rejected by the tax authority?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Common causes of clearance rejection in CTC countries:</p>
+                                    <ul>
+                                        <li>Tax calculation errors</li>
+                                        <li>Invalid tax codes</li>
+                                        <li>Missing mandatory country-specific fields</li>
+                                        <li>Duplicate invoice number</li>
+                                    </ul>
+                                    <p><strong>Resolution:</strong> Review clearance error details, cancel the rejected document, correct issues in your
+                                    source system, and resubmit with a new invoice number if needed.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What are the different document statuses?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Documents have multiple status fields:</p>
+                                    <ul>
+                                        <li><strong>sendStatus:</strong> Processing, Done, Error, Cancelled (overall sending status)</li>
+                                        <li><strong>clearanceStatus:</strong> Pending, Approved, Rejected (tax authority clearance for CTC countries)</li>
+                                        <li><strong>businessStatus:</strong> Accepted, Rejected, UnderQuery (business-level acceptance from buyer)</li>
+                                        <li><strong>externalStatus:</strong> Various external party responses</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How do I validate my PUF XML before submission?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Use the <a href="https://pagero.validex.net/" target="_blank">Pagero Validex tool</a> to validate your PUF XML.
+                                    Upload your XML file and it will check for:</p>
+                                    <ul>
+                                        <li>XML structure validity</li>
+                                        <li>Required fields presence</li>
+                                        <li>Data format correctness</li>
+                                        <li>Business rule compliance</li>
+                                    </ul>
+                                    <p>Fix any validation errors before submitting via the API.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How long are documents retained in ONESOURCE?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>
+                                        Documents are retained for 90 days standard. You must fetch and archive documents locally within this period.
+                                        Note that some countries require longer archival periods (10+ years), so implement a local archival strategy.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="best-practices">
+                    <h2>Best Practices</h2>
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How should I implement polling?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Follow these polling best practices:</p>
+                                    <ul>
+                                        <li>Use <code>modifiedTimeFrom</code> set to the latest <code>modifiedTime</code> from previous poll</li>
+                                        <li>Sort by <code>modifiedTime</code> ascending</li>
+                                        <li>Don't use offset-based pagination (documents can be modified at any time)</li>
+                                        <li>Store the latest <code>modifiedTime</code> for next poll iteration</li>
+                                        <li>Implement exponential backoff for retries on errors</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What should I do with fetched documents?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>After processing documents:</p>
+                                    <ol>
+                                        <li>Download and archive PDF presentations locally</li>
+                                        <li>Download target format for AP processing</li>
+                                        <li>Store document metadata in your database</li>
+                                        <li>Mark documents as fetched using the <code>/documents/fetch</code> endpoint</li>
+                                        <li>Implement a retention policy aligned with legal requirements</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How do I handle errors gracefully?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Error handling strategy:</p>
+                                    <ul>
+                                        <li>Distinguish between retriable and non-retriable errors</li>
+                                        <li>Implement exponential backoff for retriable errors (401, 429, 500)</li>
+                                        <li>Alert on persistent errors</li>
+                                        <li>Maintain error logs for compliance audits</li>
+                                        <li>Provide clear error messages to end users</li>
+                                        <li>Use the Document Actions API to cancel/restart/resume errored documents</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What's the recommended database schema for mappings?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>Store these key mappings:</p>
+                                    <ul>
+                                        <li><strong>Company Mapping:</strong> your_company_id ↔ onesource_company_id</li>
+                                        <li><strong>Document Mapping:</strong> your_invoice_id ↔ sender_reference ↔ onesource_document_id</li>
+                                        <li><strong>Status Tracking:</strong> send_status, clearance_status, business_status, modified_time</li>
+                                        <li><strong>Polling State:</strong> last_poll_time per company</li>
+                                    </ul>
+                                    <p>See the <a href="einvoicing-integration.html#code-examples">Code Examples</a> for sample database schemas.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Should I implement webhooks or polling?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <div class="faq-answer-content">
+                                    <p>
+                                        Currently, ONESOURCE E-Invoicing uses polling for status updates. Implement robust polling with appropriate
+                                        frequency based on your document volume. The modified-time-based polling approach ensures you don't miss updates
+                                        and handles documents that may be modified multiple times.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>THOMSON REUTERS</h4>
+                    <p>ONESOURCE API Integration Guide</p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://developers.thomsonreuters.com" target="_blank">Developer Portal</a></li>
+                        <li><a href="getting-started.html">Getting Started</a></li>
+                        <li><a href="einvoicing-integration.html">Integration Guide</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="faq.html">Documentation</a></li>
+                        <li><a href="https://www.thomsonreuters.com" target="_blank">Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Thomson Reuters. All rights reserved. | <span class="version">API Guide v1.0</span></p>
+                <p class="last-updated">Last Updated: January 2025</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget Button -->
+    <div id="chatWidget"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/chatbot-ui.js"></script>
+    <script src="assets/js/openarena-client.js"></script>
+    <script src="assets/js/chatbot-controller.js"></script>
+</body>
+</html>

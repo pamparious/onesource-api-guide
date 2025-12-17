@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TR ONESOURCE E-Invoicing Integration Guide - AR/AP flows, PUF format, status polling, and error handling">
+    <title>E-Invoicing Integration | TR ONESOURCE</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/chatbot.css">
+
+    <!-- Prism.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="navbar-brand">
+                    <h1 class="logo">THOMSON REUTERS</h1>
+                    <span class="logo-subtitle">ONESOURCE API Guide</span>
+                </div>
+
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="getting-started.html">Getting Started</a></li>
+                    <li><a href="einvoicing-integration.html" class="active">E-Invoicing Integration</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="https://developers.thomsonreuters.com" target="_blank" class="external-link">
+                        Developer Portal <i class="fas fa-external-link-alt"></i>
+                    </a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>E-Invoicing Integration Guide</h1>
+                <p class="page-subtitle">Accounts Receivable, Accounts Payable, PUF Format, Status Polling, and Error Handling</p>
+            </div>
+        </section>
+
+        <div class="container content-container">
+            <aside class="sidebar-toc">
+                <h3>On This Page</h3>
+                <ul>
+                    <li><a href="#ar-flow">AR Outbound Flow</a></li>
+                    <li><a href="#ap-flow">AP Inbound Flow</a></li>
+                    <li><a href="#puf-format">PUF Format</a></li>
+                    <li><a href="#status-polling">Status Polling</a></li>
+                    <li><a href="#error-handling">Error Handling</a></li>
+                    <li><a href="#code-examples">Code Examples</a></li>
+                </ul>
+            </aside>
+
+            <article class="main-content">
+                <section id="ar-flow">
+                    <h2>Accounts Receivable (AR) - Outbound Invoice Flow</h2>
+                    <p class="intro">
+                        This section covers sending invoices FROM your clients TO their customers. The AR flow handles
+                        invoice submission, validation, clearance, and delivery tracking.
+                    </p>
+
+                    <h3>AR Flow Overview</h3>
+                    <div class="diagram">┌──────────────────────────────────────────────────────────────────┐
+│ YOUR PLATFORM                                                    │
+│                                                                  │
+│ 1. Invoice Created → 2. Generate PUF → 3. POST /documents       │
+│                                                                  │
+└───────────────────────────┬──────────────────────────────────────┘
+                            │
+                            ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ ONESOURCE PLATFORM                                               │
+│                                                                  │
+│ 4. Validate → 5. Convert → 6. Clear (if CTC) → 7. Deliver       │
+│                                                                  │
+└───────────────────────────┬──────────────────────────────────────┘
+                            │
+                            ▼
+           ┌────────────────┴────────────────┐
+           │                                 │
+           ▼                                 ▼
+  ┌─────────────────┐              ┌─────────────────┐
+  │ Tax Authority   │              │ Customer        │
+  │ (if CTC)        │              │ (Recipient)     │
+  └─────────────────┘              └─────────────────┘</div>
+
+                    <h3>Step 1: POST Document</h3>
+                    <p><strong>Endpoint:</strong></p>
+                    <pre><code class="language-http">POST /einvoicing/document/v1/documents
+Authorization: Bearer {access_token}
+Content-Type: application/json</code></pre>
+
+                    <p><strong>Request Body:</strong></p>
+                    <pre><code class="language-json">{
+  "payload": "&lt;Invoice xmlns:cac=\"urn:pagero:CommonAggregateComponents:1.0\"...&gt;",
+  "documentType": "Invoice",
+  "senderReference": "INV-2025-001234-UNIQUE",
+  "sendingCompanyId": "89d671a5-a02f-4cd0-b1db-5c516f1791aa",
+  "systemType": "Other",
+  "systemName": "YourPlatformName",
+  "documentIdentifier": "INV-2025-001234"
+}</code></pre>
+
+                    <h4>Field Descriptions</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>payload</code></td>
+                                <td>Yes</td>
+                                <td>PUF XML as string (entire XML document)</td>
+                            </tr>
+                            <tr>
+                                <td><code>documentType</code></td>
+                                <td>Yes</td>
+                                <td>Invoice, CreditNote, ApplicationResponse</td>
+                            </tr>
+                            <tr>
+                                <td><code>senderReference</code></td>
+                                <td>Yes</td>
+                                <td>Unique identifier from your system (must be unique per sending company)</td>
+                            </tr>
+                            <tr>
+                                <td><code>sendingCompanyId</code></td>
+                                <td>Yes</td>
+                                <td>The companyId of the legal entity sending this invoice</td>
+                            </tr>
+                            <tr>
+                                <td><code>systemType</code></td>
+                                <td>No</td>
+                                <td>Oracle, SAP, SAP Ariba, or Other</td>
+                            </tr>
+                            <tr>
+                                <td><code>documentIdentifier</code></td>
+                                <td>No</td>
+                                <td>Invoice number (searchable in UI, shown even if processing fails)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert alert-warning">
+                        <strong>Critical: senderReference</strong>
+                        <ul style="margin-bottom: 0;">
+                            <li>Must be globally unique for each document from a sending company</li>
+                            <li>Recommendation: <code>{InvoiceNumber}-{Timestamp}-{RandomSuffix}</code></li>
+                            <li>Example: <code>INV-2025-001234-20250115143022-a7f3</code></li>
+                            <li>Store this value in your database linked to the invoice</li>
+                        </ul>
+                    </div>
+
+                    <h3>Step 2: Poll for Status Updates</h3>
+                    <p>Documents go through multiple status changes. Poll regularly to track progress.</p>
+
+                    <p><strong>Endpoint:</strong></p>
+                    <pre><code class="language-http">GET /einvoicing/document/v1/documents?
+companyId={company_id}&
+direction=Sent&
+documentType=Invoice&
+modifiedTimeFrom=2025-01-15T10:00:00Z&
+pageIndex=0&
+pageSize=100&
+sort=modifiedTime</code></pre>
+
+                    <h4>Status Fields</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Status Field</th>
+                                <th>Values</th>
+                                <th>Meaning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>sendStatus</code></td>
+                                <td>Processing, Done, Error, Cancelled</td>
+                                <td>Overall sending status</td>
+                            </tr>
+                            <tr>
+                                <td><code>clearanceStatus</code></td>
+                                <td>Pending, Approved, Rejected</td>
+                                <td>Tax authority clearance (CTC countries)</td>
+                            </tr>
+                            <tr>
+                                <td><code>businessStatus</code></td>
+                                <td>Accepted, Rejected, UnderQuery</td>
+                                <td>Business-level acceptance from buyer</td>
+                            </tr>
+                            <tr>
+                                <td><code>externalStatus</code></td>
+                                <td>Various</td>
+                                <td>External party responses</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert alert-info">
+                        <strong>Polling Best Practice:</strong> Use <code>modifiedTimeFrom</code> set to the latest <code>modifiedTime</code>
+                        from previous poll. Sort by <code>modifiedTime</code> ascending. Don't use offset-based pagination.
+                    </div>
+                </section>
+
+                <section id="ap-flow">
+                    <h2>Accounts Payable (AP) - Inbound Invoice Flow</h2>
+                    <p class="intro">
+                        This section covers receiving invoices FROM suppliers TO your clients. The AP flow handles
+                        polling for received documents, downloading formats, and importing into your system.
+                    </p>
+
+                    <h3>AP Flow Overview</h3>
+                    <div class="diagram">┌─────────────────┐          ┌──────────────────────┐
+│ Supplier        │─────────>│ ONESOURCE PLATFORM   │
+│ (Sends Invoice) │          │ (Validates & Stores) │
+└─────────────────┘          └──────────┬───────────┘
+                                        │
+                                        │
+                         ┌──────────────▼─────────────┐
+                         │ YOUR PLATFORM              │
+                         │                            │
+                         │ 1. Poll for new invoices   │
+                         │ 2. Download target format  │
+                         │ 3. Import into AP system   │
+                         │ 4. Mark as fetched         │
+                         │ 5. Send response           │
+                         └────────────────────────────┘</div>
+
+                    <h3>Step 1: Poll for Received Invoices</h3>
+                    <p><strong>Endpoint:</strong></p>
+                    <pre><code class="language-http">GET /einvoicing/document/v1/documents?
+companyId={company_id}&
+direction=Received&
+documentType=Invoice&
+createTimeFrom=2025-01-15T08:00:00Z&
+createTimeTo=2025-01-15T09:00:00Z&
+pageIndex=0&
+pageSize=100&
+sort=createTime</code></pre>
+
+                    <h4>Key Differences from AR Polling</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>AR (Sent)</th>
+                                <th>AP (Received)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>direction</td>
+                                <td>Sent</td>
+                                <td>Received</td>
+                            </tr>
+                            <tr>
+                                <td>Time parameter</td>
+                                <td>modifiedTimeFrom</td>
+                                <td>createTimeFrom + createTimeTo</td>
+                            </tr>
+                            <tr>
+                                <td>sort</td>
+                                <td>modifiedTime</td>
+                                <td>createTime</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert alert-info">
+                        <strong>Why createTimeFrom/To?</strong> Received documents don't change after initial receipt.
+                        Use time windows to incrementally fetch new invoices. Next poll: set <code>createTimeFrom</code>
+                        = previous <code>createTimeTo</code>.
+                    </div>
+
+                    <h3>Step 2: Download Target Document</h3>
+                    <p>The target document is the format configured for your client to receive (typically UBL, PEPPOL, or another standard format).</p>
+
+                    <pre><code class="language-http">GET /einvoicing/document/v1/documents/{id}/target-document
+Authorization: Bearer {access_token}</code></pre>
+
+                    <p><strong>Response:</strong> XML document (UBL, PEPPOL, etc.) or PDF if no structured format configured</p>
+
+                    <h3>Step 3: Mark as Fetched</h3>
+                    <p>After successfully importing, mark the document as fetched to prevent reprocessing:</p>
+
+                    <pre><code class="language-json">POST /einvoicing/document/v1/documents/fetch
+
+{
+  "documentIds": [
+    "52939209-f454-498e-afd0-64b0827c4eb0",
+    "a297a938-2c3d-4051-1193-667b0ffa19ad"
+  ]
+}</code></pre>
+                </section>
+
+                <section id="puf-format">
+                    <h2>Pagero Universal Format (PUF)</h2>
+                    <p class="intro">
+                        PUF is a structured XML format based on UBL 2.1 that enables the exchange of compliant business
+                        documents worldwide. Submit once in PUF, and ONESOURCE automatically converts to 50+ country-specific formats.
+                    </p>
+
+                    <h3>Why PUF?</h3>
+                    <ul>
+                        <li><strong>Single format</strong> for all countries and recipients</li>
+                        <li><strong>Based on UBL 2.1</strong> - Widely adopted standard</li>
+                        <li><strong>Automatic conversion</strong> to country-specific formats (FatturaPA, CFDI, Factur-X, etc.)</li>
+                        <li><strong>No country expertise needed</strong> - ONESOURCE handles local requirements</li>
+                    </ul>
+
+                    <h3>Minimal PUF Invoice Example</h3>
+                    <pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Invoice xmlns:cac="urn:pagero:CommonAggregateComponents:1.0"
+         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+         xmlns="urn:pagero:PageroUniversalFormat:Invoice:1.0"&gt;
+
+    &lt;!-- Document Identification --&gt;
+    &lt;cbc:CustomizationID&gt;urn:pagero.com:puf:billing:2.0&lt;/cbc:CustomizationID&gt;
+    &lt;cbc:ProfileID&gt;urn:pagero.com:puf:billing:1.0&lt;/cbc:ProfileID&gt;
+    &lt;cbc:ID&gt;INV-2025-001234&lt;/cbc:ID&gt;
+    &lt;cbc:IssueDate&gt;2025-01-15&lt;/cbc:IssueDate&gt;
+    &lt;cbc:DueDate&gt;2025-02-15&lt;/cbc:DueDate&gt;
+    &lt;cbc:InvoiceTypeCode&gt;380&lt;/cbc:InvoiceTypeCode&gt;
+    &lt;cbc:DocumentCurrencyCode&gt;EUR&lt;/cbc:DocumentCurrencyCode&gt;
+
+    &lt;!-- Supplier Party --&gt;
+    &lt;cac:AccountingSupplierParty&gt;
+        &lt;cac:Party&gt;
+            &lt;cac:PartyName&gt;
+                &lt;cbc:Name&gt;Supplier Company AB&lt;/cbc:Name&gt;
+            &lt;/cac:PartyName&gt;
+            &lt;cac:PartyTaxScheme&gt;
+                &lt;cbc:CompanyID&gt;SE556123456701&lt;/cbc:CompanyID&gt;
+                &lt;cac:TaxScheme&gt;
+                    &lt;cbc:ID&gt;VAT&lt;/cbc:ID&gt;
+                &lt;/cac:TaxScheme&gt;
+            &lt;/cac:PartyTaxScheme&gt;
+        &lt;/cac:Party&gt;
+    &lt;/cac:AccountingSupplierParty&gt;
+
+    &lt;!-- Customer Party --&gt;
+    &lt;cac:AccountingCustomerParty&gt;
+        &lt;cac:Party&gt;
+            &lt;cac:PartyName&gt;
+                &lt;cbc:Name&gt;Customer Company AB&lt;/cbc:Name&gt;
+            &lt;/cac:PartyName&gt;
+            &lt;cac:PartyTaxScheme&gt;
+                &lt;cbc:CompanyID&gt;SE556987654301&lt;/cbc:CompanyID&gt;
+                &lt;cac:TaxScheme&gt;
+                    &lt;cbc:ID&gt;VAT&lt;/cbc:ID&gt;
+                &lt;/cac:TaxScheme&gt;
+            &lt;/cac:PartyTaxScheme&gt;
+        &lt;/cac:Party&gt;
+    &lt;/cac:AccountingCustomerParty&gt;
+
+    &lt;!-- Tax Total --&gt;
+    &lt;cac:TaxTotal&gt;
+        &lt;cbc:TaxAmount currencyID="EUR"&gt;250.00&lt;/cbc:TaxAmount&gt;
+    &lt;/cac:TaxTotal&gt;
+
+    &lt;!-- Monetary Totals --&gt;
+    &lt;cac:LegalMonetaryTotal&gt;
+        &lt;cbc:LineExtensionAmount currencyID="EUR"&gt;1000.00&lt;/cbc:LineExtensionAmount&gt;
+        &lt;cbc:TaxExclusiveAmount currencyID="EUR"&gt;1000.00&lt;/cbc:TaxExclusiveAmount&gt;
+        &lt;cbc:TaxInclusiveAmount currencyID="EUR"&gt;1250.00&lt;/cbc:TaxInclusiveAmount&gt;
+        &lt;cbc:PayableAmount currencyID="EUR"&gt;1250.00&lt;/cbc:PayableAmount&gt;
+    &lt;/cac:LegalMonetaryTotal&gt;
+
+    &lt;!-- Invoice Line --&gt;
+    &lt;cac:InvoiceLine&gt;
+        &lt;cbc:ID&gt;1&lt;/cbc:ID&gt;
+        &lt;cbc:InvoicedQuantity unitCode="EA"&gt;10&lt;/cbc:InvoicedQuantity&gt;
+        &lt;cbc:LineExtensionAmount currencyID="EUR"&gt;1000.00&lt;/cbc:LineExtensionAmount&gt;
+        &lt;cac:Item&gt;
+            &lt;cbc:Name&gt;Product ABC&lt;/cbc:Name&gt;
+        &lt;/cac:Item&gt;
+        &lt;cac:Price&gt;
+            &lt;cbc:PriceAmount currencyID="EUR"&gt;100.00&lt;/cbc:PriceAmount&gt;
+        &lt;/cac:Price&gt;
+    &lt;/cac:InvoiceLine&gt;
+
+&lt;/Invoice&gt;</code></pre>
+
+                    <h3>PUF Resources</h3>
+                    <ul>
+                        <li><a href="https://pagero.github.io/puf-billing/" target="_blank">Full PUF Specification</a></li>
+                        <li><a href="https://github.com/pagero/puf-billing/tree/master/examples" target="_blank">Example Files</a></li>
+                        <li><a href="https://pagero.validex.net/" target="_blank">Validation Tool</a></li>
+                    </ul>
+                </section>
+
+                <section id="status-polling">
+                    <h2>Status Polling Strategy</h2>
+                    <p class="intro">
+                        E-invoicing is inherently asynchronous. Implement robust polling to track document status changes.
+                    </p>
+
+                    <h3>Polling Frequency Recommendations</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Scenario</th>
+                                <th>Frequency</th>
+                                <th>Rationale</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Low volume (&lt;100/day)</td>
+                                <td>Every 15-30 minutes</td>
+                                <td>Balance between freshness and API load</td>
+                            </tr>
+                            <tr>
+                                <td>Medium volume (100-1000/day)</td>
+                                <td>Every 5-10 minutes</td>
+                                <td>More frequent updates needed</td>
+                            </tr>
+                            <tr>
+                                <td>High volume (&gt;1000/day)</td>
+                                <td>Every 2-5 minutes</td>
+                                <td>Near real-time status updates</td>
+                            </tr>
+                            <tr>
+                                <td>Error checking</td>
+                                <td>Every 30-60 minutes</td>
+                                <td>Errors don't change frequently</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Implementation Pattern</h3>
+                    <pre><code class="language-python">def poll_document_updates(company_id, last_poll_time):
+    """Poll for document status updates"""
+    all_documents = []
+    page_index = 0
+
+    while True:
+        response = requests.get(
+            f"{base_url}/einvoicing/document/v1/documents",
+            headers={"Authorization": f"Bearer {get_access_token()}"},
+            params={
+                "companyId": company_id,
+                "direction": "Sent",
+                "documentType": "Invoice",
+                "modifiedTimeFrom": last_poll_time,
+                "pageIndex": page_index,
+                "pageSize": 100,
+                "sort": "modifiedTime"
+            }
+        )
+
+        data = response.json()
+        documents = data["items"]
+
+        if not documents:
+            break  # No more documents
+
+        all_documents.extend(documents)
+
+        # Check if there are more pages
+        if page_index + 1 >= data["meta"]["totalPages"]:
+            break
+
+        page_index += 1
+
+    # Update last poll time to latest modifiedTime
+    if all_documents:
+        latest_modified = max(doc["modifiedTime"] for doc in all_documents)
+        save_last_poll_time(company_id, latest_modified)
+
+    return all_documents</code></pre>
+                </section>
+
+                <section id="error-handling">
+                    <h2>Error Handling</h2>
+                    <p class="intro">
+                        Comprehensive error handling is critical for e-invoicing integration. Different error types require different remediation strategies.
+                    </p>
+
+                    <h3>Common Error Scenarios</h3>
+
+                    <h4>1. Recipient Not Found</h4>
+                    <div class="alert alert-error">
+                        <strong>Error Message:</strong> "Recipient of document (Customer Name) did not match any recipient in Pagero public customer registry or in your customer directory."
+                    </div>
+
+                    <p><strong>Cause:</strong></p>
+                    <ul>
+                        <li>Recipient doesn't exist in Pagero network</li>
+                        <li>Recipient not added to sender's customer directory (if using closed directory)</li>
+                        <li>Identifier mismatch (VAT number, organization number, etc.)</li>
+                    </ul>
+
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li>User must log into Pagero Online</li>
+                        <li>Navigate to Customer Directory → Search</li>
+                        <li>Search for recipient by name, VAT number, or organization number</li>
+                        <li>If recipient exists: Add to customer directory and retry</li>
+                        <li>If recipient doesn't exist: Suggest new recipient via Pagero Online</li>
+                    </ol>
+
+                    <h4>2. Validation Errors</h4>
+                    <div class="alert alert-error">
+                        <strong>Examples:</strong>
+                        <ul style="margin-bottom: 0;">
+                            <li>"XML validation failed: Element 'cbc:ID' is required"</li>
+                            <li>"Invalid VAT number format"</li>
+                            <li>"Tax amount calculation mismatch"</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li>Validate PUF XML before submission using <a href="https://pagero.validex.net/" target="_blank">Validex tool</a></li>
+                        <li>Fix data issues in source system</li>
+                        <li>Cancel errored document</li>
+                        <li>Resubmit corrected document</li>
+                    </ol>
+
+                    <h4>3. Clearance Rejection (CTC Countries)</h4>
+                    <div class="alert alert-error">
+                        <strong>Scenario:</strong> Invoice submitted to tax authority (e.g., Italy SDI, Mexico SAT) and rejected.
+                    </div>
+
+                    <p><strong>Cause:</strong></p>
+                    <ul>
+                        <li>Tax calculation errors</li>
+                        <li>Invalid tax codes</li>
+                        <li>Missing mandatory country-specific fields</li>
+                        <li>Duplicate invoice number</li>
+                    </ul>
+
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li>Review clearance error details</li>
+                        <li>Cancel rejected document</li>
+                        <li>Correct issues in source system</li>
+                        <li>Resubmit with new invoice number (if duplicate)</li>
+                    </ol>
+
+                    <h3>Document Actions API</h3>
+                    <p>When a document has <code>sendStatus = Error</code>, you can take action on it:</p>
+
+                    <pre><code class="language-json">POST /einvoicing/document/v1/documents/{id}/action
+
+{
+  "action": "Cancel"  // Or: Resume, Restart, RestartWithReplacements
+}</code></pre>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>When to Use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>Cancel</code></td>
+                                <td>Document cannot be fixed and should be abandoned</td>
+                            </tr>
+                            <tr>
+                                <td><code>Restart</code></td>
+                                <td>Temporary error, retry with same data</td>
+                            </tr>
+                            <tr>
+                                <td><code>RestartWithReplacements</code></td>
+                                <td>Update recipient directory and retry</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="code-examples">
+                    <h2>Code Examples</h2>
+                    <p class="intro">
+                        Practical code examples for common integration tasks.
+                    </p>
+
+                    <h3>Example 1: Sending an Invoice</h3>
+                    <pre><code class="language-python">import requests
+import time
+import uuid
+
+def send_invoice(invoice_data, company_id, access_token):
+    """Send an invoice to ONESOURCE"""
+
+    # Generate PUF XML from your invoice data
+    puf_xml = build_puf_invoice(invoice_data)
+
+    # Generate unique sender reference
+    sender_reference = f"{invoice_data['invoice_number']}-{int(time.time())}-{uuid.uuid4().hex[:8]}"
+
+    # POST document
+    response = requests.post(
+        "https://api-uat.onesourcetax.com/einvoicing/document/v1/documents",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json"
+        },
+        json={
+            "payload": puf_xml,
+            "documentType": "Invoice",
+            "senderReference": sender_reference,
+            "sendingCompanyId": company_id,
+            "systemType": "Other",
+            "systemName": "YourPlatform",
+            "documentIdentifier": invoice_data['invoice_number']
+        }
+    )
+
+    if response.status_code in [200, 201]:
+        document_id = response.json()["id"]
+
+        # Store mapping in database
+        save_document_mapping(
+            invoice_id=invoice_data['id'],
+            sender_reference=sender_reference,
+            document_id=document_id
+        )
+
+        return document_id
+    else:
+        raise Exception(f"Failed to send invoice: {response.text}")</code></pre>
+
+                    <h3>Example 2: Polling for Status Updates</h3>
+                    <pre><code class="language-javascript">async function pollDocumentStatus(companyId, lastPollTime) {
+    const baseUrl = 'https://api-uat.onesourcetax.com';
+    const accessToken = await getAccessToken();
+
+    let allDocuments = [];
+    let pageIndex = 0;
+
+    while (true) {
+        const params = new URLSearchParams({
+            companyId: companyId,
+            direction: 'Sent',
+            documentType: 'Invoice',
+            modifiedTimeFrom: lastPollTime,
+            pageIndex: pageIndex,
+            pageSize: 100,
+            sort: 'modifiedTime'
+        });
+
+        const response = await fetch(`${baseUrl}/einvoicing/document/v1/documents?${params}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        const data = await response.json();
+        const documents = data.items;
+
+        if (!documents || documents.length === 0) {
+            break;
+        }
+
+        allDocuments = allDocuments.concat(documents);
+
+        if (pageIndex + 1 >= data.meta.totalPages) {
+            break;
+        }
+
+        pageIndex++;
+    }
+
+    // Update last poll time
+    if (allDocuments.length > 0) {
+        const latestModified = Math.max(...allDocuments.map(doc => new Date(doc.modifiedTime)));
+        await saveLastPollTime(companyId, new Date(latestModified).toISOString());
+    }
+
+    return allDocuments;
+}</code></pre>
+
+                    <div class="alert alert-success">
+                        <h4 style="margin-top: 0;">Next Steps</h4>
+                        <p>For more detailed examples and country-specific implementations, visit:</p>
+                        <ul style="margin-bottom: 0;">
+                            <li><a href="https://github.com/pagero/puf-billing/tree/master/examples" target="_blank" style="color: #155724;">PUF Examples on GitHub</a></li>
+                            <li><a href="https://developers.thomsonreuters.com" target="_blank" style="color: #155724;">TR Developer Portal</a></li>
+                            <li><a href="faq.html" style="color: #155724;">FAQ & Troubleshooting</a></li>
+                        </ul>
+                    </div>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>THOMSON REUTERS</h4>
+                    <p>ONESOURCE API Integration Guide</p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://developers.thomsonreuters.com" target="_blank">Developer Portal</a></li>
+                        <li><a href="getting-started.html">Getting Started</a></li>
+                        <li><a href="einvoicing-integration.html">Integration Guide</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="faq.html">Documentation</a></li>
+                        <li><a href="https://www.thomsonreuters.com" target="_blank">Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Thomson Reuters. All rights reserved. | <span class="version">API Guide v1.0</span></p>
+                <p class="last-updated">Last Updated: January 2025</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget Button -->
+    <div id="chatWidget"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/chatbot-ui.js"></script>
+    <script src="assets/js/openarena-client.js"></script>
+    <script src="assets/js/chatbot-controller.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+</body>
+</html>
