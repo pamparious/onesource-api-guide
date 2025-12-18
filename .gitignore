@@ -26,6 +26,9 @@ yarn.lock
 dist/
 build/
 
+# Deployment
+.vercel
+
 # Temporary files
 .tmp/
 temp/

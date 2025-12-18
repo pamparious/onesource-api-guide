@@ -10,9 +10,15 @@
      * TR OpenArena Client Class
      */
     class OpenArenaClient {
-        constructor(apiToken, workflowId) {
+        constructor(apiToken, workflowId, useProxy = true) {
             this.apiToken = apiToken;
             this.workflowId = workflowId;
+            this.useProxy = useProxy;
+
+            // Proxy URL - Use local proxy for development
+            this.proxyURL = 'http://localhost:3000/api/proxy';
+
+            // Direct API URL (will cause CORS errors from browser)
             this.baseURL = 'https://aiopenarena.gcs.int.thomsonreuters.com';
             this.defaultModel = 'claude-sonnet-4';
         }
@@ -24,89 +30,125 @@
             const startTime = Date.now();
 
             try {
-                // Build system prompt
-                const systemPrompt = this.createSystemPrompt();
+                console.log('[OpenArena] Sending request via', this.useProxy ? 'proxy' : 'direct API');
 
-                // Build user prompt with context
-                const userPrompt = this.createUserPrompt(query, context);
+                let responseData;
 
-                // Combined query
-                const combinedQuery = `${systemPrompt}\n\n${userPrompt}`;
+                if (this.useProxy) {
+                    // Use proxy server
+                    const payload = {
+                        apiToken: this.apiToken,
+                        workflowId: this.workflowId,
+                        query: query,
+                        context: context
+                    };
 
-                // Open Arena API payload
-                const payload = {
-                    workflow_id: this.workflowId,
-                    query: combinedQuery,
-                    is_persistence_allowed: false,
-                    modelparams: {
-                        [this.defaultModel]: {
-                            temperature: '0.1',
-                            max_tokens: '4000',
-                            system_prompt: systemPrompt
+                    const response = await fetch(this.proxyURL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(errorData.error || `Proxy error: ${response.status} ${response.statusText}`);
+                    }
+
+                    responseData = await response.json();
+
+                } else {
+                    // Direct API call (will likely fail with CORS)
+                    const systemPrompt = this.createSystemPrompt();
+                    const userPrompt = this.createUserPrompt(query, context);
+                    const combinedQuery = `${systemPrompt}\n\n${userPrompt}`;
+
+                    const payload = {
+                        workflow_id: this.workflowId,
+                        query: combinedQuery,
+                        is_persistence_allowed: false,
+                        modelparams: {
+                            [this.defaultModel]: {
+                                temperature: '0.1',
+                                max_tokens: '4000',
+                                system_prompt: systemPrompt
+                            }
+                        }
+                    };
+
+                    const response = await fetch(`${this.baseURL}/v1/inference`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${this.apiToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    // Parse response
+                    responseData = await response.json();
+
+                    const resultData = responseData.result || {};
+
+                    // Extract content from Open Arena response structure
+                    let rawContent = '';
+                    if (typeof resultData === 'object') {
+                        const answerData = resultData.answer || {};
+                        if (typeof answerData === 'object') {
+                            // Try to find model response
+                            rawContent = answerData[this.defaultModel] || '';
+                            if (!rawContent) {
+                                // Fallback to first available value
+                                rawContent = Object.values(answerData)[0] || '';
+                            }
                         }
                     }
-                };
 
-                console.log('[OpenArena] Sending request...');
-
-                // Make API request
-                const response = await fetch(`${this.baseURL}/v1/inference`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${this.apiToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-
-                // Parse response
-                const responseData = await response.json();
-                const resultData = responseData.result || {};
-
-                // Extract content from Open Arena response structure
-                let rawContent = '';
-                if (typeof resultData === 'object') {
-                    const answerData = resultData.answer || {};
-                    if (typeof answerData === 'object') {
-                        // Try to find model response
-                        rawContent = answerData[this.defaultModel] || '';
-                        if (!rawContent) {
-                            // Fallback to first available value
-                            rawContent = Object.values(answerData)[0] || '';
-                        }
+                    if (typeof rawContent !== 'string') {
+                        rawContent = String(rawContent);
                     }
+
+                    // Add extracted content to responseData for consistency
+                    responseData.content = rawContent;
                 }
 
-                if (typeof rawContent !== 'string') {
-                    rawContent = String(rawContent);
-                }
-
-                const inferenceTime = (Date.now() - startTime) / 1000;
+                // Handle response (works for both proxy and direct API)
+                const content = responseData.content || '';
                 const tokensUsed = responseData.tokens_used || 0;
+                const inferenceTime = (Date.now() - startTime) / 1000;
 
                 console.log(`[OpenArena] Success - ${tokensUsed} tokens, ${inferenceTime.toFixed(2)}s`);
 
                 return {
                     success: true,
-                    content: rawContent,
+                    content: content,
                     tokens_used: tokensUsed,
                     inference_time: inferenceTime,
-                    model_used: this.defaultModel
+                    model_used: responseData.model_used || this.defaultModel
                 };
 
             } catch (error) {
                 const inferenceTime = (Date.now() - startTime) / 1000;
 
                 console.error('[OpenArena] Error:', error);
+                console.error('[OpenArena] Error type:', error.constructor.name);
+                console.error('[OpenArena] API URL:', `${this.baseURL}/v1/inference`);
+
+                // Provide detailed error message
+                let errorMessage = error.message;
+                if (error.message === 'Failed to fetch') {
+                    errorMessage = 'Network error: This is likely a CORS issue. TR OpenArena API needs to allow requests from your domain, or you need to use a backend proxy.';
+                }
 
                 return {
                     success: false,
                     content: '',
-                    error_message: error.message,
+                    error_message: errorMessage,
                     inference_time: inferenceTime,
                     model_used: this.defaultModel
                 };

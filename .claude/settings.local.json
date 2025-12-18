@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:www.thomsonreuters.com)"
+      "WebFetch(domain:www.thomsonreuters.com)",
+      "Bash(vercel logs:*)",
+      "Bash(vercel:*)"
     ]
   }
 }

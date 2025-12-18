@@ -10,6 +10,31 @@ This site provides comprehensive documentation for partners integrating with TR 
 - Interactive AI assistant powered by TR OpenArena
 - Responsive design optimized for desktop, tablet, and mobile
 
+## ⚠️ Chatbot Requires TR Network Access
+
+**The AI chatbot requires a proxy server with access to TR's internal network.**
+
+**Why:** TR OpenArena API (`aiopenarena.gcs.int.thomsonreuters.com`) is:
+- An **internal TR API** (only accessible from TR network)
+- **No CORS support** (designed for server-to-server communication)
+
+**Working Solution:**
+
+### For Local Development (POC) ✅
+Run the included local proxy on your TR machine:
+```bash
+node local-proxy.js
+```
+Then access the site at `http://localhost:8000` - chatbot will work!
+
+### For Production Deployment
+Deploy the proxy to TR's internal infrastructure:
+- TR's Kubernetes/OpenShift cluster
+- TR's internal Azure/AWS environment
+- Any TR internal server with HTTP access
+
+**📖 See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.**
+
 ## Features
 
 - **✅ 4 Comprehensive Pages**: Homepage, Getting Started, E-Invoicing Integration, FAQ
@@ -28,6 +53,9 @@ onesource-github/
 ├── getting-started.html                # Getting started guide
 ├── einvoicing-integration.html         # E-invoicing integration guide
 ├── faq.html                            # FAQ page
+├── local-proxy.js                      # ⭐ Local development proxy server
+├── api/
+│   └── proxy.js                        # Vercel serverless function (for reference)
 ├── assets/
 │   ├── css/
 │   │   ├── main.css                    # Global styles, layout, TR branding
@@ -39,17 +67,63 @@ onesource-github/
 │   │   ├── openarena-client.js         # TR OpenArena API client
 │   │   └── chatbot-controller.js       # Chat logic and context
 │   └── images/                         # (placeholder for assets)
+├── vercel.json                         # Vercel configuration
+├── package.json                        # Node.js project config
 ├── README.md                           # This file
+├── DEPLOYMENT.md                       # Proxy deployment guide
+├── PROJECT_SUMMARY.md                  # Project overview and architecture
 └── .gitignore                          # Git ignore rules
 ```
 
 ## Local Development
 
 ### Prerequisites
+- Node.js (v18 or higher) - Required for chatbot proxy
 - A modern web browser (Chrome, Firefox, Safari, or Edge)
-- (Optional) A local web server for testing (Python, Node.js, or VS Code Live Server)
+- TR network access (VPN or office network) - Required for chatbot
 
-### Running Locally
+### Running Locally with Working Chatbot
+
+**Step 1: Install dependencies**
+```bash
+cd onesource-github
+npm install
+```
+
+**Step 2: Start the proxy server (Terminal 1)**
+```bash
+node local-proxy.js
+```
+You should see:
+```
+🚀 Local Proxy Server running at http://localhost:3000
+📡 Forwarding requests to: https://aiopenarena.gcs.int.thomsonreuters.com
+✅ Ready to accept requests at: http://localhost:3000/api/proxy
+```
+
+**Step 3: Start the web server (Terminal 2)**
+```bash
+# Using Python 3
+python -m http.server 8000
+
+# OR using Node.js
+npx http-server -p 8000
+```
+
+**Step 4: Open in browser**
+```
+http://localhost:8000
+```
+
+**Step 5: Test the chatbot**
+1. Click the orange chat button (bottom-right)
+2. Enter your ESSO token and Workflow ID
+3. Send a test message: "How do I authenticate with the API?"
+4. The chatbot should respond! 🎉
+
+### Running Without Chatbot (Documentation Only)
+
+If you just want to view the documentation without the chatbot:
 
 **Option 1: Open directly in browser**
 ```bash
@@ -62,28 +136,7 @@ open index.html   # macOS
 xdg-open index.html  # Linux
 ```
 
-**Option 2: Use a local web server (recommended for testing)**
-
-Using Python:
-```bash
-# Python 3
-python -m http.server 8000
-
-# Then visit: http://localhost:8000
-```
-
-Using Node.js:
-```bash
-# Install http-server globally
-npm install -g http-server
-
-# Run server
-http-server -p 8000
-
-# Then visit: http://localhost:8000
-```
-
-Using VS Code:
+**Option 2: Using VS Code Live Server**
 ```
 1. Install "Live Server" extension
 2. Right-click on index.html
@@ -232,13 +285,14 @@ Supported languages: `python`, `javascript`, `json`, `xml`, `http`
 - Re-enter your API Token and Workflow ID
 - Ensure credentials are correct
 
-**Issue**: CORS error when calling TR OpenArena API
+**Issue**: "Failed to fetch" or CORS error when calling TR OpenArena API
 
 **Solution**:
-- TR OpenArena may not support CORS for browser requests
-- This is expected for POC
-- Production solution: Deploy a backend proxy server
-- Temporary: Use browser CORS extension for testing only
+- TR OpenArena doesn't support CORS for browser requests (this is normal)
+- **Deploy the included backend proxy to fix this**
+- See **[DEPLOYMENT.md](DEPLOYMENT.md)** for complete step-by-step instructions
+- Quick fix: Deploy to Vercel (free) with `vercel --prod`
+- ⚠️ The chatbot will NOT work without the proxy deployment
 
 ### FAQ Accordion Not Working
 
