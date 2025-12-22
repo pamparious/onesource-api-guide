@@ -3,7 +3,19 @@
     "allow": [
       "WebFetch(domain:www.thomsonreuters.com)",
       "Bash(vercel logs:*)",
-      "Bash(vercel:*)"
+      "Bash(vercel:*)",
+      "WebFetch(domain:pagero.github.io)",
+      "WebFetch(domain:developers.thomsonreuters.com)",
+      "Bash(node local-proxy.js)",
+      "Bash(timeout:*)",
+      "Bash(exit 0)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(start http://localhost:8000/api-reference.html)",
+      "Bash(start http://localhost:8000/api-reference-new.html)",
+      "Bash(start http://localhost:8000/index.html)",
+      "WebFetch(domain:logos-world.net)",
+      "Bash(ls:*)"
     ]
   }
 }

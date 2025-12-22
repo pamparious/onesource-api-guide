@@ -7,8 +7,9 @@ A professional, interactive GitHub Pages site for TR ONESOURCE API partner integ
 ### Key Features
 
 #### 1. **Comprehensive Documentation** ✅
-- **4 Pages**: Homepage, Getting Started, E-Invoicing Integration, FAQ
+- **5 Pages**: Homepage, Getting Started, E-Invoicing Integration, API Reference, FAQ
 - **Complete Coverage**: Authentication (OAuth 2.0), AR/AP flows, PUF format, error handling
+- **API Catalog**: Complete reference for 9 ONESOURCE APIs with descriptions and direct links
 - **Code Examples**: Python and JavaScript examples with syntax highlighting
 - **Interactive Components**: FAQ accordions, code copy buttons, smooth scrolling navigation
 
@@ -63,6 +64,7 @@ onesource-github/
 ├── index.html                       # Homepage - Overview & value prop
 ├── getting-started.html             # Getting started guide
 ├── einvoicing-integration.html      # E-invoicing integration guide
+├── api-reference.html               # API reference catalog
 ├── faq.html                         # FAQ page
 ├── local-proxy.js                   # Local development proxy server
 ├── api/
@@ -150,11 +152,12 @@ onesource-github/
 ## Current Status
 
 ### ✅ Complete & Working
-1. **Documentation Site**: All 4 pages with comprehensive content
+1. **Documentation Site**: All 5 pages with comprehensive content (including API Reference)
 2. **Responsive Design**: Works on desktop, tablet, mobile
 3. **Chatbot UI**: Professional chat widget with all features
 4. **Local Proxy**: Working POC with `local-proxy.js`
 5. **TR OpenArena Integration**: Successfully calling API and getting responses
+6. **API Catalog**: Complete reference for 9 ONESOURCE APIs
 
 ### 🔄 Pending for Production
 1. **Internal Proxy Deployment**: Need to deploy proxy to TR's internal infrastructure
@@ -259,7 +262,8 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions on deploying the pr
 ## Success Metrics
 
 ### Documentation Quality
-- ✅ 4 comprehensive pages covering all integration topics
+- ✅ 5 comprehensive pages covering all integration topics
+- ✅ Complete API catalog with 9 ONESOURCE APIs
 - ✅ 20+ code examples in Python and JavaScript
 - ✅ Visual diagrams for AR/AP flows
 - ✅ 20+ FAQ items covering common issues

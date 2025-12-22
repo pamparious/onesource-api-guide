@@ -37,10 +37,11 @@ Deploy the proxy to TR's internal infrastructure:
 
 ## Features
 
-- **✅ 4 Comprehensive Pages**: Homepage, Getting Started, E-Invoicing Integration, FAQ
+- **✅ 5 Comprehensive Pages**: Homepage, Getting Started, E-Invoicing Integration, API Reference, FAQ
 - **✅ TR Branding**: Professional design with Thomson Reuters colors and typography
 - **✅ Fully Responsive**: Mobile-first design with hamburger navigation
 - **✅ AI Chatbot**: Context-aware assistant using TR OpenArena API
+- **✅ API Reference**: Complete catalog of 9 ONESOURCE APIs with descriptions and links
 - **✅ Code Examples**: Syntax-highlighted examples in Python, JavaScript, XML, JSON
 - **✅ Interactive Components**: FAQ accordions, code copy buttons, smooth scrolling
 - **✅ Zero Dependencies**: Pure HTML/CSS/JavaScript (no build process)
@@ -52,6 +53,7 @@ onesource-github/
 ├── index.html                          # Homepage
 ├── getting-started.html                # Getting started guide
 ├── einvoicing-integration.html         # E-invoicing integration guide
+├── api-reference.html                  # API reference catalog
 ├── faq.html                            # FAQ page
 ├── local-proxy.js                      # ⭐ Local development proxy server
 ├── api/
@@ -120,6 +122,60 @@ http://localhost:8000
 2. Enter your ESSO token and Workflow ID
 3. Send a test message: "How do I authenticate with the API?"
 4. The chatbot should respond! 🎉
+
+### Managing the Local Proxy
+
+The local proxy server runs on your computer and forwards chatbot requests to TR OpenArena API.
+
+**Where It Runs:**
+- **Location**: Your local machine in the project directory (`C:\Users\6134505\Code\onesource-github\`)
+- **Port**: 3000 (localhost only - not accessible from other computers)
+- **Requirements**: TR network access (VPN or office network) to reach OpenArena API
+
+**Starting the Proxy:**
+Already covered in Step 2 above:
+```bash
+node local-proxy.js
+```
+Keep the terminal window open - closing it stops the proxy.
+
+**Stopping the Proxy:**
+
+**Method 1: Using Terminal (Easiest)**
+If you see the terminal window where the proxy is running, press **Ctrl + C**.
+
+**Method 2: Windows Command Prompt**
+```bash
+# Find the process ID (PID)
+netstat -ano | findstr :3000
+
+# You'll see output like:
+# TCP    0.0.0.0:3000           0.0.0.0:0              LISTENING       12345
+# The last number (12345) is the PID
+
+# Kill the process (replace 12345 with your PID)
+taskkill /PID 12345 /F
+```
+
+**Method 3: PowerShell (One Command)**
+```powershell
+Get-NetTCPConnection -LocalPort 3000 | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
+```
+
+**Checking If Proxy Is Running:**
+1. **Browser test**: Visit `http://localhost:3000/api/proxy` - you should see `{"error":"Not found"}` (this confirms the server is responding)
+2. **Terminal check**: Look for the terminal window with proxy output
+3. **Command line** (Windows):
+   ```bash
+   netstat -ano | findstr :3000
+   ```
+   If you see output, the proxy is running.
+
+**Troubleshooting:**
+
+**Issue**: "Error: listen EADDRINUSE: address already in use :::3000"
+
+**Solution**: Port 3000 is already in use. Stop the existing process using the methods above, then restart the proxy.
 
 ### Running Without Chatbot (Documentation Only)
 

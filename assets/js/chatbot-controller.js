@@ -9,13 +9,41 @@
     let openArenaClient = null;
 
     /**
+     * Get workflow ID based on selected agent
+     */
+    function getWorkflowIdForAgent() {
+        const selectedAgent = sessionStorage.getItem('selected_agent') || 'api';
+
+        // Workflow IDs for each agent
+        const workflowIds = {
+            'api': '74f9914d-b8c9-44f0-ad5c-13af2d02144c',
+            'puf': '74f9914d-b8c9-44f0-ad5c-13af2d02144c',  // Same as API for now
+            'ccr': '74f9914d-b8c9-44f0-ad5c-13af2d02144c'   // Same as API for now
+        };
+
+        return workflowIds[selectedAgent] || workflowIds['api'];
+    }
+
+    /**
      * Initialize chatbot controller
      */
     function initializeChatbot() {
         // Listen for send message events from chatbot-ui.js
         document.addEventListener('chatbot:sendMessage', handleSendMessage);
 
+        // Listen for agent switch events to reinitialize client
+        document.addEventListener('chatbot:agentSwitched', handleAgentSwitch);
+
         console.log('[Chatbot] Controller initialized');
+    }
+
+    /**
+     * Handle agent switch event
+     */
+    function handleAgentSwitch(event) {
+        console.log('[Chatbot] Agent switched, reinitializing client');
+        // Force client reinitialization on next message
+        openArenaClient = null;
     }
 
     /**
@@ -28,19 +56,21 @@
 
         // Get API credentials
         const apiToken = sessionStorage.getItem('openarena_token');
-        const workflowId = sessionStorage.getItem('openarena_workflow_id');
 
-        if (!apiToken || !workflowId) {
+        if (!apiToken) {
             if (window.showChatError) {
                 window.showChatError('API credentials not configured.');
             }
             return;
         }
 
+        // Get workflow ID based on selected agent
+        const workflowId = getWorkflowIdForAgent();
+
         // Initialize client if needed
         if (!openArenaClient) {
             openArenaClient = new window.OpenArenaClient(apiToken, workflowId);
-            console.log('[Chatbot] OpenArena client initialized');
+            console.log('[Chatbot] OpenArena client initialized with workflow ID:', workflowId);
         }
 
         // Extract current page context
@@ -125,13 +155,13 @@
      */
     window.testOpenArenaConnection = async function() {
         const apiToken = sessionStorage.getItem('openarena_token');
-        const workflowId = sessionStorage.getItem('openarena_workflow_id');
 
-        if (!apiToken || !workflowId) {
+        if (!apiToken) {
             console.error('[Chatbot] No API credentials found');
             return false;
         }
 
+        const workflowId = getWorkflowIdForAgent();
         const testClient = new window.OpenArenaClient(apiToken, workflowId);
         const isHealthy = await testClient.healthCheck();
 

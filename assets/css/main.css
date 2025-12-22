@@ -11,13 +11,15 @@
     --color-secondary: #002B49;      /* TR Navy */
     --color-secondary-dark: #001A2E;
 
-    /* Neutral Colors */
+    /* Neutral Colors - Light Mode */
     --color-white: #FFFFFF;
     --color-light-gray: #F5F7FA;
     --color-medium-gray: #E1E8ED;
     --color-gray: #8899A6;
     --color-dark-gray: #3C4858;
     --color-text: #2C3E50;
+    --color-bg: #FFFFFF;
+    --color-bg-secondary: #F5F7FA;
 
     /* Semantic Colors */
     --color-success: #28A745;
@@ -70,6 +72,28 @@
     --transition-slow: 0.5s ease;
 }
 
+/* === Dark Mode Variables === */
+html.dark {
+    /* Dark Mode Colors - Pagero Style */
+    --color-bg: #000000;              /* True black background */
+    --color-bg-secondary: #1A1A1A;    /* Dark grey for boxes/cards */
+    --color-text: #D1D5DB;            /* Very light grey text */
+    --color-light-gray: #2A2A2A;      /* Slightly lighter dark grey */
+    --color-medium-gray: #3A3A3A;     /* Medium dark grey for borders */
+    --color-gray: #9CA3AF;            /* Light grey for secondary text */
+    --color-dark-gray: #6B7280;
+    --color-white: #FFFFFF;           /* Pure white for headlines */
+
+    /* Link color for dark mode */
+    --color-link: #3B82F6;            /* Blue links in dark mode */
+    --color-link-hover: #60A5FA;      /* Lighter blue on hover */
+
+    /* Adjusted shadows for dark mode */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 10px 15px rgba(255, 128, 0, 0.1);
+}
+
 /* === Reset & Base Styles === */
 * {
     margin: 0;
@@ -87,7 +111,8 @@ body {
     font-size: var(--font-size-base);
     line-height: 1.6;
     color: var(--color-text);
-    background-color: var(--color-white);
+    background-color: var(--color-bg);
+    transition: background-color var(--transition-base), color var(--transition-base);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -99,6 +124,15 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.3;
     margin-bottom: var(--spacing-sm);
     color: var(--color-secondary);
+}
+
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6 {
+    color: var(--color-white);
 }
 
 h1 { font-size: var(--font-size-4xl); }
@@ -123,12 +157,28 @@ a:hover {
     text-decoration: underline;
 }
 
+html.dark a {
+    color: var(--color-link);
+}
+
+html.dark a:hover {
+    color: var(--color-link-hover);
+    text-decoration: underline;
+}
+
 code {
     font-family: var(--font-family-mono);
     font-size: 0.9em;
     background-color: var(--color-light-gray);
     padding: 0.2em 0.4em;
     border-radius: var(--radius-sm);
+    color: var(--color-text);
+}
+
+html.dark code {
+    background-color: var(--color-light-gray);
+    color: var(--color-white);
+    border: 1px solid var(--color-medium-gray);
 }
 
 pre {
@@ -140,10 +190,16 @@ pre {
     margin-bottom: var(--spacing-sm);
 }
 
+html.dark pre {
+    background-color: #1A1A1A;
+    border: 1px solid var(--color-medium-gray);
+}
+
 pre code {
     background: none;
     padding: 0;
     color: inherit;
+    border: none;
 }
 
 ul, ol {
@@ -212,6 +268,10 @@ ul, ol {
     color: var(--color-secondary);
     letter-spacing: 1px;
     margin: 0;
+}
+
+html.dark .logo {
+    color: var(--color-white);
 }
 
 .logo-subtitle {

@@ -10,33 +10,53 @@
      * Creates the complete chatbot UI structure
      */
     function createChatbotUI() {
-        const chatWidget = document.getElementById('chatWidget');
-        if (!chatWidget) return;
+        const chatContainer = document.getElementById('chatbot-container');
+        if (!chatContainer) {
+            console.warn('[Chatbot] Container #chatbot-container not found');
+            return;
+        }
+
+        // Create overlay
+        const chatOverlay = document.createElement('div');
+        chatOverlay.id = 'chatOverlay';
 
         // Create chat button
         const chatButton = document.createElement('button');
         chatButton.id = 'chatButton';
-        chatButton.setAttribute('aria-label', 'Open chat assistant');
-        chatButton.innerHTML = '<i class="fas fa-comments"></i>';
+        chatButton.setAttribute('aria-label', 'Open AI Assistant');
+        chatButton.innerHTML = '<i class="fas fa-robot"></i>';
 
         // Create chat panel
         const chatPanel = document.createElement('div');
         chatPanel.id = 'chatPanel';
         chatPanel.innerHTML = `
             <div class="chat-header">
-                <div class="chat-header-title">
-                    <i class="fas fa-robot"></i>
-                    <div>
-                        <h3>API Assistant</h3>
-                        <div class="chat-header-subtitle">Ask me anything!</div>
+                <div class="chat-header-top">
+                    <div class="chat-header-title">
+                        <i class="fas fa-robot"></i>
+                        <div>
+                            <h3>AI Assistant</h3>
+                            <div class="chat-header-subtitle">Powered by OpenArena</div>
+                        </div>
+                    </div>
+                    <div class="chat-header-actions">
+                        <button class="chat-header-btn" id="chatConfigBtn" aria-label="Configure API settings" title="API Settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <button class="chat-header-btn" id="chatCloseBtn" aria-label="Close chat">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="chat-header-actions">
-                    <button class="chat-header-btn" id="chatConfigBtn" aria-label="Configure API settings" title="API Settings">
-                        <i class="fas fa-cog"></i>
+                <div class="agent-switcher">
+                    <button class="agent-tab active" data-agent="api">
+                        <i class="fas fa-code"></i> API
                     </button>
-                    <button class="chat-header-btn" id="chatCloseBtn" aria-label="Close chat">
-                        <i class="fas fa-times"></i>
+                    <button class="agent-tab" data-agent="puf">
+                        <i class="fas fa-file-code"></i> PUF
+                    </button>
+                    <button class="agent-tab" data-agent="ccr">
+                        <i class="fas fa-shield-alt"></i> CCR
                     </button>
                 </div>
             </div>
@@ -97,7 +117,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>To use the AI assistant, please enter your TR OpenArena credentials:</p>
+                    <p>To use the AI assistant, please enter your TR OpenArena API Token:</p>
                     <div class="modal-warning">
                         <strong>POC Notice:</strong> This is a proof-of-concept implementation. Your credentials are stored in your browser session only and will be cleared when you close the browser.
                     </div>
@@ -109,14 +129,6 @@
                             placeholder="Enter your TR OpenArena API token"
                             autocomplete="off">
                     </div>
-                    <div class="form-group">
-                        <label for="workflowIdInput">Workflow ID:</label>
-                        <input
-                            type="text"
-                            id="workflowIdInput"
-                            placeholder="Enter your workflow ID"
-                            autocomplete="off">
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn-modal btn-modal-secondary" id="modalCancelBtn">Cancel</button>
@@ -125,13 +137,16 @@
             </div>
         `;
 
-        // Append elements to chat widget
-        chatWidget.appendChild(chatButton);
-        chatWidget.appendChild(chatPanel);
-        chatWidget.appendChild(apiKeyModal);
+        // Append elements to chat container
+        chatContainer.appendChild(chatOverlay);
+        chatContainer.appendChild(chatButton);
+        chatContainer.appendChild(chatPanel);
+        chatContainer.appendChild(apiKeyModal);
 
         // Initialize event listeners
         initializeEventListeners();
+
+        console.log('[Chatbot] UI initialized successfully');
     }
 
     /**
@@ -139,7 +154,9 @@
      */
     function initializeEventListeners() {
         const chatButton = document.getElementById('chatButton');
+        const headerAIButton = document.getElementById('headerAIButton');
         const chatPanel = document.getElementById('chatPanel');
+        const chatOverlay = document.getElementById('chatOverlay');
         const chatCloseBtn = document.getElementById('chatCloseBtn');
         const chatConfigBtn = document.getElementById('chatConfigBtn');
         const apiKeyModal = document.getElementById('apiKeyModal');
@@ -149,9 +166,22 @@
         const chatInput = document.getElementById('chatInput');
         const chatSendBtn = document.getElementById('chatSendBtn');
 
-        // Toggle chat panel
+        // Toggle chat panel (floating button)
         if (chatButton) {
             chatButton.addEventListener('click', function() {
+                const isActive = chatPanel.classList.contains('active');
+
+                if (isActive) {
+                    closeChatPanel();
+                } else {
+                    openChatPanel();
+                }
+            });
+        }
+
+        // Toggle chat panel (header button)
+        if (headerAIButton) {
+            headerAIButton.addEventListener('click', function() {
                 const isActive = chatPanel.classList.contains('active');
 
                 if (isActive) {
@@ -165,6 +195,11 @@
         // Close chat panel
         if (chatCloseBtn) {
             chatCloseBtn.addEventListener('click', closeChatPanel);
+        }
+
+        // Close chat on overlay click
+        if (chatOverlay) {
+            chatOverlay.addEventListener('click', closeChatPanel);
         }
 
         // Open API key modal
@@ -226,6 +261,49 @@
                 }
             }
         });
+
+        // Handle agent switcher
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.agent-tab')) {
+                const tab = e.target.closest('.agent-tab');
+                const agent = tab.getAttribute('data-agent');
+                switchAgent(agent);
+            }
+        });
+    }
+
+    /**
+     * Switch active agent
+     */
+    function switchAgent(agent) {
+        // Update active tab
+        document.querySelectorAll('.agent-tab').forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.getAttribute('data-agent') === agent) {
+                tab.classList.add('active');
+            }
+        });
+
+        // Store selected agent
+        sessionStorage.setItem('selected_agent', agent);
+
+        // Update header subtitle
+        const subtitle = document.querySelector('.chat-header-subtitle');
+        if (subtitle) {
+            const agentNames = {
+                'api': 'API Integration Expert',
+                'puf': 'PUF Format Specialist',
+                'ccr': 'CCR Compliance Guide'
+            };
+            subtitle.textContent = agentNames[agent] || 'Powered by OpenArena';
+        }
+
+        // Dispatch event to notify controller to reinitialize client
+        document.dispatchEvent(new CustomEvent('chatbot:agentSwitched', {
+            detail: { agent }
+        }));
+
+        console.log(`[Chatbot] Switched to ${agent} agent`);
     }
 
     /**
@@ -233,15 +311,19 @@
      */
     function openChatPanel() {
         const chatButton = document.getElementById('chatButton');
+        const headerAIButton = document.getElementById('headerAIButton');
         const chatPanel = document.getElementById('chatPanel');
+        const chatOverlay = document.getElementById('chatOverlay');
 
         chatPanel.classList.add('active');
-        chatButton.classList.add('active');
+        if (chatButton) chatButton.classList.add('active');
+        if (headerAIButton) headerAIButton.classList.add('active');
+        if (chatOverlay) chatOverlay.classList.add('active');
 
-        // Change icon
-        const icon = chatButton.querySelector('i');
-        if (icon) {
-            icon.className = 'fas fa-times';
+        // Change icons
+        if (chatButton) {
+            const icon = chatButton.querySelector('i');
+            if (icon) icon.className = 'fas fa-times';
         }
 
         // Check if API credentials are set, if not show modal
@@ -263,16 +345,23 @@
      */
     function closeChatPanel() {
         const chatButton = document.getElementById('chatButton');
+        const headerAIButton = document.getElementById('headerAIButton');
         const chatPanel = document.getElementById('chatPanel');
+        const chatOverlay = document.getElementById('chatOverlay');
 
         chatPanel.classList.remove('active');
-        chatButton.classList.remove('active');
+        if (chatButton) chatButton.classList.remove('active');
+        if (headerAIButton) headerAIButton.classList.remove('active');
+        if (chatOverlay) chatOverlay.classList.remove('active');
 
-        // Change icon back
-        const icon = chatButton.querySelector('i');
-        if (icon) {
-            icon.className = 'fas fa-comments';
+        // Change icons back
+        if (chatButton) {
+            const icon = chatButton.querySelector('i');
+            if (icon) icon.className = 'fas fa-robot';
         }
+
+        // Restore body scroll
+        document.body.style.overflow = '';
     }
 
     /**
@@ -281,17 +370,12 @@
     function openApiKeyModal() {
         const apiKeyModal = document.getElementById('apiKeyModal');
         const apiTokenInput = document.getElementById('apiTokenInput');
-        const workflowIdInput = document.getElementById('workflowIdInput');
 
         // Pre-fill with existing values if any
         const storedToken = sessionStorage.getItem('openarena_token');
-        const storedWorkflowId = sessionStorage.getItem('openarena_workflow_id');
 
         if (apiTokenInput && storedToken) {
             apiTokenInput.value = storedToken;
-        }
-        if (workflowIdInput && storedWorkflowId) {
-            workflowIdInput.value = storedWorkflowId;
         }
 
         apiKeyModal.classList.add('active');
@@ -315,19 +399,16 @@
      */
     function saveApiCredentials() {
         const apiTokenInput = document.getElementById('apiTokenInput');
-        const workflowIdInput = document.getElementById('workflowIdInput');
 
         const apiToken = apiTokenInput.value.trim();
-        const workflowId = workflowIdInput.value.trim();
 
-        if (!apiToken || !workflowId) {
-            alert('Please enter both API token and workflow ID.');
+        if (!apiToken) {
+            alert('Please enter your API token.');
             return;
         }
 
         // Store in sessionStorage
         sessionStorage.setItem('openarena_token', apiToken);
-        sessionStorage.setItem('openarena_workflow_id', workflowId);
 
         closeApiKeyModal();
 
@@ -339,8 +420,7 @@
      * Check if API credentials are set
      */
     function hasApiCredentials() {
-        return sessionStorage.getItem('openarena_token') &&
-               sessionStorage.getItem('openarena_workflow_id');
+        return sessionStorage.getItem('openarena_token');
     }
 
     /**

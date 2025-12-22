@@ -6,8 +6,20 @@
     <meta name="description" content="TR ONESOURCE E-Invoicing API Partner Integration Guide - Comprehensive documentation for implementing global e-invoicing compliance">
     <title>TR ONESOURCE E-Invoicing | Partner Integration Guide</title>
 
+    <!-- Dark Mode Detection (must run before styles to avoid flash) -->
+    <script>
+        (function() {
+            const cl = document.documentElement.classList;
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                cl.add('dark');
+            }
+        })();
+    </script>
+
     <!-- Styles -->
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/chatbot.css">
 
@@ -15,56 +27,91 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navigation Header -->
+    <!-- Fixed Header -->
     <header class="site-header">
-        <nav class="navbar">
-            <div class="container">
-                <div class="navbar-brand">
-                    <h1 class="logo">THOMSON REUTERS</h1>
-                    <span class="logo-subtitle">ONESOURCE API Guide</span>
-                </div>
-
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+        <div class="container" style="display: flex; align-items: center; justify-content: space-between; height: 100%; padding: 0 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
                     <i class="fas fa-bars"></i>
                 </button>
-
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="getting-started.html">Getting Started</a></li>
-                    <li><a href="einvoicing-integration.html">E-Invoicing Integration</a></li>
-                    <li><a href="faq.html">FAQ</a></li>
-                    <li><a href="https://developers.thomsonreuters.com" target="_blank" class="external-link">
-                        Developer Portal <i class="fas fa-external-link-alt"></i>
-                    </a></li>
-                </ul>
+                <a href="index.html" class="navbar-brand" style="display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                    <div style="background-color: white; padding: 4px 8px; border-radius: 4px; display: flex; align-items: center;">
+                        <img src="assets/images/Thomson-Reuters-Logo-500x281.png" alt="Thomson Reuters" style="height: 24px; width: auto;">
+                    </div>
+                    <div style="border-left: 2px solid #444; height: 32px; margin: 0 0.25rem;"></div>
+                    <span style="font-size: 0.875rem; color: #cccccc; font-weight: 500; white-space: nowrap;">ONESOURCE API Guide</span>
+                </a>
             </div>
-        </nav>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button id="headerAIButton" class="header-ai-button" aria-label="Open AI Assistant">
+                    <i class="fas fa-robot"></i>
+                    <span class="ai-button-text">AI Assistant</span>
+                </button>
+            </div>
+        </div>
     </header>
 
-    <!-- Hero Section -->
-    <main>
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-title">TR ONESOURCE E-Invoicing</h1>
-                    <p class="hero-subtitle">Partner Integration Guide</p>
-                    <p class="hero-description">
-                        Build compliant e-invoicing solutions with Thomson Reuters ONESOURCE.
-                        Seamless integration, global compliance, and automated document exchange across 80+ countries.
-                    </p>
-                    <div class="hero-actions">
-                        <a href="getting-started.html" class="btn btn-primary">Get Started</a>
-                        <a href="#overview" class="btn btn-secondary">Learn More</a>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- Overlay for mobile sidebar -->
+    <div class="sidebar-overlay"></div>
 
-        <!-- Overview Section -->
-        <section id="overview" class="section section-light">
-            <div class="container">
-                <h2 class="section-title">What is ONESOURCE E-Invoicing?</h2>
-                <p class="section-intro">
+    <!-- Main Container -->
+    <div id="retype-container">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar-left">
+            <nav class="sidebar-nav">
+                <!-- Home Section (Active) -->
+                <div class="nav-section">
+                    <a href="index.html" class="nav-section-title active" style="text-decoration: none;">
+                        <span><i class="fas fa-home" style="margin-right: 0.5rem; width: 20px;"></i> Home</span>
+                    </a>
+                </div>
+
+                <!-- Getting Started Section -->
+                <div class="nav-section">
+                    <a href="getting-started.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-rocket" style="margin-right: 0.5rem; width: 20px;"></i> Getting Started</span>
+                    </a>
+                </div>
+
+                <!-- E-Invoicing Integration Section -->
+                <div class="nav-section">
+                    <a href="einvoicing-integration.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-file-invoice" style="margin-right: 0.5rem; width: 20px;"></i> E-Invoicing Integration</span>
+                    </a>
+                </div>
+
+                <!-- API Reference Section -->
+                <div class="nav-section">
+                    <a href="api-reference.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-code" style="margin-right: 0.5rem; width: 20px;"></i> API Reference</span>
+                    </a>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="nav-section">
+                    <a href="faq.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-question-circle" style="margin-right: 0.5rem; width: 20px;"></i> FAQ</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-wrapper">
+            <main class="main-content-area">
+                <h1 id="overview">TR ONESOURCE E-Invoicing</h1>
+                <p style="font-size: 1.5rem; font-weight: 300; color: var(--color-gray); margin-bottom: 1rem;">Partner Integration Guide</p>
+                <p style="font-size: 1.125rem; color: var(--color-gray); margin-bottom: 2rem;">
+                    Build compliant e-invoicing solutions with Thomson Reuters ONESOURCE.
+                    Seamless integration, global compliance, and automated document exchange across 80+ countries.
+                </p>
+                <div style="display: flex; gap: 1rem; margin-bottom: 3rem;">
+                    <a href="getting-started.html" class="btn btn-primary">Get Started</a>
+                    <a href="#what-is-onesource" class="btn btn-secondary" style="background-color: transparent; color: var(--color-text); border: 2px solid var(--color-medium-gray);">Learn More</a>
+                </div>
+
+                <h2 id="what-is-onesource">What is ONESOURCE E-Invoicing?</h2>
+                <p>
                     ONESOURCE E-Invoicing is a centralized platform designed to streamline electronic invoicing management
                     for multinational businesses, offering pre-built integrations connecting financial systems, including
                     common enterprise resource planning (ERP) systems.
@@ -103,13 +150,8 @@
                         <p>Connect to 14 million businesses globally through the ONESOURCE Pagero network.</p>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- Value Proposition Section -->
-        <section class="section">
-            <div class="container">
-                <h2 class="section-title">Why Partner with ONESOURCE?</h2>
+                <h2 id="why-partner">Why Partner with ONESOURCE?</h2>
 
                 <div class="value-props">
                     <div class="value-prop">
@@ -134,13 +176,8 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- Key Concepts Section -->
-        <section class="section section-light">
-            <div class="container">
-                <h2 class="section-title">Key Concepts</h2>
+                <h2 id="key-concepts">Key Concepts</h2>
 
                 <div class="concepts-grid">
                     <div class="concept-card">
@@ -175,24 +212,16 @@
                         </p>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- CTA Section -->
-        <section class="section section-cta">
-            <div class="container">
-                <h2>Ready to Get Started?</h2>
-                <p>Begin your integration journey with our comprehensive guide.</p>
-                <a href="getting-started.html" class="btn btn-primary btn-large">Start Integrating</a>
-            </div>
-        </section>
-
-        <!-- Resources Section -->
-        <section class="section">
-            <div class="container">
-                <h2 class="section-title">Additional Resources</h2>
+                <h2 id="additional-resources">Additional Resources</h2>
 
                 <div class="resources-grid">
+                    <a href="api-reference.html" class="resource-card">
+                        <i class="fas fa-code"></i>
+                        <h3>API Reference</h3>
+                        <p>Complete catalog of 9 E-Invoicing APIs</p>
+                    </a>
+
                     <a href="https://developers.thomsonreuters.com" target="_blank" class="resource-card">
                         <i class="fas fa-book"></i>
                         <h3>Developer Portal</h3>
@@ -205,61 +234,37 @@
                         <p>Pagero Universal Format documentation</p>
                     </a>
 
-                    <a href="https://pagero.github.io/partners/partner-integration-guidelines/" target="_blank" class="resource-card">
-                        <i class="fas fa-users"></i>
-                        <h3>Partner Guidelines</h3>
-                        <p>Integration best practices and patterns</p>
-                    </a>
-
                     <a href="faq.html" class="resource-card">
                         <i class="fas fa-question-circle"></i>
                         <h3>FAQ</h3>
                         <p>Common questions and troubleshooting</p>
                     </a>
                 </div>
-            </div>
-        </section>
-    </main>
+            </main>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>THOMSON REUTERS</h4>
-                    <p>ONESOURCE API Integration Guide</p>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <ul>
-                        <li><a href="https://developers.thomsonreuters.com" target="_blank">Developer Portal</a></li>
-                        <li><a href="getting-started.html">Getting Started</a></li>
-                        <li><a href="einvoicing-integration.html">Integration Guide</a></li>
-                        <li><a href="faq.html">FAQ</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="faq.html">Documentation</a></li>
-                        <li><a href="https://www.thomsonreuters.com" target="_blank">Contact Support</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2025 Thomson Reuters. All rights reserved. | <span class="version">API Guide v1.0</span></p>
-                <p class="last-updated">Last Updated: January 2025</p>
-            </div>
+            <!-- Footer -->
+            <footer class="site-footer" style="border-top: 1px solid var(--color-medium-gray); padding: 2rem 3rem; margin-top: 4rem;">
+                <p style="text-align: center; color: var(--color-gray); font-size: 0.875rem;">
+                    © 2025 Thomson Reuters. All rights reserved.
+                </p>
+            </footer>
         </div>
-    </footer>
 
-    <!-- Chat Widget Button (initially hidden, populated by chatbot.js) -->
-    <div id="chatWidget"></div>
+        <!-- Right Sidebar (Table of Contents) -->
+        <aside class="sidebar-right">
+            <div class="toc-heading">Contents</div>
+            <ul class="toc-list">
+                <!-- Generated dynamically by JavaScript -->
+            </ul>
+        </aside>
+    </div>
+
+    <!-- Chatbot Widget -->
+    <div id="chatbot-container"></div>
 
     <!-- Scripts -->
+    <script src="assets/js/theme-toggle.js"></script>
+    <script src="assets/js/layout.js"></script>
     <script src="assets/js/navigation.js"></script>
     <script src="assets/js/chatbot-ui.js"></script>
     <script src="assets/js/openarena-client.js"></script>

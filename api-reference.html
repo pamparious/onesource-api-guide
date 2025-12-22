@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TR ONESOURCE API Reference - Complete catalog of ONESOURCE APIs for e-invoicing, tax calculation, global trade, and more">
+    <title>API Reference | TR ONESOURCE</title>
+
+    <!-- Dark Mode Detection (must run before styles to avoid flash) -->
+    <script>
+        (function() {
+            const cl = document.documentElement.classList;
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                cl.add('dark');
+            }
+        })();
+    </script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/chatbot.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="site-header">
+        <div class="container" style="display: flex; align-items: center; justify-content: space-between; height: 100%; padding: 0 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="index.html" class="navbar-brand" style="display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                    <div style="background-color: white; padding: 4px 8px; border-radius: 4px; display: flex; align-items: center;">
+                        <img src="assets/images/Thomson-Reuters-Logo-500x281.png" alt="Thomson Reuters" style="height: 24px; width: auto;">
+                    </div>
+                    <div style="border-left: 2px solid #444; height: 32px; margin: 0 0.25rem;"></div>
+                    <span style="font-size: 0.875rem; color: #cccccc; font-weight: 500; white-space: nowrap;">ONESOURCE API Guide</span>
+                </a>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button id="headerAIButton" class="header-ai-button" aria-label="Open AI Assistant">
+                    <i class="fas fa-robot"></i>
+                    <span class="ai-button-text">AI Assistant</span>
+                </button>
+                <a href="https://developers.thomsonreuters.com" target="_blank" style="font-size: 0.875rem; color: var(--color-gray); text-decoration: none; display: none;">
+                    Developer Portal <i class="fas fa-external-link-alt" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Main Container -->
+    <div id="retype-container">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar-left">
+            <nav class="sidebar-nav">
+                <!-- Home Section -->
+                <div class="nav-section">
+                    <a href="index.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-home" style="margin-right: 0.5rem; width: 20px;"></i> Home</span>
+                    </a>
+                </div>
+
+                <!-- Getting Started Section -->
+                <div class="nav-section">
+                    <a href="getting-started.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-rocket" style="margin-right: 0.5rem; width: 20px;"></i> Getting Started</span>
+                    </a>
+                </div>
+
+                <!-- E-Invoicing Integration Section -->
+                <div class="nav-section">
+                    <a href="einvoicing-integration.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-file-invoice" style="margin-right: 0.5rem; width: 20px;"></i> E-Invoicing Integration</span>
+                    </a>
+                </div>
+
+                <!-- API Reference Section (Active) -->
+                <div class="nav-section">
+                    <div class="nav-section-title active">
+                        <span><i class="fas fa-code" style="margin-right: 0.5rem; width: 20px;"></i> API Reference</span>
+                        <i class="fas fa-chevron-down nav-section-icon"></i>
+                    </div>
+                    <div class="nav-section-items">
+                        <a href="#overview" class="nav-item">Overview</a>
+                        <a href="#get-documents" class="nav-item">Get Documents API</a>
+                        <a href="#post-documents" class="nav-item">Post Documents API</a>
+                        <a href="#get-document" class="nav-item">Get A Document API</a>
+                        <a href="#get-companies" class="nav-item">Get Companies API</a>
+                        <a href="#presentation" class="nav-item">Presentation API</a>
+                        <a href="#source" class="nav-item">Source API</a>
+                        <a href="#action" class="nav-item">Action API</a>
+                        <a href="#target" class="nav-item">Target API</a>
+                        <a href="#external-status" class="nav-item">External Status API</a>
+                        <a href="#workflow" class="nav-item">Integration Workflows</a>
+                        <a href="#support" class="nav-item">API Support</a>
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="nav-section">
+                    <a href="faq.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-question-circle" style="margin-right: 0.5rem; width: 20px;"></i> FAQ</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-wrapper">
+            <main class="main-content-area">
+                <h1 id="overview">ONESOURCE E-Invoicing API Reference</h1>
+                <p class="intro" style="font-size: 1.125rem; color: var(--color-gray); margin-bottom: 2rem;">
+                    Thomson Reuters ONESOURCE E-Invoicing provides a comprehensive suite of APIs for managing electronic invoicing workflows,
+                    document processing, and compliance. These APIs enable you to submit, retrieve, track, and manage e-invoicing documents
+                    programmatically. All APIs use OAuth 2.0 authentication and follow RESTful design principles.
+                </p>
+
+                <div class="alert alert-info" style="margin-bottom: 2rem;">
+                    <h4 style="margin-top: 0;">Quick Navigation</h4>
+                    <p style="margin-bottom: 0.5rem;">New to ONESOURCE E-Invoicing? Start here:</p>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <a href="getting-started.html" class="btn btn-secondary btn-sm" style="background-color: var(--color-primary); color: white; border: none;">Getting Started Guide</a>
+                        <a href="einvoicing-integration.html" class="btn btn-secondary btn-sm" style="background-color: var(--color-primary); color: white; border: none;">Integration Guide</a>
+                        <a href="faq.html" class="btn btn-secondary btn-sm" style="background-color: var(--color-primary); color: white; border: none;">FAQ</a>
+                    </div>
+                </div>
+
+                <h2 id="get-documents">Get Documents API</h2>
+                <div class="api-card">
+                    <div class="api-header">
+                        <h3 style="margin: 0;">Get Documents API</h3>
+                        <span class="api-badge">E-Invoicing</span>
+                    </div>
+                    <p class="api-description">
+                        Provides a list of all sent and received e-invoicing documents available for a given company.
+                        Supports filtering by company, document type, and status to enable document tracking and reconciliation workflows.
+                    </p>
+                    <div class="api-links">
+                        <a href="https://developers.thomsonreuters.com/pages/api-catalog/2638d12c-c7f8-4274-9793-00415e51f084#Overview"
+                           target="_blank"
+                           class="btn btn-primary btn-sm">
+                            View Documentation <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <h2 id="post-documents">Post Documents API</h2>
+                <div class="api-card">
+                    <div class="api-header">
+                        <h3 style="margin: 0;">Post Documents API</h3>
+                        <span class="api-badge">E-Invoicing</span>
+                    </div>
+                    <p class="api-description">
+                        Used to submit (send) e-invoicing documents into ONESOURCE E-Invoicing for processing and delivery.
+                        This is the primary API for pushing outbound invoices and related documents into the OEI platform.
+                    </p>
+                    <div class="api-links">
+                        <a href="https://developers.thomsonreuters.com/pages/api-catalog/1c016fe8-d97d-4c15-8bbf-1e057fab1fdd#Overview"
+                           target="_blank"
+                           class="btn btn-primary btn-sm">
+                            View Documentation <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <h2 id="get-document">Get A Document API</h2>
+                <div class="api-card">
+                    <div class="api-header">
+                        <h3 style="margin: 0;">Get A Document API</h3>
+                        <span class="api-badge">E-Invoicing</span>
+                    </div>
+                    <p class="api-description">
+                        Retrieves a single document using a provided document ID. This API is typically used to fetch
+                        detailed metadata or validate the existence and state of a specific invoice or document.
+                    </p>
+                    <div class="api-links">
+                        <a href="https://developers.thomsonreuters.com/pages/api-catalog/852c78d2-f37f-4d0d-9f20-4faf5e6e3498#Overview"
+                           target="_blank"
+                           class="btn btn-primary btn-sm">
+                            View Documentation <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <h2 id="get-companies">Get Companies API</h2>
+                <div class="api-card">
+                    <div class="api-header">
+                        <h3 style="margin: 0;">Get Companies API</h3>
+                        <span class="api-badge">E-Invoicing</span>
+                    </div>
+                    <p class="api-description">
+                        Returns a list of all companies that the authenticated user has access to within a given tenant.
+                        This API is commonly used to discover company identifiers required by other OEI APIs.
+                    </p>
+                    <div class="api-links">
+                        <a href="https://developers.thomsonreuters.com/pages/api-catalog/eab11cf9-3f5b-5688-b50e-dc1fed5c402e#Overview"
+                           target="_blank"
+                           class="btn btn-primary btn-sm">
+                            View Documentation <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <h2 id="presentation">Presentation API</h2>
+                <div class="api-card">
+                    <div class="api-header">
+                        <h3 style="margin: 0;">Presentation API</h3>
+                        <span class="api-badge">E-Invoicing</span>
+                    </div>
+                    <p class="api-description">
+                        Retrieves the presentation version of a document (for example, a human-readable or rendered format
+                        suitable for viewing or display). Often used for UI display or audit purposes.
+                    </p>
+                    <div class="api-links">
+                        <a href="https://developers.thomsonreuters.com/pages/api-catalog/6c16ad58-1136-40aa-aa4d-5d617372c7c9#Overview"
+                           target="_blank"
+                           class="btn btn-primary btn-sm">
+                            View Documentation <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <h2 id="source">Source API</h2>
+                <div class="api-card">
+                    <div class="api-header">
+                        <h3 style="margin: 0;">Source API</h3>
+                        <span class="api-badge">E-Invoicing</span>
+                    </div>
+                    <p class="api-description">
+                        Returns the source document that was originally submitted to ONESOURCE E-Invoicing. This is useful
+                        for troubleshooting, auditing, or validating the original payload provided by the sender.
+                    </p>
+                    <div class="api-links">
+                        <a href="https://developers.thomsonreuters.com/pages/api-catalog/9f328e83-441c-4218-a48e-440cf99303cb#Overview"
+                           target="_blank"
+                           class="btn btn-primary btn-sm">
+                            View Documentation <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <h2 id="action">Action API</h2>
+                <div class="api-card">
+                    <div class="api-header">
+                        <h3 style="margin: 0;">Action API</h3>
+                        <span class="api-badge">E-Invoicing</span>
+                    </div>
+                    <p class="api-description">
+                        Allows operational actions such as Cancel or Restart on a document. This API is used when errors
+                        occur during processing in OEI or downstream systems (e.g., Pagero) and corrective action is required.
+                    </p>
+                    <div class="api-links">
+                        <a href="https://developers.thomsonreuters.com/pages/api-catalog/38d8017d-5e6b-468f-acb4-b2750cccd84f#Overview"
+                           target="_blank"
+                           class="btn btn-primary btn-sm">
+                            View Documentation <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <h2 id="target">Target API</h2>
+                <div class="api-card">
+                    <div class="api-header">
+                        <h3 style="margin: 0;">Target API</h3>
+                        <span class="api-badge">E-Invoicing</span>
+                    </div>
+                    <p class="api-description">
+                        Retrieves the target document generated as part of the e-invoicing process. This typically represents
+                        the transformed or routed version of the original source document sent to external networks or partners.
+                    </p>
+                    <div class="api-links">
+                        <a href="https://developers.thomsonreuters.com/pages/api-catalog/728f00b1-7e63-4688-b70f-b379981784d8#Overview"
+                           target="_blank"
+                           class="btn btn-primary btn-sm">
+                            View Documentation <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <h2 id="external-status">External Status API</h2>
+                <div class="api-card">
+                    <div class="api-header">
+                        <h3 style="margin: 0;">External Status API</h3>
+                        <span class="api-badge">E-Invoicing</span>
+                    </div>
+                    <p class="api-description">
+                        Used to update external status and status messages for one or more document IDs within the ONESOURCE
+                        E-Invoicing database. Enables synchronization of document statuses with external systems or networks.
+                    </p>
+                    <div class="api-links">
+                        <a href="https://developers.thomsonreuters.com/pages/api-catalog/d923235a-2516-4d62-86d4-7b4d7a135842#Overview"
+                           target="_blank"
+                           class="btn btn-primary btn-sm">
+                            View Documentation <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <h2 id="workflow">API Integration Workflows</h2>
+                <p>Understanding which APIs to use for common scenarios:</p>
+
+                <h3>Sending Invoices (AR/Outbound Flow)</h3>
+                <div style="background-color: var(--color-code-bg); padding: 1.5rem; border-radius: 6px; margin-bottom: 1.5rem;">
+                    <ol style="margin: 0; padding-left: 1.5rem;">
+                        <li><strong><a href="#get-companies">Get Companies API</a></strong> - Discover available company IDs</li>
+                        <li><strong><a href="#post-documents">Post Documents API</a></strong> - Submit invoice in PUF format</li>
+                        <li><strong><a href="#get-documents">Get Documents API</a></strong> - Poll for status updates (sendStatus, clearanceStatus)</li>
+                        <li><strong><a href="#get-document">Get A Document API</a></strong> - Retrieve detailed status of specific invoice</li>
+                        <li><strong><a href="#action">Action API</a></strong> - Cancel or restart if errors occur</li>
+                        <li><strong><a href="#presentation">Presentation API</a></strong> - Download PDF for archival (optional)</li>
+                    </ol>
+                    <p style="margin-top: 1rem; margin-bottom: 0;"><a href="einvoicing-integration.html#ar-flow">View detailed AR integration guide →</a></p>
+                </div>
+
+                <h3>Receiving Invoices (AP/Inbound Flow)</h3>
+                <div style="background-color: var(--color-code-bg); padding: 1.5rem; border-radius: 6px; margin-bottom: 1.5rem;">
+                    <ol style="margin: 0; padding-left: 1.5rem;">
+                        <li><strong><a href="#get-companies">Get Companies API</a></strong> - Discover available company IDs</li>
+                        <li><strong><a href="#get-documents">Get Documents API</a></strong> - Poll for received invoices (direction=Received)</li>
+                        <li><strong><a href="#target">Target API</a></strong> - Download invoice in configured format (UBL, PEPPOL, etc.)</li>
+                        <li><strong><a href="#source">Source API</a></strong> - Download original PUF format (optional)</li>
+                        <li><strong><a href="#presentation">Presentation API</a></strong> - Download PDF presentation</li>
+                        <li><strong><a href="#external-status">External Status API</a></strong> - Update status after processing</li>
+                    </ol>
+                    <p style="margin-top: 1rem; margin-bottom: 0;"><a href="einvoicing-integration.html#ap-flow">View detailed AP integration guide →</a></p>
+                </div>
+
+                <h3>Error Handling Workflow</h3>
+                <div style="background-color: var(--color-code-bg); padding: 1.5rem; border-radius: 6px; margin-bottom: 2rem;">
+                    <ol style="margin: 0; padding-left: 1.5rem;">
+                        <li><strong><a href="#get-documents">Get Documents API</a></strong> - Filter by sendStatus=Error</li>
+                        <li><strong><a href="#get-document">Get A Document API</a></strong> - Get detailed error messages</li>
+                        <li><strong><a href="#source">Source API</a></strong> - Review original submitted document</li>
+                        <li><strong><a href="#action">Action API</a></strong> - Cancel errored document</li>
+                        <li>Fix issue in source system and resubmit with <strong><a href="#post-documents">Post Documents API</a></strong></li>
+                    </ol>
+                    <p style="margin-top: 1rem; margin-bottom: 0;"><a href="einvoicing-integration.html#error-handling">View error handling guide →</a></p>
+                </div>
+
+                <h2 id="support">API Support</h2>
+                <p>
+                    For technical support, API access requests, or questions about specific APIs:
+                </p>
+                <ul>
+                    <li><strong>Developer Portal</strong>: <a href="https://developers.thomsonreuters.com" target="_blank">developers.thomsonreuters.com</a></li>
+                    <li><strong>Documentation</strong>: Each API includes comprehensive OpenAPI specifications and examples</li>
+                    <li><strong>Technical Support</strong>: Contact your TR account representative or submit a support ticket through the developer portal</li>
+                </ul>
+            </main>
+
+            <!-- Footer -->
+            <footer class="site-footer" style="border-top: 1px solid var(--color-medium-gray); padding: 2rem 3rem; margin-top: 4rem;">
+                <p style="text-align: center; color: var(--color-gray); font-size: 0.875rem;">
+                    © 2025 Thomson Reuters. All rights reserved.
+                </p>
+            </footer>
+        </div>
+
+        <!-- Right Sidebar (Table of Contents) -->
+        <aside class="sidebar-right">
+            <div class="toc-heading">Contents</div>
+            <ul class="toc-list">
+                <!-- Generated dynamically by JavaScript -->
+            </ul>
+        </aside>
+    </div>
+
+    <!-- Chatbot Widget -->
+    <div id="chatbot-container"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/theme-toggle.js"></script>
+    <script src="assets/js/layout.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/chatbot-ui.js"></script>
+    <script src="assets/js/openarena-client.js"></script>
+    <script src="assets/js/chatbot-controller.js"></script>
+</body>
+</html>

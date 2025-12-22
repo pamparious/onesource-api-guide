@@ -6,8 +6,20 @@
     <meta name="description" content="Get started with TR ONESOURCE E-Invoicing API integration - Partner onboarding, prerequisites, and authentication setup">
     <title>Getting Started | TR ONESOURCE E-Invoicing</title>
 
+    <!-- Dark Mode Detection (must run before styles to avoid flash) -->
+    <script>
+        (function() {
+            const cl = document.documentElement.classList;
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                cl.add('dark');
+            }
+        })();
+    </script>
+
     <!-- Styles -->
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/chatbot.css">
 
@@ -15,170 +27,202 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navigation Header -->
+    <!-- Fixed Header -->
     <header class="site-header">
-        <nav class="navbar">
-            <div class="container">
-                <div class="navbar-brand">
-                    <h1 class="logo">THOMSON REUTERS</h1>
-                    <span class="logo-subtitle">ONESOURCE API Guide</span>
-                </div>
-
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+        <div class="container" style="display: flex; align-items: center; justify-content: space-between; height: 100%; padding: 0 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
                     <i class="fas fa-bars"></i>
                 </button>
-
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="getting-started.html" class="active">Getting Started</a></li>
-                    <li><a href="einvoicing-integration.html">E-Invoicing Integration</a></li>
-                    <li><a href="faq.html">FAQ</a></li>
-                    <li><a href="https://developers.thomsonreuters.com" target="_blank" class="external-link">
-                        Developer Portal <i class="fas fa-external-link-alt"></i>
-                    </a></li>
-                </ul>
+                <a href="index.html" class="navbar-brand" style="display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                    <div style="background-color: white; padding: 4px 8px; border-radius: 4px; display: flex; align-items: center;">
+                        <img src="assets/images/Thomson-Reuters-Logo-500x281.png" alt="Thomson Reuters" style="height: 24px; width: auto;">
+                    </div>
+                    <div style="border-left: 2px solid #444; height: 32px; margin: 0 0.25rem;"></div>
+                    <span style="font-size: 0.875rem; color: #cccccc; font-weight: 500; white-space: nowrap;">ONESOURCE API Guide</span>
+                </a>
             </div>
-        </nav>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button id="headerAIButton" class="header-ai-button" aria-label="Open AI Assistant">
+                    <i class="fas fa-robot"></i>
+                    <span class="ai-button-text">AI Assistant</span>
+                </button>
+            </div>
+        </div>
     </header>
 
-    <!-- Main Content -->
-    <main>
-        <section class="page-header">
-            <div class="container">
-                <h1>Getting Started</h1>
-                <p class="page-subtitle">Partner onboarding, prerequisites, and authentication setup</p>
-            </div>
-        </section>
+    <!-- Overlay for mobile sidebar -->
+    <div class="sidebar-overlay"></div>
 
-        <div class="container content-container">
-            <aside class="sidebar-toc">
-                <h3>On This Page</h3>
+    <!-- Main Container -->
+    <div id="retype-container">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar-left">
+            <nav class="sidebar-nav">
+                <!-- Home Section -->
+                <div class="nav-section">
+                    <a href="index.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-home" style="margin-right: 0.5rem; width: 20px;"></i> Home</span>
+                    </a>
+                </div>
+
+                <!-- Getting Started Section (Active) -->
+                <div class="nav-section">
+                    <div class="nav-section-title active">
+                        <span><i class="fas fa-rocket" style="margin-right: 0.5rem; width: 20px;"></i> Getting Started</span>
+                        <i class="fas fa-chevron-down nav-section-icon"></i>
+                    </div>
+                    <div class="nav-section-items">
+                        <a href="#onboarding" class="nav-item">Partner Onboarding</a>
+                        <a href="#prerequisites" class="nav-item">Prerequisites</a>
+                        <a href="#authentication" class="nav-item">Authentication & Authorization</a>
+                        <a href="#environments" class="nav-item">Environment URLs</a>
+                        <a href="#next-steps" class="nav-item">Next Steps</a>
+                    </div>
+                </div>
+
+                <!-- E-Invoicing Integration Section -->
+                <div class="nav-section">
+                    <a href="einvoicing-integration.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-file-invoice" style="margin-right: 0.5rem; width: 20px;"></i> E-Invoicing Integration</span>
+                    </a>
+                </div>
+
+                <!-- API Reference Section -->
+                <div class="nav-section">
+                    <a href="api-reference.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-code" style="margin-right: 0.5rem; width: 20px;"></i> API Reference</span>
+                    </a>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="nav-section">
+                    <a href="faq.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-question-circle" style="margin-right: 0.5rem; width: 20px;"></i> FAQ</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-wrapper">
+            <main class="main-content-area">
+                <h1 id="overview">Getting Started</h1>
+                <p class="intro" style="font-size: 1.125rem; color: var(--color-gray); margin-bottom: 2rem;">
+                    Partner onboarding, prerequisites, and authentication setup
+                </p>
+
+                <h2 id="onboarding">Partner Onboarding Process</h2>
+                <p class="intro">
+                    This guide walks you through the process of becoming an ONESOURCE E-Invoicing integration partner.
+                    Follow these steps to get started.
+                </p>
+
+                <h3>Step 1: Contact ONESOURCE Team</h3>
                 <ul>
-                    <li><a href="#onboarding">Partner Onboarding</a></li>
-                    <li><a href="#prerequisites">Prerequisites</a></li>
-                    <li><a href="#authentication">Authentication & Authorization</a></li>
-                    <li><a href="#environments">Environment URLs</a></li>
-                    <li><a href="#next-steps">Next Steps</a></li>
+                    <li>Reach out to the Thomson Reuters ONESOURCE team</li>
+                    <li>Express interest in becoming an integration partner</li>
+                    <li>Discuss your client base, use cases, and geographic scope</li>
                 </ul>
-            </aside>
 
-            <article class="main-content">
-                <section id="onboarding">
-                    <h2>Partner Onboarding Process</h2>
-                    <p class="intro">
-                        This guide walks you through the process of becoming an ONESOURCE E-Invoicing integration partner.
-                        Follow these steps to get started.
-                    </p>
+                <h3>Step 2: Receive Partner Credentials</h3>
+                <p>ONESOURCE will generate universal partner credentials:</p>
+                <ul>
+                    <li><strong>client_id</strong> (consumer key)</li>
+                    <li><strong>client_secret</strong> (consumer secret)</li>
+                </ul>
+                <div class="alert alert-warning">
+                    <strong>Important:</strong> These credentials are partner-specific, not client-specific.
+                    Keep them confidential and secure.
+                </div>
 
-                    <h3>Step 1: Contact ONESOURCE Team</h3>
-                    <ul>
-                        <li>Reach out to the Thomson Reuters ONESOURCE team</li>
-                        <li>Express interest in becoming an integration partner</li>
-                        <li>Discuss your client base, use cases, and geographic scope</li>
+                <h3>Step 3: Register Redirect URIs</h3>
+                <p>Provide your OAuth 2.0 redirect URIs to ONESOURCE. These must be registered before authentication will work.</p>
+                <p><strong>Examples:</strong></p>
+                <ul>
+                    <li><code>https://yourplatform.com/onesource/callback</code></li>
+                    <li><code>https://yourplatform.com/auth/onesource/return</code></li>
+                </ul>
+
+                <h3>Step 4: Receive Test Accounts</h3>
+                <p>ONESOURCE will provision test accounts simulating:</p>
+                <ul>
+                    <li><strong>Supplier account</strong> - For testing AR/outbound flow</li>
+                    <li><strong>Buyer account</strong> - For testing AP/inbound flow</li>
+                </ul>
+                <p>Each test account has a <code>companyId</code> and test users.</p>
+
+                <h3>Step 5: Access Developer Portal</h3>
+                <p>
+                    Public documentation available at:
+                    <a href="https://developers.thomsonreuters.com" target="_blank">developers.thomsonreuters.com</a>
+                </p>
+                <p>Includes API reference, Swagger documentation, and examples.</p>
+
+                <h2 id="prerequisites">Prerequisites Checklist</h2>
+                <p class="intro">Before beginning integration, ensure you have the following:</p>
+
+                <div class="alert alert-info">
+                    <h4 style="margin-top: 0;">✓ Required Items</h4>
+                    <ul style="margin-bottom: 0;">
+                        <li>Partner credentials received (<code>client_id</code> + <code>client_secret</code>)</li>
+                        <li>Redirect URIs registered with ONESOURCE</li>
+                        <li>Test accounts received with <code>companyId</code> values</li>
+                        <li>Test user credentials received</li>
+                        <li>Access to developer portal documentation</li>
                     </ul>
+                </div>
 
-                    <h3>Step 2: Receive Partner Credentials</h3>
-                    <p>ONESOURCE will generate universal partner credentials:</p>
-                    <ul>
-                        <li><strong>client_id</strong> (consumer key)</li>
-                        <li><strong>client_secret</strong> (consumer secret)</li>
-                    </ul>
-                    <div class="alert alert-warning">
-                        <strong>Important:</strong> These credentials are partner-specific, not client-specific.
-                        Keep them confidential and secure.
-                    </div>
+                <h3>Technical Requirements</h3>
+                <ul>
+                    <li><strong>HTTP/HTTPS Support</strong> - Ability to make secure API calls</li>
+                    <li><strong>OAuth 2.0</strong> - Support for authorization code and client credentials flows</li>
+                    <li><strong>XML Processing</strong> - Ability to generate and parse PUF XML documents</li>
+                    <li><strong>Polling/Webhooks</strong> - Mechanism for checking document status updates</li>
+                    <li><strong>Data Storage</strong> - Database to store mappings between your system and ONESOURCE</li>
+                </ul>
 
-                    <h3>Step 3: Register Redirect URIs</h3>
-                    <p>Provide your OAuth 2.0 redirect URIs to ONESOURCE. These must be registered before authentication will work.</p>
-                    <p><strong>Examples:</strong></p>
-                    <ul>
-                        <li><code>https://yourplatform.com/onesource/callback</code></li>
-                        <li><code>https://yourplatform.com/auth/onesource/return</code></li>
-                    </ul>
+                <h3>Understanding Your Scope</h3>
+                <p>Before starting, clarify:</p>
+                <ul>
+                    <li><strong>Geographic Scope</strong> - Which countries will your clients operate in?</li>
+                    <li><strong>Document Types</strong> - Invoice, Credit Note, Application Response, etc.?</li>
+                    <li><strong>Integration Type</strong> - AR (outbound), AP (inbound), or both?</li>
+                    <li><strong>Volume Expectations</strong> - Estimated documents per day/month</li>
+                </ul>
 
-                    <h3>Step 4: Receive Test Accounts</h3>
-                    <p>ONESOURCE will provision test accounts simulating:</p>
-                    <ul>
-                        <li><strong>Supplier account</strong> - For testing AR/outbound flow</li>
-                        <li><strong>Buyer account</strong> - For testing AP/inbound flow</li>
-                    </ul>
-                    <p>Each test account has a <code>companyId</code> and test users.</p>
+                <h2 id="authentication">Authentication & Authorization</h2>
+                <p class="intro">
+                    ONESOURCE uses OAuth 2.0 with two different grant types for secure API access.
+                </p>
 
-                    <h3>Step 5: Access Developer Portal</h3>
-                    <p>
-                        Public documentation available at:
-                        <a href="https://developers.thomsonreuters.com" target="_blank">developers.thomsonreuters.com</a>
-                    </p>
-                    <p>Includes API reference, Swagger documentation, and examples.</p>
-                </section>
+                <h3>Authentication Model Overview</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Grant Type</th>
+                            <th>Purpose</th>
+                            <th>When to Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Client Credentials</strong></td>
+                            <td>Partner-level API access</td>
+                            <td>Getting access tokens for API calls</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Authorization Code</strong></td>
+                            <td>End-user authorization</td>
+                            <td>Granting access to client data</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                <section id="prerequisites">
-                    <h2>Prerequisites Checklist</h2>
-                    <p class="intro">Before beginning integration, ensure you have the following:</p>
+                <h3>Client Credentials Flow</h3>
+                <p>Used to obtain an <code>access_token</code> for making API calls:</p>
 
-                    <div class="alert alert-info">
-                        <h4 style="margin-top: 0;">✓ Required Items</h4>
-                        <ul style="margin-bottom: 0;">
-                            <li>Partner credentials received (<code>client_id</code> + <code>client_secret</code>)</li>
-                            <li>Redirect URIs registered with ONESOURCE</li>
-                            <li>Test accounts received with <code>companyId</code> values</li>
-                            <li>Test user credentials received</li>
-                            <li>Access to developer portal documentation</li>
-                        </ul>
-                    </div>
-
-                    <h3>Technical Requirements</h3>
-                    <ul>
-                        <li><strong>HTTP/HTTPS Support</strong> - Ability to make secure API calls</li>
-                        <li><strong>OAuth 2.0</strong> - Support for authorization code and client credentials flows</li>
-                        <li><strong>XML Processing</strong> - Ability to generate and parse PUF XML documents</li>
-                        <li><strong>Polling/Webhooks</strong> - Mechanism for checking document status updates</li>
-                        <li><strong>Data Storage</strong> - Database to store mappings between your system and ONESOURCE</li>
-                    </ul>
-
-                    <h3>Understanding Your Scope</h3>
-                    <p>Before starting, clarify:</p>
-                    <ul>
-                        <li><strong>Geographic Scope</strong> - Which countries will your clients operate in?</li>
-                        <li><strong>Document Types</strong> - Invoice, Credit Note, Application Response, etc.?</li>
-                        <li><strong>Integration Type</strong> - AR (outbound), AP (inbound), or both?</li>
-                        <li><strong>Volume Expectations</strong> - Estimated documents per day/month</li>
-                    </ul>
-                </section>
-
-                <section id="authentication">
-                    <h2>Authentication & Authorization</h2>
-                    <p class="intro">
-                        ONESOURCE uses OAuth 2.0 with two different grant types for secure API access.
-                    </p>
-
-                    <h3>Authentication Model Overview</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Grant Type</th>
-                                <th>Purpose</th>
-                                <th>When to Use</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Client Credentials</strong></td>
-                                <td>Partner-level API access</td>
-                                <td>Getting access tokens for API calls</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Authorization Code</strong></td>
-                                <td>End-user authorization</td>
-                                <td>Granting access to client data</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <h3>Client Credentials Flow</h3>
-                    <p>Used to obtain an <code>access_token</code> for making API calls:</p>
-
-                    <pre><code class="language-http">POST https://api-uat.onesourcetax.com/oauth2/v1/token
+                <pre><code class="language-http">POST https://api-uat.onesourcetax.com/oauth2/v1/token
 Content-Type: application/x-www-form-urlencoded
 
 client_id={your_consumer_key}
@@ -186,8 +230,8 @@ client_secret={your_consumer_secret}
 grant_type=client_credentials
 scope=urn:tr:onesource:auth:api:einvoicing</code></pre>
 
-                    <p><strong>Response:</strong></p>
-                    <pre><code class="language-json">{
+                <p><strong>Response:</strong></p>
+                <pre><code class="language-json">{
   "success": "approved",
   "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
   "token_type": "Bearer",
@@ -195,41 +239,41 @@ scope=urn:tr:onesource:auth:api:einvoicing</code></pre>
   "issued_at": "1744125241833"
 }</code></pre>
 
-                    <div class="alert alert-warning">
-                        <strong>Token Management:</strong>
-                        <ul style="margin-bottom: 0;">
-                            <li>Token expires in 1799 seconds (~30 minutes)</li>
-                            <li>Implement token caching and refresh logic</li>
-                            <li>Do NOT request a new token for every API call</li>
-                            <li>Store token with expiry timestamp and refresh when needed</li>
-                        </ul>
-                    </div>
-
-                    <h3>Authorization Code Flow</h3>
-                    <p>Used when an end-user needs to authorize your platform to access their ONESOURCE account.</p>
-
-                    <p><strong>When to use:</strong></p>
-                    <ul>
-                        <li>First-time setup for a new client</li>
-                        <li>When user credentials expire or are revoked</li>
-                        <li>When user needs to grant access to additional companies</li>
+                <div class="alert alert-warning">
+                    <strong>Token Management:</strong>
+                    <ul style="margin-bottom: 0;">
+                        <li>Token expires in 1799 seconds (~30 minutes)</li>
+                        <li>Implement token caching and refresh logic</li>
+                        <li>Do NOT request a new token for every API call</li>
+                        <li>Store token with expiry timestamp and refresh when needed</li>
                     </ul>
+                </div>
 
-                    <h4>Step 1: Redirect User to Authorization URL</h4>
-                    <pre><code class="language-http">https://api-uat.onesourcetax.com/oauth2/v1/authorize?
+                <h3>Authorization Code Flow</h3>
+                <p>Used when an end-user needs to authorize your platform to access their ONESOURCE account.</p>
+
+                <p><strong>When to use:</strong></p>
+                <ul>
+                    <li>First-time setup for a new client</li>
+                    <li>When user credentials expire or are revoked</li>
+                    <li>When user needs to grant access to additional companies</li>
+                </ul>
+
+                <h4>Step 1: Redirect User to Authorization URL</h4>
+                <pre><code class="language-http">https://api-uat.onesourcetax.com/oauth2/v1/authorize?
 response_type=code&
 client_id={your_client_id}&
 redirect_uri={your_registered_redirect_uri}&
 scope=urn:tr:onesource:auth:api:einvoicing&
 state={random_state_string}</code></pre>
 
-                    <h4>Step 2: Handle Callback</h4>
-                    <p>User will be redirected back to your URI with:</p>
-                    <pre><code>https://yourplatform.com/callback?code=AUTHORIZATION_CODE&state=YOUR_STATE</code></pre>
-                    <p>Verify the <code>state</code> parameter matches what you sent.</p>
+                <h4>Step 2: Handle Callback</h4>
+                <p>User will be redirected back to your URI with:</p>
+                <pre><code>https://yourplatform.com/callback?code=AUTHORIZATION_CODE&state=YOUR_STATE</code></pre>
+                <p>Verify the <code>state</code> parameter matches what you sent.</p>
 
-                    <h4>Step 3: Exchange Code for Token</h4>
-                    <pre><code class="language-http">POST https://api-uat.onesourcetax.com/oauth2/v1/token
+                <h4>Step 3: Exchange Code for Token</h4>
+                <pre><code class="language-http">POST https://api-uat.onesourcetax.com/oauth2/v1/token
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=authorization_code
@@ -238,133 +282,110 @@ redirect_uri={same_redirect_uri_as_before}
 client_id={your_client_id}
 client_secret={your_client_secret}</code></pre>
 
-                    <p><strong>Response includes:</strong></p>
-                    <ul>
-                        <li><code>access_token</code> - Use for API calls</li>
-                        <li><code>refresh_token</code> - Use to get new access token without user interaction</li>
-                    </ul>
+                <p><strong>Response includes:</strong></p>
+                <ul>
+                    <li><code>access_token</code> - Use for API calls</li>
+                    <li><code>refresh_token</code> - Use to get new access token without user interaction</li>
+                </ul>
 
-                    <div class="alert alert-info">
-                        <strong>Best Practice:</strong> Store tokens encrypted in your database, associated with the user/tenant ID.
-                        Never log tokens or expose them in URLs.
-                    </div>
-                </section>
+                <div class="alert alert-info">
+                    <strong>Best Practice:</strong> Store tokens encrypted in your database, associated with the user/tenant ID.
+                    Never log tokens or expose them in URLs.
+                </div>
 
-                <section id="environments">
-                    <h2>Environment URLs</h2>
-                    <p class="intro">ONESOURCE provides separate environments for testing and production.</p>
+                <h2 id="environments">Environment URLs</h2>
+                <p class="intro">ONESOURCE provides separate environments for testing and production.</p>
 
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Environment</th>
-                                <th>Base URL</th>
-                                <th>Purpose</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>UAT (Testing)</strong></td>
-                                <td><code>https://api-uat.onesourcetax.com</code></td>
-                                <td>Development and testing</td>
-                            </tr>
-                            <tr>
-                                <td><strong>PROD (EMEA)</strong></td>
-                                <td><code>https://api-emea.onesourcetax.com</code></td>
-                                <td>Production for EMEA region</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Environment</th>
+                            <th>Base URL</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>UAT (Testing)</strong></td>
+                            <td><code>https://api-uat.onesourcetax.com</code></td>
+                            <td>Development and testing</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PROD (EMEA)</strong></td>
+                            <td><code>https://api-emea.onesourcetax.com</code></td>
+                            <td>Production for EMEA region</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                    <div class="alert alert-warning">
-                        <strong>Note:</strong> There is no separate sandbox environment. Testing is done in UAT using test accounts
-                        and send modes (Certification/Test/Production).
-                    </div>
+                <div class="alert alert-warning">
+                    <strong>Note:</strong> There is no separate sandbox environment. Testing is done in UAT using test accounts
+                    and send modes (Certification/Test/Production).
+                </div>
 
-                    <h3>Testing Modes</h3>
-                    <p>When submitting documents, you can specify a testing mode:</p>
-                    <ul>
-                        <li><strong>Certification Mode</strong> - Documents never leave Pagero platform, tests validation only</li>
-                        <li><strong>Test Mode</strong> - Documents tagged as "Test" and sent through full flow</li>
-                        <li><strong>Production Mode</strong> - Real production documents</li>
-                    </ul>
-                </section>
+                <h3>Testing Modes</h3>
+                <p>When submitting documents, you can specify a testing mode:</p>
+                <ul>
+                    <li><strong>Certification Mode</strong> - Documents never leave Pagero platform, tests validation only</li>
+                    <li><strong>Test Mode</strong> - Documents tagged as "Test" and sent through full flow</li>
+                    <li><strong>Production Mode</strong> - Real production documents</li>
+                </ul>
 
-                <section id="next-steps">
-                    <h2>Next Steps</h2>
-                    <p class="intro">Now that you understand the basics, continue to the integration guide:</p>
+                <h2 id="next-steps">Next Steps</h2>
+                <p class="intro">Now that you understand the basics, continue to the integration guide:</p>
 
-                    <div class="resources-grid">
-                        <a href="einvoicing-integration.html" class="resource-card">
-                            <i class="fas fa-rocket"></i>
-                            <h3>E-Invoicing Integration</h3>
-                            <p>Learn how to implement AR and AP flows with ONESOURCE</p>
-                        </a>
+                <div class="resources-grid">
+                    <a href="einvoicing-integration.html" class="resource-card">
+                        <i class="fas fa-rocket"></i>
+                        <h3>E-Invoicing Integration</h3>
+                        <p>Learn how to implement AR and AP flows with ONESOURCE</p>
+                    </a>
 
-                        <a href="faq.html" class="resource-card">
-                            <i class="fas fa-question-circle"></i>
-                            <h3>FAQ & Troubleshooting</h3>
-                            <p>Common questions and solutions to integration challenges</p>
-                        </a>
+                    <a href="faq.html" class="resource-card">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>FAQ & Troubleshooting</h3>
+                        <p>Common questions and solutions to integration challenges</p>
+                    </a>
 
-                        <a href="https://developers.thomsonreuters.com" target="_blank" class="resource-card">
-                            <i class="fas fa-book"></i>
-                            <h3>API Reference</h3>
-                            <p>Detailed API endpoint documentation</p>
-                        </a>
-                    </div>
+                    <a href="api-reference.html" class="resource-card">
+                        <i class="fas fa-book"></i>
+                        <h3>API Reference</h3>
+                        <p>Complete catalog of 9 E-Invoicing APIs</p>
+                    </a>
+                </div>
 
-                    <div class="alert alert-success" style="margin-top: var(--spacing-lg);">
-                        <h4 style="margin-top: 0;">Ready to Integrate?</h4>
-                        <p style="margin-bottom: 0;">
-                            Proceed to the <a href="einvoicing-integration.html">E-Invoicing Integration Guide</a>
-                            to start building your integration with step-by-step instructions for AR and AP flows.
-                        </p>
-                    </div>
-                </section>
-            </article>
+                <div class="alert alert-success" style="margin-top: var(--spacing-lg);">
+                    <h4 style="margin-top: 0;">Ready to Integrate?</h4>
+                    <p style="margin-bottom: 0;">
+                        Proceed to the <a href="einvoicing-integration.html">E-Invoicing Integration Guide</a>
+                        to start building your integration with step-by-step instructions for AR and AP flows.
+                    </p>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="site-footer" style="border-top: 1px solid var(--color-medium-gray); padding: 2rem 3rem; margin-top: 4rem;">
+                <p style="text-align: center; color: var(--color-gray); font-size: 0.875rem;">
+                    © 2025 Thomson Reuters. All rights reserved.
+                </p>
+            </footer>
         </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>THOMSON REUTERS</h4>
-                    <p>ONESOURCE API Integration Guide</p>
-                </div>
+        <!-- Right Sidebar (Table of Contents) -->
+        <aside class="sidebar-right">
+            <div class="toc-heading">Contents</div>
+            <ul class="toc-list">
+                <!-- Generated dynamically by JavaScript -->
+            </ul>
+        </aside>
+    </div>
 
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <ul>
-                        <li><a href="https://developers.thomsonreuters.com" target="_blank">Developer Portal</a></li>
-                        <li><a href="getting-started.html">Getting Started</a></li>
-                        <li><a href="einvoicing-integration.html">Integration Guide</a></li>
-                        <li><a href="faq.html">FAQ</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="faq.html">Documentation</a></li>
-                        <li><a href="https://www.thomsonreuters.com" target="_blank">Contact Support</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2025 Thomson Reuters. All rights reserved. | <span class="version">API Guide v1.0</span></p>
-                <p class="last-updated">Last Updated: January 2025</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Chat Widget Button -->
-    <div id="chatWidget"></div>
+    <!-- Chatbot Widget -->
+    <div id="chatbot-container"></div>
 
     <!-- Scripts -->
+    <script src="assets/js/theme-toggle.js"></script>
+    <script src="assets/js/layout.js"></script>
     <script src="assets/js/navigation.js"></script>
     <script src="assets/js/chatbot-ui.js"></script>
     <script src="assets/js/openarena-client.js"></script>
