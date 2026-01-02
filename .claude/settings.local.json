@@ -15,7 +15,12 @@
       "Bash(start http://localhost:8000/api-reference-new.html)",
       "Bash(start http://localhost:8000/index.html)",
       "WebFetch(domain:logos-world.net)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npm install)",
+      "Bash(node:*)",
+      "Bash(cat:*)",
+      "Bash(npm start)",
+      "Bash(taskkill:*)"
     ]
   }
 }

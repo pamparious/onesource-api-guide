@@ -1,452 +1,497 @@
 # TR ONESOURCE API Partner Integration Guide
 
-A professional, interactive GitHub Pages site for TR ONESOURCE API partner integration guidance, featuring an AI-powered chatbot assistant.
+A professional, interactive documentation site for TR ONESOURCE API partner integration guidance, featuring an AI-powered chatbot assistant and automated partner onboarding.
 
-## Overview
+## 🌟 Overview
 
-This site provides comprehensive documentation for partners integrating with TR ONESOURCE E-Invoicing APIs, including:
-- Partner onboarding and authentication
-- E-Invoicing integration (AR/AP flows, PUF format, error handling)
-- Interactive AI assistant powered by TR OpenArena
-- Responsive design optimized for desktop, tablet, and mobile
+This site provides comprehensive documentation and tools for partners integrating with TR ONESOURCE E-Invoicing APIs:
 
-## ⚠️ Chatbot Requires TR Network Access
+- **📚 5 Documentation Pages**: Homepage, Getting Started, E-Invoicing Integration, API Reference, FAQ
+- **🤖 AI Assistant**: Context-aware chatbot powered by TR OpenArena
+- **📝 Partner Onboarding**: Automated onboarding form with AI-generated implementation reports
+- **🎨 Professional Design**: TR branding with responsive mobile-first layout
+- **⚡ Zero Build Process**: Pure HTML/CSS/JavaScript
 
-**The AI chatbot requires a proxy server with access to TR's internal network.**
+## ✨ Key Features
 
-**Why:** TR OpenArena API (`aiopenarena.gcs.int.thomsonreuters.com`) is:
-- An **internal TR API** (only accessible from TR network)
-- **No CORS support** (designed for server-to-server communication)
+### Documentation
+- ✅ Comprehensive API integration guides
+- ✅ Code examples in Python, JavaScript, XML, JSON
+- ✅ Interactive FAQ with search and filtering
+- ✅ Complete API reference catalog (9 ONESOURCE APIs)
+- ✅ Responsive design for all devices
 
-**Working Solution:**
+### AI-Powered Tools
+- ✅ **AI Chatbot**: Ask questions about API integration, authentication, PUF format, error handling
+- ✅ **Partner Onboarding**: Generate personalized implementation reports by answering a form
+  - Calls CCR Agent for country compliance requirements
+  - Calls API Agent for implementation guidance
+  - Generates comprehensive 2-part report (compliance + API integration)
 
-### For Local Development (POC) ✅
-Run the included local proxy on your TR machine:
+### Technical
+- ✅ **Unified Backend**: Single server handles both chatbot and onboarding
+- ✅ **Dark Mode**: Professional dark theme matching Pagero style
+- ✅ **Demo Mode**: Test without API credentials using mock data
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- **Node.js** v18+ (for backend server)
+- **TR Network Access** (VPN or office network)
+- **TR OpenArena API Token** (optional - use demo mode for testing)
+
+### Installation
+
 ```bash
-node local-proxy.js
+# Clone or navigate to project
+cd onesource-github
+
+# Install dependencies
+npm install
+
+# Start the unified server
+npm start
 ```
-Then access the site at `http://localhost:8000` - chatbot will work!
 
-### For Production Deployment
-Deploy the proxy to TR's internal infrastructure:
-- TR's Kubernetes/OpenShift cluster
-- TR's internal Azure/AWS environment
-- Any TR internal server with HTTP access
+You should see:
+```
+🚀 TR ONESOURCE Unified Server
+================================================
+✅ Server running at http://localhost:3000
+📍 AI Chatbot: POST /api/proxy
+📍 Partner Onboarding: POST /api/generate-report
+📡 CCR Agent ID: f87b828b-39cb-4a9e-9225-bb9e67ff4860
+📡 API Agent ID: 74f9914d-b8c9-44f0-ad5c-13af2d02144c
+================================================
+```
 
-**📖 See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.**
+### Access the Site
 
-## Features
+Open your browser and navigate to:
+```
+http://localhost:3000/
+```
 
-- **✅ 5 Comprehensive Pages**: Homepage, Getting Started, E-Invoicing Integration, API Reference, FAQ
-- **✅ TR Branding**: Professional design with Thomson Reuters colors and typography
-- **✅ Fully Responsive**: Mobile-first design with hamburger navigation
-- **✅ AI Chatbot**: Context-aware assistant using TR OpenArena API
-- **✅ API Reference**: Complete catalog of 9 ONESOURCE APIs with descriptions and links
-- **✅ Code Examples**: Syntax-highlighted examples in Python, JavaScript, XML, JSON
-- **✅ Interactive Components**: FAQ accordions, code copy buttons, smooth scrolling
-- **✅ Zero Dependencies**: Pure HTML/CSS/JavaScript (no build process)
+**All features work:**
+- ✅ Browse documentation pages
+- ✅ Use AI chatbot (click robot icon in bottom-right)
+- ✅ Access partner onboarding form (click "Partner Onboarding" in menu)
 
-## File Structure
+---
+
+## 🏗️ Architecture
+
+### Unified Server Design
+
+```
+┌──────────────────────────────────────────────────┐
+│  Unified Server (Port 3000)                      │
+│  unified-server.js                               │
+│                                                   │
+│  📍 Route 1: POST /api/proxy                     │
+│     → AI Chatbot                                 │
+│     → 30s timeout, 4K tokens                     │
+│     → Quick conversational responses             │
+│                                                   │
+│  📍 Route 2: POST /api/generate-report           │
+│     → Partner Onboarding                         │
+│     → 120s timeout, 8K tokens                    │
+│     → Sequential: CCR Agent → API Agent          │
+│     → Comprehensive implementation reports       │
+│                                                   │
+│  📍 Route 3: GET /health                         │
+│     → Health check endpoint                      │
+│                                                   │
+│          ↓ All routes call ↓                     │
+│  ┌────────────────────────────────────────────┐ │
+│  │  OpenArena API (Remote)                    │ │
+│  │  aiopenarena.gcs.int.thomsonreuters.com    │ │
+│  └────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────┘
+```
+
+**Benefits:**
+- ✅ Single command: `npm start`
+- ✅ One port to manage: 3000
+- ✅ Simplified architecture
+- ✅ Easier maintenance
+
+---
+
+## 📁 Project Structure
 
 ```
 onesource-github/
 ├── index.html                          # Homepage
 ├── getting-started.html                # Getting started guide
-├── einvoicing-integration.html         # E-invoicing integration guide
+├── einvoicing-integration.html         # E-invoicing integration
 ├── api-reference.html                  # API reference catalog
 ├── faq.html                            # FAQ page
-├── local-proxy.js                      # ⭐ Local development proxy server
-├── api/
-│   └── proxy.js                        # Vercel serverless function (for reference)
+├── partner-onboarding.html             # ⭐ NEW: Partner onboarding form
+│
+├── unified-server.js                   # ⭐ NEW: Unified backend (1 server)
+├── local-proxy.js                      # Legacy: Chatbot proxy only
+├── partner-onboarding-server.js        # Legacy: Onboarding only
+│
 ├── assets/
 │   ├── css/
-│   │   ├── main.css                    # Global styles, layout, TR branding
+│   │   ├── main.css                    # Global styles & TR branding
+│   │   ├── layout.css                  # Page layout & structure
 │   │   ├── components.css              # Reusable UI components
-│   │   └── chatbot.css                 # Chat widget styles
+│   │   ├── chatbot.css                 # Chat widget styles
+│   │   └── partner-onboarding.css      # ⭐ NEW: Onboarding form styles
+│   │
 │   ├── js/
-│   │   ├── navigation.js               # Mobile menu, smooth scrolling
+│   │   ├── mobile-menu.js              # Mobile navigation
 │   │   ├── chatbot-ui.js               # Chat widget UI
-│   │   ├── openarena-client.js         # TR OpenArena API client
-│   │   └── chatbot-controller.js       # Chat logic and context
-│   └── images/                         # (placeholder for assets)
-├── vercel.json                         # Vercel configuration
-├── package.json                        # Node.js project config
+│   │   ├── openarena-client.js         # OpenArena API client
+│   │   ├── chatbot-controller.js       # Chat logic & context
+│   │   └── partner-onboarding.js       # ⭐ NEW: Form validation & submission
+│   │
+│   └── images/
+│       └── Thomson-Reuters-Logo-*.png  # TR logo assets
+│
+├── package.json                        # Node.js dependencies
 ├── README.md                           # This file
-├── DEPLOYMENT.md                       # Proxy deployment guide
-├── PROJECT_SUMMARY.md                  # Project overview and architecture
-└── .gitignore                          # Git ignore rules
+├── SERVER-GUIDE.md                     # ⭐ NEW: Detailed server documentation
+└── PARTNER-ONBOARDING.md              # ⭐ NEW: Onboarding feature guide
 ```
 
-## Local Development
+---
 
-### Prerequisites
-- Node.js (v18 or higher) - Required for chatbot proxy
-- A modern web browser (Chrome, Firefox, Safari, or Edge)
-- TR network access (VPN or office network) - Required for chatbot
+## 🎯 Features Guide
 
-### Running Locally with Working Chatbot
+### 1. AI Chatbot Assistant
 
-**Step 1: Install dependencies**
-```bash
-cd onesource-github
-npm install
-```
+**Purpose:** Answer questions about API integration in real-time
 
-**Step 2: Start the proxy server (Terminal 1)**
-```bash
-node local-proxy.js
-```
-You should see:
-```
-🚀 Local Proxy Server running at http://localhost:3000
-📡 Forwarding requests to: https://aiopenarena.gcs.int.thomsonreuters.com
-✅ Ready to accept requests at: http://localhost:3000/api/proxy
-```
+**How to Use:**
+1. Click the robot icon (bottom-right corner)
+2. Click the settings icon (⚙️) to configure API credentials
+3. Enter your TR OpenArena API Token
+4. Ask questions like:
+   - "How do I authenticate with the API?"
+   - "What is PUF format?"
+   - "How do I handle recipient not found errors?"
 
-**Step 3: Start the web server (Terminal 2)**
-```bash
-# Using Python 3
-python -m http.server 8000
+**Features:**
+- Context-aware responses based on current page
+- Markdown formatting with code highlighting
+- Conversation history
+- Multi-agent support (API, PUF, CCR specialists)
 
-# OR using Node.js
-npx http-server -p 8000
-```
+---
 
-**Step 4: Open in browser**
-```
-http://localhost:8000
-```
+### 2. Partner Onboarding Form
 
-**Step 5: Test the chatbot**
-1. Click the orange chat button (bottom-right)
-2. Enter your ESSO token and Workflow ID
-3. Send a test message: "How do I authenticate with the API?"
-4. The chatbot should respond! 🎉
+**Purpose:** Generate personalized implementation reports automatically
 
-### Managing the Local Proxy
+**How to Use:**
+1. Click "Partner Onboarding" in the left menu
+2. Fill out the 8-section form:
+   - Partner & Contact Information
+   - Partnership Type
+   - System Integration
+   - Countries in Scope
+   - AP/AR Handling
+   - Support Model
+   - Account Management
+   - Service Model
+3. Click "Generate Report"
+4. Wait 2-3 minutes for AI agents to analyze
+5. Review your comprehensive implementation report
 
-The local proxy server runs on your computer and forwards chatbot requests to TR OpenArena API.
+**Report Includes:**
+- ✅ **Country Compliance Requirements** (from CCR Agent)
+  - Compliance models and clearance requirements
+  - Required document types
+  - Mandatory fields and formats
+  - Validation rules
+  - Deadlines and timelines
 
-**Where It Runs:**
-- **Location**: Your local machine in the project directory (`C:\Users\6134505\Code\onesource-github\`)
-- **Port**: 3000 (localhost only - not accessible from other computers)
-- **Requirements**: TR network access (VPN or office network) to reach OpenArena API
+- ✅ **API Implementation Guide** (from API Agent)
+  - Authentication setup (OAuth 2.0)
+  - Required endpoints
+  - Integration architecture
+  - Request/response examples
+  - Webhook configuration
+  - Error handling strategies
+  - Code samples
 
-**Starting the Proxy:**
-Already covered in Step 2 above:
-```bash
-node local-proxy.js
-```
-Keep the terminal window open - closing it stops the proxy.
+**Features:**
+- Auto-save every 30 seconds (localStorage)
+- Real-time validation
+- Demo mode (test without API token)
+- Print/copy/download report
+- Mobile responsive
 
-**Stopping the Proxy:**
+---
 
-**Method 1: Using Terminal (Easiest)**
-If you see the terminal window where the proxy is running, press **Ctrl + C**.
+## 🔧 Configuration
 
-**Method 2: Windows Command Prompt**
-```bash
-# Find the process ID (PID)
-netstat -ano | findstr :3000
+### AI Chatbot Agents
 
-# You'll see output like:
-# TCP    0.0.0.0:3000           0.0.0.0:0              LISTENING       12345
-# The last number (12345) is the PID
+Configure which agent to use by clicking the agent tabs:
+- **API Agent**: API integration, authentication, endpoints
+- **PUF Agent**: PUF document format, field mappings
+- **CCR Agent**: Country compliance, e-invoicing mandates
 
-# Kill the process (replace 12345 with your PID)
-taskkill /PID 12345 /F
-```
+### Partner Onboarding Agents
 
-**Method 3: PowerShell (One Command)**
-```powershell
-Get-NetTCPConnection -LocalPort 3000 | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
-```
+Automatically uses:
+- **CCR Agent**: Country CCR Expert (Workflow ID: `f87b828b-39cb-4a9e-9225-bb9e67ff4860`)
+- **API Agent**: API Integration Expert (Workflow ID: `74f9914d-b8c9-44f0-ad5c-13af2d02144c`)
 
-**Checking If Proxy Is Running:**
-1. **Browser test**: Visit `http://localhost:3000/api/proxy` - you should see `{"error":"Not found"}` (this confirms the server is responding)
-2. **Terminal check**: Look for the terminal window with proxy output
-3. **Command line** (Windows):
-   ```bash
-   netstat -ano | findstr :3000
-   ```
-   If you see output, the proxy is running.
-
-**Troubleshooting:**
-
-**Issue**: "Error: listen EADDRINUSE: address already in use :::3000"
-
-**Solution**: Port 3000 is already in use. Stop the existing process using the methods above, then restart the proxy.
-
-### Running Without Chatbot (Documentation Only)
-
-If you just want to view the documentation without the chatbot:
-
-**Option 1: Open directly in browser**
-```bash
-# Navigate to the project directory
-cd onesource-github
-
-# Open index.html in your default browser
-start index.html  # Windows
-open index.html   # macOS
-xdg-open index.html  # Linux
-```
-
-**Option 2: Using VS Code Live Server**
-```
-1. Install "Live Server" extension
-2. Right-click on index.html
-3. Select "Open with Live Server"
-```
-
-## Configuring the AI Chatbot
-
-The chatbot requires TR OpenArena credentials to function.
-
-### Getting TR OpenArena Credentials
-
-1. **API Token (ESSO)**:
-   - Obtain from TR authentication system
-   - Contact TR support if you need access
-
-2. **Workflow ID**:
-   - Log into [TR OpenArena Dashboard](https://aiopenarena.gcs.int.thomsonreuters.com)
-   - Navigate to Workflows
-   - Create a new workflow (or use existing)
-   - Copy the Workflow ID
-
-### Using the Chatbot
-
-1. Open the site in your browser
-2. Click the orange chat button (bottom-right corner)
-3. Enter your API Token and Workflow ID when prompted
-4. Start asking questions!
-
-**Note**: Credentials are stored in `sessionStorage` and cleared when you close the browser. This is a POC implementation - production will use secure backend authentication.
-
-### Testing the Chatbot
-
-Open browser DevTools console and run:
+To change workflow IDs, edit `unified-server.js`:
 ```javascript
-// Test connection
-await testOpenArenaConnection()
+const CCR_WORKFLOW_ID = 'your-ccr-workflow-id';
+const API_WORKFLOW_ID = 'your-api-workflow-id';
 ```
 
-## GitHub Pages Deployment
+---
 
-### Step 1: Create GitHub Repository
+## 🛠️ Development
+
+### Start Development Server
 
 ```bash
-# Initialize git (if not already done)
-git init
-
-# Add all files
-git add .
-
-# Create initial commit
-git commit -m "Initial commit: TR ONESOURCE API Guide
-
-\ud83e\udd16 Generated with Claude Code
-Co-Authored-By: Claude <noreply@anthropic.com>"
-
-# Add remote
-git remote add origin https://github.com/YOUR_USERNAME/onesource-api-guide.git
-
-# Push to GitHub
-git push -u origin main
+npm start
 ```
 
-### Step 2: Enable GitHub Pages
+Runs the unified server on port 3000.
 
-1. Go to your repository on GitHub
-2. Click **Settings** → **Pages** (left sidebar)
-3. Under **Source**, select:
-   - Branch: `main`
-   - Folder: `/ (root)`
-4. Click **Save**
-5. Wait 1-2 minutes for deployment
+### Alternative Commands
 
-### Step 3: Access Your Site
-
-Your site will be available at:
-```
-https://YOUR_USERNAME.github.io/onesource-api-guide/
-```
-
-### Custom Domain (Optional)
-
-1. In GitHub Settings → Pages, enter your custom domain
-2. Add DNS records:
-   - Type: CNAME
-   - Name: www
-   - Value: YOUR_USERNAME.github.io
-3. Enable **Enforce HTTPS** after DNS propagation
-
-## Updating Content
-
-### Updating Text Content
-
-1. Open the relevant HTML file (index.html, getting-started.html, etc.)
-2. Find the section you want to update
-3. Edit the HTML content
-4. Save the file
-5. Commit and push changes:
 ```bash
-git add .
-git commit -m "Update: [description of changes]"
-git push
-```
-6. GitHub Pages will automatically redeploy (1-2 minutes)
-
-### Adding Code Examples
-
-Use Prism.js syntax highlighting:
-
-```html
-<pre><code class="language-python">
-def example_function():
-    return "Hello World"
-</code></pre>
+npm run start:proxy      # Run chatbot proxy only (legacy)
+npm run start:onboarding # Run onboarding backend only (legacy)
 ```
 
-Supported languages: `python`, `javascript`, `json`, `xml`, `http`
+### Testing
 
-### Updating Styles
+**Test AI Chatbot:**
+1. Open http://localhost:3000
+2. Click robot icon
+3. Enable demo mode OR enter API token
+4. Ask: "How do I authenticate with the API?"
 
-- **Global styles**: Edit `assets/css/main.css`
-- **Component styles**: Edit `assets/css/components.css`
-- **TR brand colors**: Update CSS variables in `main.css`:
-  ```css
-  :root {
-      --color-primary: #FF8000;        /* TR Orange */
-      --color-secondary: #002B49;      /* TR Navy */
-  }
-  ```
+**Test Partner Onboarding:**
+1. Open http://localhost:3000/partner-onboarding.html
+2. Enable demo mode (checkbox at bottom)
+3. Fill out form with test data
+4. Click "Generate Report"
+5. View mock report (instant response)
 
-## Troubleshooting
+**Test with Real Agents:**
+1. Configure API token (settings icon)
+2. Disable demo mode
+3. Submit form
+4. Wait 2-3 minutes for real AI agents
 
-### Chatbot Not Working
+---
 
-**Issue**: Chat button appears but clicking does nothing
+## 📊 Performance
 
-**Solution**:
-- Check browser console for errors
-- Ensure all JavaScript files are loaded
-- Verify you're not blocking scripts (check Content Security Policy)
+### AI Chatbot
+- **Response Time:** 2-5 seconds
+- **Timeout:** 30 seconds
+- **Max Tokens:** 4,000
+- **Retries:** Up to 3 attempts
 
-**Issue**: "API credentials not configured" error
+### Partner Onboarding
+- **Total Time:** 2-3 minutes
+- **CCR Agent:** ~60 seconds
+- **API Agent:** ~60 seconds
+- **Timeout per Agent:** 120 seconds
+- **Max Tokens:** 8,000
+- **Retries:** Up to 3 attempts per agent
 
-**Solution**:
-- Click the settings icon (⚙️) in chat header
-- Re-enter your API Token and Workflow ID
-- Ensure credentials are correct
+---
 
-**Issue**: "Failed to fetch" or CORS error when calling TR OpenArena API
+## 🐛 Troubleshooting
 
-**Solution**:
-- TR OpenArena doesn't support CORS for browser requests (this is normal)
-- **Deploy the included backend proxy to fix this**
-- See **[DEPLOYMENT.md](DEPLOYMENT.md)** for complete step-by-step instructions
-- Quick fix: Deploy to Vercel (free) with `vercel --prod`
-- ⚠️ The chatbot will NOT work without the proxy deployment
+### Server Won't Start
 
-### FAQ Accordion Not Working
+**Issue:** `EADDRINUSE: address already in use :::3000`
 
-**Issue**: Clicking FAQ questions doesn't expand them
+**Solution:**
+```bash
+# Windows
+netstat -ano | findstr ":3000"
+taskkill //F //PID <PID>
 
-**Solution**:
-- Ensure `navigation.js` is loaded
-- Check browser console for JavaScript errors
-- Verify Font Awesome is loading (chevron icons)
+# Mac/Linux
+lsof -i :3000
+kill -9 <PID>
 
-### Code Syntax Highlighting Not Working
+# Then restart
+npm start
+```
 
-**Issue**: Code blocks appear without colors
+---
 
-**Solution**:
-- Verify Prism.js CDN is accessible
-- Check if `language-*` class is on the `<code>` element
-- Ensure proper HTML structure: `<pre><code class="language-python">...</code></pre>`
+### Chatbot Not Responding
 
-### Mobile Menu Not Opening
+**Issue:** Chat sends message but gets no response
 
-**Issue**: Hamburger icon doesn't toggle menu on mobile
+**Solutions:**
+1. Check server is running: http://localhost:3000/health
+2. Check browser console for errors
+3. Verify API token is valid
+4. Try demo mode first
+5. Check TR network connection (VPN)
 
-**Solution**:
-- Check that `navigation.js` is loaded
-- Verify Font Awesome icons are loading
-- Check browser console for errors
+---
 
-## Browser Compatibility
+### Onboarding Form Timeout
 
-**Tested and supported:**
+**Issue:** "Failed to generate report" after waiting
+
+**Solutions:**
+1. Try demo mode first to verify form works
+2. Check server logs for errors
+3. Verify API token is valid
+4. Check TR network connection
+5. Try again (agents may be slow sometimes)
+
+---
+
+### Form Not Validating
+
+**Issue:** Can't submit form even though all fields are filled
+
+**Solution:**
+1. Check all required fields (marked with *)
+2. At least one system type must be selected
+3. At least one invoice handling type (AR/AP) must be selected
+4. Country 1 must be filled
+5. Check browser console for validation errors
+
+---
+
+## 🌐 Browser Compatibility
+
+**Tested and Supported:**
 - ✅ Chrome 90+
 - ✅ Firefox 88+
 - ✅ Safari 14+
 - ✅ Edge 90+
 
-**Note**: IE11 is not supported (uses modern CSS features like Grid/Flexbox)
-
-## Performance
-
-- **Initial Load**: ~200KB (uncompressed)
-- **Assets**: All external resources loaded from CDN
-- **No Build Process**: Direct browser execution
-- **Lighthouse Score**: 95+ (Performance, Accessibility, Best Practices)
-
-## Security Notes
-
-### POC Implementation (Current)
-
-⚠️ **Not production-ready**:
-- API credentials stored in browser sessionStorage
-- No rate limiting
-- No backend authentication
-- Direct API calls from browser (CORS dependent)
-
-### Production Recommendations
-
-✅ **For production deployment**:
-- Implement backend proxy server (Node.js/Python)
-- Server-side API key storage
-- User authentication (SSO/OAuth)
-- Rate limiting per user
-- Error logging and monitoring
-- Content Security Policy headers
-
-## Contributing
-
-To contribute to this guide:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/improvement`)
-3. Make your changes
-4. Test locally
-5. Commit with descriptive message
-6. Push to your fork
-7. Create a Pull Request
-
-## Support
-
-- **API Documentation**: [TR Developer Portal](https://developers.thomsonreuters.com)
-- **PUF Specification**: [Pagero PUF Docs](https://pagero.github.io/puf-billing/)
-- **Issues**: Report issues in GitHub Issues
-
-## License
-
-© 2025 Thomson Reuters. All rights reserved.
+**Note:** IE11 is not supported (uses modern CSS Grid/Flexbox)
 
 ---
 
-## Changelog
+## 🔐 Security Notes
+
+### Current Implementation (POC)
+⚠️ **Not production-ready:**
+- API credentials stored in browser sessionStorage
+- No rate limiting
+- No user authentication
+- No audit logging
+
+### Production Recommendations
+✅ **For production:**
+- Implement user authentication (SSO/OAuth)
+- Server-side API key management
+- Rate limiting per user/IP
+- Audit logging for all API calls
+- HTTPS enforcement
+- Content Security Policy headers
+- Input sanitization and validation
+
+---
+
+## 📚 Additional Documentation
+
+- **[SERVER-GUIDE.md](SERVER-GUIDE.md)** - Detailed server architecture and API reference
+- **[PARTNER-ONBOARDING.md](PARTNER-ONBOARDING.md)** - Partner onboarding feature guide
+- **[TR Developer Portal](https://developers.thomsonreuters.com)** - Official TR API docs
+- **[Pagero PUF Docs](https://pagero.github.io/puf-billing/)** - PUF format specification
+
+---
+
+## 🎨 Customization
+
+### Update TR Branding
+
+Edit `assets/css/main.css`:
+```css
+:root {
+    --color-primary: #FF8000;        /* TR Orange */
+    --color-secondary: #002B49;      /* TR Navy */
+}
+```
+
+### Add New Pages
+
+1. Create new HTML file (e.g., `new-page.html`)
+2. Copy header/footer structure from `index.html`
+3. Add page to navigation menu in all HTML files:
+```html
+<div class="nav-section">
+    <a href="new-page.html" class="nav-section-title">
+        <span><i class="fas fa-icon"></i> New Page</span>
+    </a>
+</div>
+```
+
+### Update Content
+
+All content is in HTML files - no build process needed:
+1. Edit the HTML file
+2. Save
+3. Refresh browser
+
+---
+
+## 🤝 Contributing
+
+Contributions welcome! To contribute:
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/improvement`
+3. Make your changes
+4. Test locally: `npm start`
+5. Commit: `git commit -m "Add feature: description"`
+6. Push: `git push origin feature/improvement`
+7. Create a Pull Request
+
+---
+
+## 📝 Changelog
+
+### v2.0.0 (December 2025)
+- ✨ **NEW**: Partner Onboarding form with AI-generated reports
+- ✨ **NEW**: Unified server architecture (1 server instead of 2)
+- ✨ **NEW**: Multi-agent orchestration (CCR + API agents)
+- 🎨 Updated UI with consistent TR dark theme
+- 📚 Added SERVER-GUIDE.md and PARTNER-ONBOARDING.md
+- 🐛 Improved error handling and timeout management
 
 ### v1.0.0 (January 2025)
 - Initial release
-- 4 comprehensive documentation pages
+- 5 documentation pages
 - AI chatbot with TR OpenArena integration
 - Responsive design with TR branding
 - Code examples and interactive components
 
 ---
 
-**Built with** [Claude Code](https://claude.com/claude-code) 🤖
+## 📄 License
+
+© 2025 Thomson Reuters. All rights reserved.
+
+---
+
+## 🙏 Support
+
+- **Issues:** Report bugs via GitHub Issues
+- **Questions:** Use the AI chatbot on the site
+- **API Support:** Contact TR support team
+
+---
+
+**Built with** ❤️ and [Claude Code](https://claude.com/claude-code) 🤖

@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vercel dev",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "start": "node unified-server.js",
+    "start:proxy": "node local-proxy.js",
+    "start:onboarding": "node partner-onboarding-server.js"
   },
   "keywords": [
     "tr-onesource",
@@ -14,6 +17,11 @@
   ],
   "author": "Thomson Reuters",
   "license": "UNLICENSED",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "node-fetch": "^3.3.2"
+  },
   "devDependencies": {
     "vercel": "^33.0.0"
   }

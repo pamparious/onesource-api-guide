@@ -1,0 +1,7 @@
+{
+    "env": {
+        "ANTHROPIC_BASE_URL": "https://litellm.int.thomsonreuters.com",
+        "ANTHROPIC_MODEL": "anthropic/claude-sonnet-4-5",
+        "ANTHROPIC_AUTH_TOKEN": "sk-XPPFoRe02E2jsiqOH5tNYg"
+   }
+}

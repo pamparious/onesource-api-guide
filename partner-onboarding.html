@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TR ONESOURCE Partner Onboarding - Generate your personalized implementation guide">
+    <title>Partner Onboarding | TR ONESOURCE E-Invoicing</title>
+
+    <!-- Dark Mode Detection -->
+    <script>
+        (function() {
+            const cl = document.documentElement.classList;
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                cl.add('dark');
+            }
+        })();
+    </script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/chatbot.css">
+    <link rel="stylesheet" href="assets/css/partner-onboarding.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header class="site-header">
+        <div class="container" style="display: flex; align-items: center; justify-content: space-between; height: 100%; padding: 0 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="index.html" class="navbar-brand" style="display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                    <div style="background-color: white; padding: 4px 8px; border-radius: 4px; display: flex; align-items: center;">
+                        <img src="assets/images/Thomson-Reuters-Logo-500x281.png" alt="Thomson Reuters" style="height: 24px; width: auto;">
+                    </div>
+                    <div style="border-left: 2px solid #444; height: 32px; margin: 0 0.25rem;"></div>
+                    <span style="font-size: 0.875rem; color: #cccccc; font-weight: 500; white-space: nowrap;">ONESOURCE API Guide</span>
+                </a>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button id="headerAIButton" class="header-ai-button" aria-label="Open AI Assistant">
+                    <i class="fas fa-robot"></i>
+                    <span class="ai-button-text">AI Assistant</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Main Container -->
+    <div id="retype-container">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar-left">
+            <nav class="sidebar-nav">
+                <!-- Home Section -->
+                <div class="nav-section">
+                    <a href="index.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-home" style="margin-right: 0.5rem; width: 20px;"></i> Home</span>
+                    </a>
+                </div>
+
+                <!-- Getting Started Section -->
+                <div class="nav-section">
+                    <a href="getting-started.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-rocket" style="margin-right: 0.5rem; width: 20px;"></i> Getting Started</span>
+                    </a>
+                </div>
+
+                <!-- E-Invoicing Integration Section -->
+                <div class="nav-section">
+                    <a href="einvoicing-integration.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-file-invoice" style="margin-right: 0.5rem; width: 20px;"></i> E-Invoicing Integration</span>
+                    </a>
+                </div>
+
+                <!-- API Reference Section -->
+                <div class="nav-section">
+                    <a href="api-reference.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-code" style="margin-right: 0.5rem; width: 20px;"></i> API Reference</span>
+                    </a>
+                </div>
+
+                <!-- Partner Onboarding Section (Active) -->
+                <div class="nav-section">
+                    <a href="partner-onboarding.html" class="nav-section-title active" style="text-decoration: none;">
+                        <span><i class="fas fa-handshake" style="margin-right: 0.5rem; width: 20px;"></i> Partner Onboarding</span>
+                    </a>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="nav-section">
+                    <a href="faq.html" class="nav-section-title" style="text-decoration: none;">
+                        <span><i class="fas fa-question-circle" style="margin-right: 0.5rem; width: 20px;"></i> FAQ</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-wrapper">
+            <div class="main-content-area">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1><i class="fas fa-handshake"></i> Partner Onboarding</h1>
+                    <p class="subtitle">Complete this form to generate your personalized implementation guide powered by AI</p>
+                </div>
+
+                <!-- Main Form -->
+                <div id="formContainer" class="onboarding-form-container">
+                    <form id="onboardingForm" novalidate>
+                        <!-- Section 1: Partner & Contact Information -->
+                        <div class="form-section">
+                            <h2><i class="fas fa-building"></i> Partner & Contact Information</h2>
+
+                            <div class="form-group">
+                                <label for="partnerCompanyName" class="required">Partner Company Name</label>
+                                <input type="text" id="partnerCompanyName" name="partnerCompanyName" required placeholder="Enter your company name">
+                                <span class="error-message"></span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="projectManagerName" class="required">Project Manager Name</label>
+                                    <input type="text" id="projectManagerName" name="projectManagerName" required placeholder="Full name">
+                                    <span class="error-message"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="projectManagerEmail" class="required">Project Manager Email</label>
+                                    <input type="email" id="projectManagerEmail" name="projectManagerEmail" required placeholder="email@company.com">
+                                    <span class="error-message"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="technicalLeadName" class="required">Technical Lead/Developer Name</label>
+                                    <input type="text" id="technicalLeadName" name="technicalLeadName" required placeholder="Full name">
+                                    <span class="error-message"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="technicalLeadEmail" class="required">Technical Lead/Developer Email</label>
+                                    <input type="email" id="technicalLeadEmail" name="technicalLeadEmail" required placeholder="email@company.com">
+                                    <span class="error-message"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Partnership Type -->
+                        <div class="form-section">
+                            <h2><i class="fas fa-users"></i> Partnership Type</h2>
+                            <div class="form-group radio-group">
+                                <label class="required">Select Partnership Type</label>
+                                <div class="radio-options">
+                                    <label class="radio-label">
+                                        <input type="radio" name="partnershipType" value="reseller" required>
+                                        <span class="radio-text">
+                                            <strong>Reseller Partner</strong>
+                                            <small>You sell and support TR ONESOURCE to end customers</small>
+                                        </span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="partnershipType" value="referral" required>
+                                        <span class="radio-text">
+                                            <strong>Referral Partner</strong>
+                                            <small>You refer customers to Thomson Reuters</small>
+                                        </span>
+                                    </label>
+                                </div>
+                                <span class="error-message"></span>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: System Integration -->
+                        <div class="form-section">
+                            <h2><i class="fas fa-plug"></i> System Integration</h2>
+                            <div class="form-group checkbox-group">
+                                <label class="required">Select Systems to Integrate (select all that apply)</label>
+                                <div class="checkbox-options">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="systemIntegration" value="erp" id="systemErp">
+                                        <span class="checkbox-text">
+                                            <strong>ERP System</strong>
+                                            <small>Enterprise Resource Planning</small>
+                                        </span>
+                                    </label>
+                                    <div class="conditional-input" id="erpDetails" style="display: none;">
+                                        <input type="text" name="erpDetails" placeholder="Specify ERP name & version (e.g., SAP S/4HANA 2021)">
+                                    </div>
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="systemIntegration" value="tax">
+                                        <span class="checkbox-text">
+                                            <strong>Tax Technology Platform</strong>
+                                            <small>Tax calculation and compliance systems</small>
+                                        </span>
+                                    </label>
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="systemIntegration" value="workflow">
+                                        <span class="checkbox-text">
+                                            <strong>Workflow/Approval System</strong>
+                                            <small>Document approval and routing</small>
+                                        </span>
+                                    </label>
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="systemIntegration" value="procurement">
+                                        <span class="checkbox-text">
+                                            <strong>Procurement Platform</strong>
+                                            <small>Purchase order and procurement systems</small>
+                                        </span>
+                                    </label>
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="systemIntegration" value="custom">
+                                        <span class="checkbox-text">
+                                            <strong>Custom-built System</strong>
+                                            <small>Proprietary or internally developed systems</small>
+                                        </span>
+                                    </label>
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="systemIntegration" value="other" id="systemOther">
+                                        <span class="checkbox-text">
+                                            <strong>Other</strong>
+                                            <small>Other system types</small>
+                                        </span>
+                                    </label>
+                                    <div class="conditional-input" id="otherSystemDetails" style="display: none;">
+                                        <input type="text" name="otherSystemDetails" placeholder="Please specify the system type">
+                                    </div>
+                                </div>
+                                <span class="error-message"></span>
+                            </div>
+                        </div>
+
+                        <!-- Section 4: Countries in Scope -->
+                        <div class="form-section">
+                            <h2><i class="fas fa-globe"></i> Countries in Scope</h2>
+
+                            <div class="form-group">
+                                <label for="country1" class="required">Country 1 (Priority)</label>
+                                <input type="text" id="country1" name="country1" required placeholder="e.g., Germany, France, Italy" list="countryList">
+                                <datalist id="countryList">
+                                    <option value="Germany">
+                                    <option value="France">
+                                    <option value="Italy">
+                                    <option value="Spain">
+                                    <option value="Poland">
+                                    <option value="Romania">
+                                    <option value="Belgium">
+                                    <option value="Netherlands">
+                                    <option value="Portugal">
+                                    <option value="Brazil">
+                                    <option value="Mexico">
+                                    <option value="United States">
+                                </datalist>
+                                <span class="error-message"></span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="country2">Country 2 (Optional)</label>
+                                    <input type="text" id="country2" name="country2" placeholder="Additional country" list="countryList">
+                                </div>
+                                <div class="form-group">
+                                    <label for="country3">Country 3 (Optional)</label>
+                                    <input type="text" id="country3" name="country3" placeholder="Additional country" list="countryList">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="additionalCountries">Additional Countries (Optional)</label>
+                                <textarea id="additionalCountries" name="additionalCountries" rows="3" placeholder="Enter any additional countries, separated by commas"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Section 5: AP/AR Handling -->
+                        <div class="form-section">
+                            <h2><i class="fas fa-file-invoice-dollar"></i> AP/AR Handling</h2>
+
+                            <div class="form-group checkbox-group">
+                                <label class="required">Select Invoice Handling Type (select all that apply)</label>
+                                <div class="checkbox-options">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="invoiceHandling" value="ar" required>
+                                        <span class="checkbox-text">
+                                            <strong>Accounts Receivable (AR)</strong>
+                                            <small>Sending invoices to customers</small>
+                                        </span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="invoiceHandling" value="ap" required>
+                                        <span class="checkbox-text">
+                                            <strong>Accounts Payable (AP)</strong>
+                                            <small>Receiving invoices from suppliers</small>
+                                        </span>
+                                    </label>
+                                </div>
+                                <span class="error-message"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="invoiceVolume" class="required">Estimated Monthly Invoice Volume</label>
+                                <input type="number" id="invoiceVolume" name="invoiceVolume" required min="1" placeholder="Enter estimated number of invoices per month">
+                                <span class="error-message"></span>
+                            </div>
+                        </div>
+
+                        <!-- Section 6: First-Line Support -->
+                        <div class="form-section">
+                            <h2><i class="fas fa-headset"></i> First-Line Support</h2>
+                            <div class="form-group radio-group">
+                                <label class="required">Who will provide first-line support to end customers?</label>
+                                <div class="radio-options">
+                                    <label class="radio-label">
+                                        <input type="radio" name="firstLineSupport" value="thomson-reuters" required>
+                                        <span class="radio-text">
+                                            <strong>Thomson Reuters</strong>
+                                            <small>TR provides direct support to end customers</small>
+                                        </span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="firstLineSupport" value="partner" required>
+                                        <span class="radio-text">
+                                            <strong>Partner</strong>
+                                            <small>Partner provides first-line support, escalates to TR as needed</small>
+                                        </span>
+                                    </label>
+                                </div>
+                                <span class="error-message"></span>
+                            </div>
+                        </div>
+
+                        <!-- Section 7: Account Access Management -->
+                        <div class="form-section">
+                            <h2><i class="fas fa-key"></i> Account Access Management</h2>
+                            <div class="form-group radio-group">
+                                <label class="required">How will customer accounts be managed?</label>
+                                <div class="radio-options">
+                                    <label class="radio-label">
+                                        <input type="radio" name="accountAccess" value="partner-managed" required>
+                                        <span class="radio-text">
+                                            <strong>Partner manages all customer accounts</strong>
+                                            <small>Partner has master credentials and manages sub-accounts</small>
+                                        </span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="accountAccess" value="customer-direct" required>
+                                        <span class="radio-text">
+                                            <strong>End customers have direct access</strong>
+                                            <small>Each customer has their own credentials and portal access</small>
+                                        </span>
+                                    </label>
+                                </div>
+                                <span class="error-message"></span>
+                            </div>
+                        </div>
+
+                        <!-- Section 8: Service Model -->
+                        <div class="form-section">
+                            <h2><i class="fas fa-cogs"></i> Service Model</h2>
+                            <div class="form-group radio-group">
+                                <label class="required">Select Your Service Model</label>
+                                <div class="radio-options">
+                                    <label class="radio-label">
+                                        <input type="radio" name="serviceModel" value="self-service" required>
+                                        <span class="radio-text">
+                                            <strong>Self-Service</strong>
+                                            <small>Partner manages implementation and operations independently</small>
+                                        </span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="serviceModel" value="managed-service" required>
+                                        <span class="radio-text">
+                                            <strong>Managed Service</strong>
+                                            <small>Thomson Reuters provides ongoing support and guidance</small>
+                                        </span>
+                                    </label>
+                                </div>
+                                <span class="error-message"></span>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="button" id="clearBtn" class="btn btn-secondary">
+                                <i class="fas fa-eraser"></i> Clear Form
+                            </button>
+                            <button type="submit" id="submitBtn" class="btn btn-primary" disabled>
+                                <i class="fas fa-paper-plane"></i> Generate Report
+                            </button>
+                        </div>
+
+                        <!-- Auto-save indicator -->
+                        <div class="auto-save-indicator" id="autoSaveIndicator">
+                            <i class="fas fa-check-circle"></i> Form auto-saved
+                        </div>
+
+                        <!-- Demo Mode Toggle -->
+                        <div class="demo-mode-toggle">
+                            <label>
+                                <input type="checkbox" id="demoModeToggle">
+                                <span>Demo Mode (Use mock data without API token)</span>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Generating your implementation report...</p>
+                    <small>Consulting our AI agents for country compliance and API guidance</small>
+                    <small style="margin-top: 10px;">This may take 30-60 seconds...</small>
+                </div>
+
+                <!-- Report Display -->
+                <div id="reportContainer" class="report-container" style="display: none;">
+                    <div class="report-header">
+                        <h2><i class="fas fa-file-alt"></i> Partner Implementation Report</h2>
+                        <div class="report-actions">
+                            <button type="button" id="printReportBtn" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                            <button type="button" id="copyReportBtn" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                            <button type="button" id="newFormBtn" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> New Form
+                            </button>
+                        </div>
+                    </div>
+                    <div id="reportContent" class="report-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar (Table of Contents) -->
+        <aside class="sidebar-right">
+            <div class="toc-container">
+                <h3 class="toc-title">On This Page</h3>
+                <ul class="toc-list" id="tocList">
+                    <li><a href="#" data-section="partner-info">Partner Information</a></li>
+                    <li><a href="#" data-section="partnership-type">Partnership Type</a></li>
+                    <li><a href="#" data-section="system-integration">System Integration</a></li>
+                    <li><a href="#" data-section="countries">Countries in Scope</a></li>
+                    <li><a href="#" data-section="ap-ar">AP/AR Handling</a></li>
+                    <li><a href="#" data-section="support">Support Model</a></li>
+                    <li><a href="#" data-section="account-mgmt">Account Management</a></li>
+                    <li><a href="#" data-section="service-model">Service Model</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <!-- API Key Modal -->
+    <div id="apiKeyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Configure API Settings</h3>
+                <button class="modal-close" id="modalCloseBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>To generate reports, please enter your TR OpenArena API Token:</p>
+                <div class="modal-warning">
+                    <strong>Note:</strong> Your credentials are stored in your browser session only.
+                </div>
+                <div class="form-group">
+                    <label for="apiTokenInput">API Token (ESSO):</label>
+                    <input type="password" id="apiTokenInput" placeholder="Enter your TR OpenArena API token" autocomplete="off">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
+                <button class="btn btn-primary" id="modalSaveBtn">Save & Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot Container -->
+    <div id="chatbot-container"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/mobile-menu.js"></script>
+    <script src="assets/js/chatbot-ui.js"></script>
+    <script src="assets/js/openarena-client.js"></script>
+    <script src="assets/js/chatbot-controller.js"></script>
+    <script src="assets/js/partner-onboarding.js"></script>
+</body>
+</html>

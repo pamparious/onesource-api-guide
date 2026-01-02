@@ -56,7 +56,7 @@
                         <i class="fas fa-file-code"></i> PUF
                     </button>
                     <button class="agent-tab" data-agent="ccr">
-                        <i class="fas fa-shield-alt"></i> CCR
+                        <i class="fas fa-globe"></i> CCR
                     </button>
                 </div>
             </div>
@@ -293,7 +293,7 @@
             const agentNames = {
                 'api': 'API Integration Expert',
                 'puf': 'PUF Format Specialist',
-                'ccr': 'CCR Compliance Guide'
+                'ccr': 'CCR Country Guide'
             };
             subtitle.textContent = agentNames[agent] || 'Powered by OpenArena';
         }
