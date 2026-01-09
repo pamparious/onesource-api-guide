@@ -109,6 +109,7 @@ input[type="text"],
 input[type="email"],
 input[type="number"],
 input[type="password"],
+select,
 textarea {
     width: 100%;
     padding: 0.75rem 1rem;
@@ -125,6 +126,7 @@ html.dark input[type="text"],
 html.dark input[type="email"],
 html.dark input[type="number"],
 html.dark input[type="password"],
+html.dark select,
 html.dark textarea {
     background: #0A0A0A;
     border-color: #2A2A2A;
@@ -135,6 +137,7 @@ input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="number"]:focus,
 input[type="password"]:focus,
+select:focus,
 textarea:focus {
     outline: none;
     border-color: var(--color-primary);
@@ -407,12 +410,19 @@ html.dark .checkbox-label:has(input:checked) {
     margin-top: 0.5rem;
 }
 
-/* Report Container */
+/* Report Container - Full Width */
 .report-container {
     background: var(--color-bg-secondary);
     border-radius: var(--radius-lg);
     overflow: hidden;
     margin-bottom: 2rem;
+    max-width: 100%;
+}
+
+/* Override main-content-area max-width when report is shown */
+body:has(#reportContainer[style*="display: block"]) .main-content-area {
+    max-width: 100% !important;
+    padding: 2rem 1.5rem !important;
 }
 
 .report-header {
@@ -447,11 +457,17 @@ html.dark .checkbox-label:has(input:checked) {
 
 /* Report Metadata */
 .report-metadata {
-    background: rgba(255, 128, 0, 0.08);
+    background: #f9fafb;
     border-left: 4px solid var(--color-primary);
     padding: 1.5rem;
     border-radius: var(--radius-sm);
     margin-bottom: 2rem;
+}
+
+html.dark .report-metadata {
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    border-left: 4px solid var(--color-primary);
 }
 
 .report-metadata h3 {
@@ -829,6 +845,29 @@ html.dark .country-requirements li {
     margin-bottom: 1rem;
 }
 
+/* Code example labels - small, orange text above code blocks */
+.report-section h4.code-example-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+    text-transform: none;
+    letter-spacing: normal;
+    padding-left: 0.5rem;
+    border-left: 3px solid var(--color-primary);
+}
+
+/* Fallback: Smaller headings when they introduce code examples */
+.report-section h4:has(+ pre),
+.report-section h4:has(+ p + pre) {
+    font-size: var(--font-size-base);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-top: 1rem;
+}
+
 .report-section p {
     margin-bottom: 1rem;
     line-height: 1.7;
@@ -873,17 +912,171 @@ html.dark .report-section ol {
     overflow-x: auto;
     margin: 1rem 0;
     border: 1px solid #2A2A2A;
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
 }
 
 .report-section pre code {
     background: none;
     color: inherit;
     padding: 0;
+    font-size: var(--font-size-sm);
+    font-family: var(--font-family-mono);
+}
+
+/* Code block labels/descriptions - reduce size if it's right before pre */
+.report-section h4 + pre,
+.report-section strong + pre {
+    margin-top: 0.5rem;
+}
+
+/* Style for code example descriptions */
+.report-section p + pre {
+    margin-top: 0.75rem;
 }
 
 .report-section strong {
     color: var(--color-white);
     font-weight: 600;
+}
+
+/* Markdown Tables - Responsive wrapper */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: var(--color-bg-secondary);
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #2a2a2a;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #3a3a3a;
+}
+
+.markdown-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    margin: 0;
+    background: var(--color-bg-secondary);
+    table-layout: auto;
+}
+
+.markdown-table thead {
+    background: #1a1a1a;
+}
+
+html.dark .markdown-table thead {
+    background: #1a1a1a;
+}
+
+.markdown-table thead tr {
+    border-bottom: 2px solid #2a2a2a;
+}
+
+html.dark .markdown-table thead tr {
+    border-bottom: 2px solid #2a2a2a;
+}
+
+.markdown-table th {
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-white);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.markdown-table td {
+    padding: 0.625rem 0.75rem;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-medium-gray);
+    line-height: 1.5;
+    font-size: var(--font-size-sm);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    max-width: 300px;
+    vertical-align: top;
+    position: relative;
+}
+
+.markdown-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.markdown-table tbody tr {
+    transition: background-color var(--transition-fast);
+}
+
+.markdown-table tbody tr:hover {
+    background: rgba(255, 128, 0, 0.05);
+}
+
+.markdown-table code {
+    font-size: 0.85em;
+    white-space: normal;
+    word-break: break-all;
+    display: inline;
+}
+
+.markdown-table td code {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+html.dark .markdown-table {
+    background: #1A1A1A;
+}
+
+html.dark .markdown-table td {
+    color: var(--color-gray);
+}
+
+html.dark .markdown-table tbody tr:hover {
+    background: rgba(255, 128, 0, 0.08);
+}
+
+html.dark .table-wrapper {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive tables */
+@media (max-width: 768px) {
+    .table-wrapper {
+        margin: 0.75rem 0;
+    }
+
+    .markdown-table {
+        min-width: 500px;
+        font-size: var(--font-size-xs);
+    }
+
+    .markdown-table th,
+    .markdown-table td {
+        padding: 0.5rem;
+    }
+
+    .markdown-table td {
+        max-width: 200px;
+    }
 }
 
 /* Modal */
@@ -1070,4 +1263,428 @@ html.dark .modal-warning {
     .form-actions .btn {
         width: 100%;
     }
+}
+
+/* ============================================
+   NEW STYLES FOR ENHANCED REPORT TEMPLATE
+   ============================================ */
+
+/* Validation Summary */
+.validation-summary {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 2px solid;
+}
+
+.validation-passed {
+    border-color: #10b981;
+    background-color: #d1fae5;
+}
+
+html.dark .validation-passed {
+    background-color: rgba(16, 185, 129, 0.15);
+    border-color: #10b981;
+}
+
+.validation-failed {
+    border-color: #ef4444;
+    background-color: #fee2e2;
+}
+
+html.dark .validation-failed {
+    background-color: rgba(239, 68, 68, 0.15);
+    border-color: #ef4444;
+}
+
+.validation-stats {
+    display: flex;
+    gap: 2rem;
+    margin: 1rem 0;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.stat-error {
+    color: #ef4444;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+html.dark .stat-label {
+    color: var(--color-gray);
+}
+
+.validation-warning {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #fef3c7;
+    border-left: 4px solid #f59e0b;
+}
+
+html.dark .validation-warning {
+    background-color: rgba(245, 158, 11, 0.15);
+    border-left-color: #f59e0b;
+    color: var(--color-text);
+}
+
+.validation-details {
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.validation-details summary {
+    font-weight: bold;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+html.dark .validation-details summary {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.validation-details summary:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+html.dark .validation-details summary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.validation-checklist {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.validation-checklist li {
+    padding: 0.5rem;
+    margin: 0.25rem 0;
+}
+
+.check-passed {
+    color: #10b981;
+}
+
+.check-failed {
+    color: #ef4444;
+}
+
+.badge-critical {
+    background-color: #ef4444;
+    color: white;
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.badge-error {
+    background-color: #ef4444;
+    color: white;
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+/* Section Error */
+.section-error {
+    padding: 2rem;
+    background-color: #fee2e2;
+    border: 2px solid #ef4444;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.error-icon {
+    font-size: 3rem;
+    color: #ef4444;
+    margin-bottom: 1rem;
+}
+
+.section-error h3 {
+    color: #ef4444;
+    margin-bottom: 1rem;
+}
+
+.section-error ul {
+    text-align: left;
+    display: inline-block;
+    margin: 1rem 0;
+}
+
+.section-error p {
+    margin: 0.5rem 0;
+}
+
+/* Report TOC */
+.report-toc {
+    background-color: #f9fafb;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    border: 1px solid #e5e7eb;
+}
+
+html.dark .report-toc {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+}
+
+.report-toc h3 {
+    margin-top: 0;
+    color: #1f2937;
+}
+
+html.dark .report-toc h3 {
+    color: var(--color-white);
+}
+
+.report-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.report-toc li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+html.dark .report-toc li {
+    border-bottom: 1px solid var(--color-medium-gray);
+}
+
+.report-toc li:last-child {
+    border-bottom: none;
+}
+
+.report-toc a {
+    color: #2563eb;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+html.dark .report-toc a {
+    color: var(--color-primary);
+}
+
+.report-toc a:hover {
+    text-decoration: underline;
+    color: #1d4ed8;
+}
+
+html.dark .report-toc a:hover {
+    color: var(--color-white);
+}
+
+.toc-error {
+    color: #ef4444;
+}
+
+/* Demo Badge */
+.demo-badge {
+    background-color: #fbbf24;
+    color: #78350f;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.875rem;
+    display: inline-block;
+}
+
+/* Report Errors Summary */
+.report-errors-summary {
+    background-color: #fef2f2;
+    border: 2px solid #ef4444;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+
+.report-errors-summary h2 {
+    color: #ef4444;
+    margin-top: 0;
+}
+
+.report-errors-summary ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+}
+
+.report-errors-summary li {
+    margin: 0.5rem 0;
+    color: #991b1b;
+}
+
+/* Report Errors Summary - Dark Mode */
+html.dark .report-errors-summary {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+}
+
+html.dark .report-errors-summary h2 {
+    color: #ef4444;
+}
+
+html.dark .report-errors-summary li {
+    color: #fca5a5;
+}
+
+/* Responsive Adjustments for New Elements */
+@media (max-width: 768px) {
+    .validation-stats {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .report-metadata {
+        flex-direction: column;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+}
+
+/* ============================================
+   STICKY REPORT TOC (RIGHT SIDEBAR)
+   ============================================ */
+
+/* Hide the default form TOC when report is shown */
+.sidebar-right .toc-container.form-toc {
+    display: block;
+}
+
+.sidebar-right .toc-container.report-toc {
+    display: none;
+}
+
+/* Show report TOC when report is displayed */
+body:has(#reportContainer[style*="display: block"]) .sidebar-right .toc-container.form-toc {
+    display: none;
+}
+
+body:has(#reportContainer[style*="display: block"]) .sidebar-right .toc-container.report-toc {
+    display: block;
+}
+
+/* Sticky TOC Container within Right Sidebar */
+.sidebar-right .toc-container {
+    position: sticky;
+    top: 1.5rem;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    padding: 0 1.5rem;
+}
+
+.sidebar-right .toc-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+html.dark .sidebar-right .toc-title {
+    color: #6b7280;
+    border-bottom-color: #1a1a1a;
+}
+
+.sidebar-right .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-right .toc-list li {
+    margin-bottom: 0;
+}
+
+/* Match left sidebar nav-item styling */
+.sidebar-right .toc-list a {
+    display: block;
+    padding: 0.5rem 1.5rem;
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    transition: all var(--transition-fast);
+    border-left: 3px solid transparent;
+    border-radius: 0;
+}
+
+html.dark .sidebar-right .toc-list a {
+    color: #9ca3af;
+}
+
+.sidebar-right .toc-list a:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.08);
+    text-decoration: none;
+}
+
+html.dark .sidebar-right .toc-list a:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.sidebar-right .toc-list a.active {
+    color: #ffffff;
+    font-weight: 600;
+    border-left-color: var(--color-primary);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+html.dark .sidebar-right .toc-list a.active {
+    color: #ffffff;
+    border-left-color: var(--color-primary);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Nested TOC items */
+.sidebar-right .toc-list ul {
+    list-style: none;
+    padding-left: 1rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-right .toc-list ul a {
+    font-size: var(--font-size-xs);
+    padding: 0.375rem 0.5rem;
+}
+
+/* Custom scrollbar for TOC */
+.sidebar-right .toc-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-right .toc-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-right .toc-container::-webkit-scrollbar-thumb {
+    background: var(--color-medium-gray);
+    border-radius: 3px;
+}
+
+.sidebar-right .toc-container::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
 }

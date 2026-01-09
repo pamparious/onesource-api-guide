@@ -17,7 +17,7 @@
         // Workflow IDs for each agent
         const workflowIds = {
             'api': '74f9914d-b8c9-44f0-ad5c-13af2d02144c',
-            'puf': '74f9914d-b8c9-44f0-ad5c-13af2d02144c',  // Same as API for now
+            'puf': 'f5a1f931-82f3-4b50-a051-de3e175e3d5f',  // PUF AI Agent
             'ccr': 'f87b828b-39cb-4a9e-9225-bb9e67ff4860'   // Country CCR Expert
         };
 

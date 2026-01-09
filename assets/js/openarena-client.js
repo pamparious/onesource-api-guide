@@ -26,11 +26,12 @@
         /**
          * Execute LLM inference using OpenArena workflow API
          */
-        async infer(query, context = {}) {
+        async infer(query, context = {}, extendedTimeout = false) {
             const startTime = Date.now();
 
             try {
-                console.log('[OpenArena] Sending request via', this.useProxy ? 'proxy' : 'direct API');
+                console.log('[OpenArena] Sending request via', this.useProxy ? 'proxy' : 'direct API',
+                           extendedTimeout ? '(extended timeout)' : '');
 
                 let responseData;
 
@@ -40,7 +41,8 @@
                         apiToken: this.apiToken,
                         workflowId: this.workflowId,
                         query: query,
-                        context: context
+                        context: context,
+                        extendedTimeout: extendedTimeout
                     };
 
                     const response = await fetch(this.proxyURL, {
@@ -53,7 +55,21 @@
 
                     if (!response.ok) {
                         const errorData = await response.json().catch(() => ({}));
-                        throw new Error(errorData.error || `Proxy error: ${response.status} ${response.statusText}`);
+
+                        // Check if this was a timeout error on first attempt
+                        if (errorData.isTimeout && !extendedTimeout) {
+                            console.log('[OpenArena] Request timed out, retrying with extended timeout...');
+
+                            // Show progress message to user
+                            if (window.showTimeoutMessage) {
+                                window.showTimeoutMessage();
+                            }
+
+                            // Retry with extended timeout
+                            return await this.infer(query, context, true);
+                        }
+
+                        throw new Error(errorData.message || errorData.error || `Proxy error: ${response.status} ${response.statusText}`);
                     }
 
                     responseData = await response.json();

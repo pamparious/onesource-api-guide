@@ -601,6 +601,13 @@
         addAIMessage(`I apologize, but I encountered an error: ${errorMessage}\n\nPlease check your API credentials or try again later.`);
     };
 
+    /**
+     * Display timeout message (when retrying with extended timeout)
+     */
+    window.showTimeoutMessage = function() {
+        addSystemMessage('⏳ Response is taking longer than expected. Retrying with extended timeout (up to 3 minutes)...');
+    };
+
     // Initialize chatbot UI when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', createChatbotUI);

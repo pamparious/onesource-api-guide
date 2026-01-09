@@ -191,33 +191,7 @@
     function validateForm() {
         let isValid = true;
 
-        // Validate all required text/email/number inputs
-        const requiredInputs = form.querySelectorAll('input[required]:not([type="radio"]):not([type="checkbox"]), textarea[required]');
-        requiredInputs.forEach(input => {
-            if (!input.value.trim()) {
-                isValid = false;
-            }
-        });
-
-        // Validate radio groups
-        const partnershipType = form.querySelector('input[name="partnershipType"]:checked');
-        const firstLineSupport = form.querySelector('input[name="firstLineSupport"]:checked');
-        const accountAccess = form.querySelector('input[name="accountAccess"]:checked');
-        const serviceModel = form.querySelector('input[name="serviceModel"]:checked');
-
-        if (!partnershipType || !firstLineSupport || !accountAccess || !serviceModel) {
-            isValid = false;
-        }
-
-        // Validate checkboxes (at least one)
-        const systemIntegration = form.querySelectorAll('input[name="systemIntegration"]:checked');
-        const invoiceHandling = form.querySelectorAll('input[name="invoiceHandling"]:checked');
-
-        if (systemIntegration.length === 0 || invoiceHandling.length === 0) {
-            isValid = false;
-        }
-
-        // Validate at least one country
+        // Only validate country1 is required
         const country1 = document.getElementById('country1').value.trim();
         if (!country1) {
             isValid = false;
@@ -234,6 +208,56 @@
      */
     function handleFormChange() {
         validateForm();
+    }
+
+    /**
+     * Calculate estimated time based on country count
+     */
+    function calculateTimeEstimate(countryCount) {
+        // Each country needs 2 agents (CCR + PUF), plus 1 API agent for all countries
+        const agentCount = (countryCount * 2) + 1;
+
+        // Base timeout per agent: 2 minutes, with potential retry: +4 minutes
+        // Conservative estimate: assume 50% retry rate
+        const avgTimePerAgent = 2 + (4 * 0.3); // 3.2 minutes average per agent
+
+        const totalMinutes = Math.ceil(agentCount * avgTimePerAgent);
+
+        // Return range (min is base time, max includes all retries)
+        const minMinutes = agentCount * 2;
+        const maxMinutes = agentCount * 6; // If all agents retry
+
+        return {
+            min: minMinutes,
+            max: maxMinutes,
+            average: totalMinutes
+        };
+    }
+
+    /**
+     * Update loading time estimate based on country count
+     */
+    function updateLoadingEstimate(data) {
+        const countries = [];
+        if (data.country1) countries.push(data.country1);
+        if (data.country2) countries.push(data.country2);
+        if (data.country3) countries.push(data.country3);
+        if (data.additionalCountries) {
+            const additional = data.additionalCountries.split(',').map(c => c.trim()).filter(c => c);
+            countries.push(...additional);
+        }
+
+        const countryCount = [...new Set(countries)].length;
+        const estimate = calculateTimeEstimate(countryCount);
+
+        const loadingTimeElement = document.getElementById('loadingTimeEstimate');
+        if (loadingTimeElement) {
+            if (countryCount === 1) {
+                loadingTimeElement.textContent = `This may take 3-5 minutes (1 country, ${3} AI agents)...`;
+            } else {
+                loadingTimeElement.textContent = `This may take ${estimate.min}-${estimate.max} minutes (${countryCount} countries, ${countryCount * 2 + 1} AI agents)...`;
+            }
+        }
     }
 
     /**
@@ -256,6 +280,9 @@
 
         // Collect form data
         const data = collectFormData();
+
+        // Update loading time estimate
+        updateLoadingEstimate(data);
 
         // Show loading spinner
         formContainer.style.display = 'none';
@@ -287,25 +314,29 @@
      * Collect form data
      */
     function collectFormData() {
+        const systemIntegration = Array.from(form.querySelectorAll('input[name="systemIntegration"]:checked')).map(cb => cb.value);
+        const invoiceHandling = Array.from(form.querySelectorAll('input[name="invoiceHandling"]:checked')).map(cb => cb.value);
+
         const data = {
-            partnerCompanyName: document.getElementById('partnerCompanyName').value.trim(),
-            projectManagerName: document.getElementById('projectManagerName').value.trim(),
-            projectManagerEmail: document.getElementById('projectManagerEmail').value.trim(),
-            technicalLeadName: document.getElementById('technicalLeadName').value.trim(),
-            technicalLeadEmail: document.getElementById('technicalLeadEmail').value.trim(),
-            partnershipType: form.querySelector('input[name="partnershipType"]:checked')?.value,
-            systemIntegration: Array.from(form.querySelectorAll('input[name="systemIntegration"]:checked')).map(cb => cb.value),
+            partnerCompanyName: document.getElementById('partnerCompanyName').value.trim() || 'Not specified',
+            projectManagerName: document.getElementById('projectManagerName').value.trim() || 'Not specified',
+            projectManagerEmail: document.getElementById('projectManagerEmail').value.trim() || 'not.specified@example.com',
+            technicalLeadName: document.getElementById('technicalLeadName').value.trim() || 'Not specified',
+            technicalLeadEmail: document.getElementById('technicalLeadEmail').value.trim() || 'not.specified@example.com',
+            partnershipType: form.querySelector('input[name="partnershipType"]:checked')?.value || 'reseller',
+            programmingLanguage: document.getElementById('programmingLanguage').value || 'python',
+            systemIntegration: systemIntegration.length > 0 ? systemIntegration : ['custom'],
             erpDetails: document.querySelector('input[name="erpDetails"]')?.value || '',
             otherSystemDetails: document.querySelector('input[name="otherSystemDetails"]')?.value || '',
             country1: document.getElementById('country1').value.trim(),
             country2: document.getElementById('country2').value.trim(),
             country3: document.getElementById('country3').value.trim(),
             additionalCountries: document.getElementById('additionalCountries').value.trim(),
-            invoiceHandling: Array.from(form.querySelectorAll('input[name="invoiceHandling"]:checked')).map(cb => cb.value),
-            invoiceVolume: document.getElementById('invoiceVolume').value,
-            firstLineSupport: form.querySelector('input[name="firstLineSupport"]:checked')?.value,
-            accountAccess: form.querySelector('input[name="accountAccess"]:checked')?.value,
-            serviceModel: form.querySelector('input[name="serviceModel"]:checked')?.value
+            invoiceHandling: invoiceHandling.length > 0 ? invoiceHandling : ['ar', 'ap'],
+            invoiceVolume: document.getElementById('invoiceVolume').value || '1000',
+            firstLineSupport: form.querySelector('input[name="firstLineSupport"]:checked')?.value || 'thomson-reuters',
+            accountAccess: form.querySelector('input[name="accountAccess"]:checked')?.value || 'customer-direct',
+            serviceModel: form.querySelector('input[name="serviceModel"]:checked')?.value || 'managed-service'
         };
 
         return data;
@@ -344,78 +375,282 @@
      * Display report
      */
     function displayReport(response, formData) {
-        const reportId = generateReportId();
-        const timestamp = new Date().toLocaleString();
+        // Hide form and loading
+        document.getElementById('formContainer').style.display = 'none';
+        document.getElementById('loadingSpinner').style.display = 'none';
 
-        // Collect all countries
-        const countries = [formData.country1, formData.country2, formData.country3]
-            .filter(c => c)
-            .concat(formData.additionalCountries ? formData.additionalCountries.split(',').map(c => c.trim()) : [])
-            .filter(c => c);
+        // Show report container
+        const reportContainer = document.getElementById('reportContainer');
+        reportContainer.style.display = 'block';
 
-        const html = `
+        const reportContent = document.getElementById('reportContent');
+
+        // Build report HTML
+        let html = '';
+
+        // Report header with metadata
+        html += `
             <div class="report-metadata">
-                <h3>Report Information</h3>
-                <div class="metadata-grid">
-                    <div class="metadata-item">
-                        <span class="metadata-label">Report ID</span>
-                        <span class="metadata-value">${reportId}</span>
-                    </div>
-                    <div class="metadata-item">
-                        <span class="metadata-label">Generated</span>
-                        <span class="metadata-value">${timestamp}</span>
-                    </div>
-                    <div class="metadata-item">
-                        <span class="metadata-label">Partner Company</span>
-                        <span class="metadata-value">${formData.partnerCompanyName}</span>
-                    </div>
-                    <div class="metadata-item">
-                        <span class="metadata-label">Partnership Type</span>
-                        <span class="metadata-value">${formatValue(formData.partnershipType)}</span>
-                    </div>
+                <div class="metadata-item">
+                    <strong>Report ID:</strong> ${response.metadata.reportId || generateReportId()}
                 </div>
-            </div>
-
-            <div class="report-section">
-                <h3>Partner Information Summary</h3>
-
-                <h4>Contact Information</h4>
-                <p><strong>Project Manager:</strong> ${formData.projectManagerName} (${formData.projectManagerEmail})</p>
-                <p><strong>Technical Lead:</strong> ${formData.technicalLeadName} (${formData.technicalLeadEmail})</p>
-
-                <h4>Integration Details</h4>
-                <p><strong>Systems to Integrate:</strong></p>
-                <ul>
-                    ${formData.systemIntegration.map(sys => `<li>${formatValue(sys)}${sys === 'erp' && formData.erpDetails ? ': ' + formData.erpDetails : ''}${sys === 'other' && formData.otherSystemDetails ? ': ' + formData.otherSystemDetails : ''}</li>`).join('')}
-                </ul>
-
-                <h4>Countries in Scope</h4>
-                <ul>
-                    ${countries.map((country, index) => `<li>${country}${index === 0 ? ' (Priority)' : ''}</li>`).join('')}
-                </ul>
-
-                <h4>Invoice Handling</h4>
-                <p><strong>Type:</strong> ${formData.invoiceHandling.map(h => h.toUpperCase()).join(', ')}</p>
-                <p><strong>Estimated Monthly Volume:</strong> ${formData.invoiceVolume} invoices</p>
-
-                <h4>Service Configuration</h4>
-                <p><strong>First-Line Support:</strong> ${formatValue(formData.firstLineSupport)}</p>
-                <p><strong>Account Management:</strong> ${formatValue(formData.accountAccess)}</p>
-                <p><strong>Service Model:</strong> ${formatValue(formData.serviceModel)}</p>
-            </div>
-
-            <div class="report-section">
-                <h3>Country Compliance Requirements</h3>
-                ${formatAgentResponse(response.ccrResponse)}
-            </div>
-
-            <div class="report-section">
-                <h3>API Implementation Guide</h3>
-                ${formatAgentResponse(response.apiResponse)}
+                <div class="metadata-item">
+                    <strong>Generated:</strong> ${new Date(response.metadata.generatedAt).toLocaleString()}
+                </div>
+                <div class="metadata-item">
+                    <strong>Partner:</strong> ${formData.partnerCompanyName}
+                </div>
+                <div class="metadata-item">
+                    <strong>Partnership Type:</strong> ${formatValue(formData.partnershipType)}
+                </div>
+                <div class="metadata-item">
+                    <strong>Countries:</strong> ${response.metadata.countries.join(', ')}
+                </div>
+                <div class="metadata-item">
+                    <strong>Duration:</strong> ${response.metadata.duration}
+                </div>
+                ${response.metadata.demoMode ? '<div class="metadata-item demo-badge">DEMO MODE</div>' : ''}
             </div>
         `;
 
+        // Validation summary
+        if (response.validation) {
+            const validation = response.validation;
+            html += `
+                <div class="validation-summary ${validation.ready ? 'validation-passed' : 'validation-failed'}">
+                    <h3>
+                        <i class="fas fa-${validation.ready ? 'check-circle' : 'exclamation-triangle'}"></i>
+                        Report Validation Summary
+                    </h3>
+                    <div class="validation-stats">
+                        <div class="stat">
+                            <span class="stat-value">${validation.passedChecks}/${validation.totalChecks}</span>
+                            <span class="stat-label">Checks Passed</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">${validation.completeness}%</span>
+                            <span class="stat-label">Completeness</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value ${validation.criticalFailed > 0 ? 'stat-error' : ''}">${validation.criticalFailed}</span>
+                            <span class="stat-label">Critical Failures</span>
+                        </div>
+                    </div>
+                    ${validation.criticalFailed > 0 ? `
+                        <div class="validation-warning">
+                            ⚠️ <strong>Critical sections failed.</strong> Report is incomplete. Please retry or contact support.
+                        </div>
+                    ` : ''}
+                    <details class="validation-details">
+                        <summary>View Detailed Validation Results</summary>
+                        <ul class="validation-checklist">
+                            ${validation.checks.map(check => `
+                                <li class="${check.passed ? 'check-passed' : 'check-failed'}">
+                                    <i class="fas fa-${check.passed ? 'check-circle' : 'times-circle'}"></i>
+                                    ${check.check}
+                                    ${check.critical ? ' <span class="badge-critical">CRITICAL</span>' : ''}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </details>
+                </div>
+            `;
+        }
+
+        // Table of contents
+        html += '<div class="report-toc"><h3>Table of Contents</h3><ul>';
+        response.sections.forEach((section, index) => {
+            if (section.success) {
+                html += `<li><a href="#section-${section.id}">${index + 1}. ${section.title}</a></li>`;
+            } else {
+                html += `<li class="toc-error">${index + 1}. ${section.title} <span class="badge-error">FAILED</span></li>`;
+            }
+        });
+        html += '</ul></div>';
+
+        // Render each section
+        response.sections.forEach((section, index) => {
+            html += `<div class="report-section" id="section-${section.id}">`;
+            html += `<h2>${index + 1}. ${section.title}</h2>`;
+
+            if (section.success) {
+                // Successfully generated section
+                html += formatAgentResponse(section.content);
+            } else {
+                // Failed section - show error placeholder
+                html += `
+                    <div class="section-error">
+                        <div class="error-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3>Section Generation Failed</h3>
+                        <p><strong>Error:</strong> ${section.error}</p>
+                        <p>This section could not be generated due to an error. Please:</p>
+                        <ul>
+                            <li>Verify your API credentials are valid</li>
+                            <li>Check your network connection</li>
+                            <li>Try generating the report again</li>
+                            <li>Contact Thomson Reuters support if the issue persists</li>
+                        </ul>
+                        ${section.country ? `<p><strong>Country affected:</strong> ${section.country}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+        });
+
+        // Add error summary at the end if any errors occurred
+        if (response.metadata.errors && response.metadata.errors.length > 0) {
+            html += `
+                <div class="report-errors-summary">
+                    <h2><i class="fas fa-exclamation-circle"></i> Errors Summary</h2>
+                    <p>The following sections failed to generate:</p>
+                    <ul>
+                        ${response.metadata.errors.map(error => `<li>${error}</li>`).join('')}
+                    </ul>
+                    <p><strong>Recommendation:</strong> Please retry report generation or contact support with Report ID: ${response.metadata.reportId || 'N/A'}</p>
+                </div>
+            `;
+        }
+
         reportContent.innerHTML = html;
+
+        // Generate dynamic right sidebar TOC
+        generateReportTOC(response.sections);
+
+        // Scroll to report
+        reportContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /**
+     * Generate dynamic TOC in right sidebar for the report
+     */
+    function generateReportTOC(sections) {
+        const reportTocList = document.getElementById('reportTocList');
+        if (!reportTocList) return;
+
+        let tocHtml = '';
+        sections.forEach((section, index) => {
+            if (section.success) {
+                tocHtml += `
+                    <li>
+                        <a href="#section-${section.id}" data-section="${section.id}">
+                            ${index + 1}. ${section.title}
+                        </a>
+                    </li>
+                `;
+            }
+        });
+
+        reportTocList.innerHTML = tocHtml;
+
+        // Add smooth scrolling and active state tracking
+        const tocLinks = reportTocList.querySelectorAll('a');
+        tocLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                    // Update active state
+                    tocLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Track scroll position to highlight current section
+        setupScrollSpy(sections);
+    }
+
+    /**
+     * Setup scroll spy to highlight current section in TOC
+     */
+    function setupScrollSpy(sections) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id.replace('section-', '');
+                    const tocLinks = document.querySelectorAll('#reportTocList a');
+                    tocLinks.forEach(link => {
+                        const linkSection = link.getAttribute('data-section');
+                        if (linkSection === id) {
+                            tocLinks.forEach(l => l.classList.remove('active'));
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, {
+            rootMargin: '-100px 0px -66% 0px',
+            threshold: 0
+        });
+
+        // Observe all report sections
+        sections.forEach(section => {
+            const element = document.getElementById(`section-${section.id}`);
+            if (element) {
+                observer.observe(element);
+            }
+        });
+    }
+
+    /**
+     * HTML escape function for code blocks
+     */
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    /**
+     * Parse markdown tables to HTML
+     */
+    function parseMarkdownTables(text) {
+        // Match markdown tables (header | separator | rows)
+        const tableRegex = /(\|.+\|\n)(\|[\s:|-]+\|\n)((?:\|.+\|\n?)+)/g;
+
+        return text.replace(tableRegex, (match, header, separator, rows) => {
+            // Parse header
+            const headerCells = header.trim().split('|').filter(cell => cell.trim()).map(cell => cell.trim());
+
+            // Parse rows
+            const rowLines = rows.trim().split('\n').filter(line => line.trim());
+            const dataRows = rowLines.map(line => {
+                return line.trim().split('|').filter(cell => cell.trim()).map(cell => cell.trim());
+            });
+
+            // Build HTML table wrapped in scrollable container - use special marker
+            let html = '<<<TABLE_START>>>';
+            html += '<div class="table-wrapper">';
+            html += '<table class="markdown-table">';
+
+            // Header
+            html += '<thead><tr>';
+            headerCells.forEach(cell => {
+                html += `<th>${cell}</th>`;
+            });
+            html += '</tr></thead>';
+
+            // Body
+            html += '<tbody>';
+            dataRows.forEach(row => {
+                html += '<tr>';
+                row.forEach(cell => {
+                    html += `<td>${cell}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            html += '</div>';
+            html += '<<<TABLE_END>>>';
+
+            return html;
+        });
     }
 
     /**
@@ -424,10 +659,17 @@
     function formatAgentResponse(text) {
         if (!text) return '<p>No response available.</p>';
 
+        // First, parse markdown tables (before other formatting)
+        let html = parseMarkdownTables(text);
+
         // Convert markdown-like formatting to HTML
-        let html = text
-            // Code blocks
-            .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+        html = html
+            // Code blocks - ESCAPE HTML ENTITIES to prevent XML tags from being interpreted
+            .replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+                const escaped = escapeHtml(code);
+                const langClass = lang ? ` class="language-${lang}"` : '';
+                return `<pre><code${langClass}>${escaped}</code></pre>`;
+            })
             // Bold
             .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
             // Headers
@@ -448,6 +690,38 @@
         html = html.replace(/(<li>.*<\/li>)/gs, function(match) {
             return '<ul>' + match + '</ul>';
         });
+
+        // Clean up extra spacing around tables and code blocks
+        html = html
+            // First protect tables by replacing markers
+            .replace(/<<<TABLE_START>>>/g, '|||TABLE_MARKER_START|||')
+            .replace(/<<<TABLE_END>>>/g, '|||TABLE_MARKER_END|||')
+            // Remove ALL <br> tags between table markers
+            .replace(/\|\|\|TABLE_MARKER_START\|\|\|(<br>\s*)*<div class="table-wrapper">/g, '|||TABLE_MARKER_START|||<div class="table-wrapper">')
+            .replace(/<\/div>(<br>\s*)*\|\|\|TABLE_MARKER_END\|\|\|/g, '</div>|||TABLE_MARKER_END|||')
+            // Remove multiple consecutive <br> tags (replace with max 2)
+            .replace(/(<br>\s*){3,}/g, '<br><br>')
+            // Remove empty paragraphs
+            .replace(/<p><\/p>/g, '')
+            .replace(/<p>\s*<\/p>/g, '')
+            .replace(/<p>\s*<br>\s*<\/p>/g, '')
+            // Remove paragraphs that only contain table markers
+            .replace(/<p>\s*\|\|\|TABLE_MARKER_START\|\|\|/g, '|||TABLE_MARKER_START|||')
+            .replace(/\|\|\|TABLE_MARKER_END\|\|\|\s*<\/p>/g, '|||TABLE_MARKER_END|||')
+            // Clean around code blocks
+            .replace(/(<br>\s*){1,5}<pre>/g, '<pre>')
+            .replace(/<\/pre>\s*(<br>\s*){1,5}/g, '</pre>')
+            // Remove <br> before headings
+            .replace(/(<br>\s*){1,5}<h4>/g, '<h4>')
+            // Remove <br> after headings (but keep one if followed by pre)
+            .replace(/<\/h4>\s*(<br>\s*){2,}(?!<pre>)/g, '</h4><br>')
+            .replace(/<\/h4>\s*(<br>\s*)+<pre>/g, '</h4><pre>')
+            // Add class to h4 that precede code blocks for styling
+            .replace(/<h4>([^<]+)<\/h4>\s*<pre>/g, '<h4 class="code-example-label">$1</h4><pre>')
+            // Finally, restore table markers
+            .replace(/\|\|\|TABLE_MARKER_START\|\|\|/g, '')
+            .replace(/\|\|\|TABLE_MARKER_END\|\|\|/g, '');
+
 
         // Wrap in paragraphs if not already wrapped
         if (!html.startsWith('<')) {

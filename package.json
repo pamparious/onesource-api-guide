@@ -24,5 +24,9 @@
   },
   "devDependencies": {
     "vercel": "^33.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }
