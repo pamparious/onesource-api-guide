@@ -17,16 +17,22 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 3000;
 
-// Load report template configuration
+// ============================================================
+// CONFIGURATION LOADING - v2.1
+// ============================================================
+
+// Load report template configuration (v2.2)
 const reportTemplateConfig = JSON.parse(
-  fs.readFileSync(path.join(__dirname, 'config', 'report-template-config.json'), 'utf8')
+  fs.readFileSync(path.join(__dirname, 'config', 'report-template-config-v2.1.json'), 'utf8')
 );
+
+console.log(`✅ Loaded report template configuration v${reportTemplateConfig.reportMetadata.version} (${reportTemplateConfig.reportMetadata.generatedBy})`);
 
 // OpenArena Configuration
 const OPENARENA_BASE_URL = 'https://aiopenarena.gcs.int.thomsonreuters.com/v1/inference';
 const CCR_WORKFLOW_ID = 'f87b828b-39cb-4a9e-9225-bb9e67ff4860'; // Country CCR Expert
 const API_WORKFLOW_ID = '74f9914d-b8c9-44f0-ad5c-13af2d02144c'; // API Expert
-const PUF_WORKFLOW_ID = 'f5a1f931-82f3-4b50-a051-de3e175e3d5f'; // PUF Format Expert
+const PUF_WORKFLOW_ID = 'f5a1f931-82f3-4b50-a051-de3e175e3d5f'; // Format Expert
 
 // Request Configuration
 const CHATBOT_TIMEOUT_FAST = 60000; // 60 seconds for first attempt
@@ -97,10 +103,46 @@ app.get('/health', (req, res) => {
     res.json({
         status: 'ok',
         message: 'TR ONESOURCE Unified Server is running',
+        version: reportTemplateConfig.reportMetadata.version,
         services: {
             chatbot: 'Ready',
             onboarding: 'Ready'
         }
+    });
+});
+
+/**
+ * Configuration status endpoint (v2.2)
+ */
+app.get('/api/config/status', (req, res) => {
+    res.json({
+        version: reportTemplateConfig.reportMetadata.version,
+        title: reportTemplateConfig.reportMetadata.title,
+        generatedBy: reportTemplateConfig.reportMetadata.generatedBy,
+        lastUpdated: reportTemplateConfig.reportMetadata.lastUpdated,
+        agents: {
+            ccr: {
+                name: reportTemplateConfig.agentConfiguration.agents.ccr.name,
+                role: reportTemplateConfig.agentConfiguration.agents.ccr.role,
+                promptLoaded: true
+            },
+            format: {
+                name: reportTemplateConfig.agentConfiguration.agents.format.name,
+                role: reportTemplateConfig.agentConfiguration.agents.format.role,
+                promptLoaded: true,
+                receivesContext: true
+            },
+            api: {
+                name: reportTemplateConfig.agentConfiguration.agents.api.name,
+                role: reportTemplateConfig.agentConfiguration.agents.api.role,
+                promptLoaded: true,
+                receivesContext: true
+            }
+        },
+        executionStrategy: reportTemplateConfig.agentConfiguration.executionStrategy,
+        contextPassing: 'Agents receive context for reference only - no verbatim copying',
+        reportSections: reportTemplateConfig.reportSections.length,
+        staticSectionsRemoved: ['testing-validation', 'production-deployment', 'support-resources']
     });
 });
 
@@ -129,7 +171,7 @@ app.post('/api/proxy', async (req, res) => {
 
 - API authentication (OAuth 2.0, client credentials, authorization code flows)
 - E-invoicing integration (AR/AP flows, document submission, status polling)
-- PUF (Pagero Universal Format) document structure
+- Document format requirements (PUF, UBL, CII)
 - Error handling (recipient not found, validation errors, clearance rejection)
 - Best practices for polling, token management, and error recovery
 - Technical implementation details (endpoints, parameters, response formats)
@@ -233,7 +275,11 @@ async function callAgentWithRetry(workflowId, prompt, agentName, apiToken, count
 
 /**
  * ROUTE 2: Partner Onboarding Report Generation
- * New multi-agent orchestration with per-country sections
+ * Multi-agent orchestration with context-based collaboration (v2.2)
+ * - CCR agents generate country compliance requirements
+ * - Format agents generate format specifications (receive CCR context)
+ * - API agent generates implementation code (receives all context)
+ * - Each agent produces only their own content - no duplication
  */
 app.post('/api/generate-report', async (req, res) => {
     const startTime = Date.now();
@@ -262,17 +308,17 @@ app.post('/api/generate-report', async (req, res) => {
             success: true
         });
 
-        // 2. Generate per-country sections (CCR + PUF)
+        // 2. Generate per-country sections (CCR + Format)
         for (const country of countries) {
             console.log(`[Onboarding] Processing country: ${country}`);
 
-            // 2a. CCR Agent
+            // 2a. CCR Agent (v2.2)
             try {
                 const ccrPrompt = buildCCRPrompt(formData, country);
                 const ccrResponse = demoMode
                     ? getMockCCRResponse(formData, country)
                     : await callAgentWithRetry(
-                        reportTemplateConfig.sections.find(s => s.id === 'country-compliance').workflowId,
+                        CCR_WORKFLOW_ID,
                         ccrPrompt,
                         `CCR Agent (${country})`,
                         apiToken,
@@ -299,48 +345,55 @@ app.post('/api/generate-report', async (req, res) => {
                 errors.push(`CCR section for ${country}: ${error.message}`);
             }
 
-            // 2b. PUF Agent
+            // 2b. Format Agent (v2.2 - receives CCR output as reference context)
             try {
-                const pufPrompt = buildPUFPrompt(formData, country);
+                // Get the CCR output from the section just added
+                const ccrSection = sections.find(s =>
+                    s.id === `country-compliance-${country.toLowerCase().replace(/\s+/g, '-')}` &&
+                    s.success
+                );
+                const ccrOutput = ccrSection ? ccrSection.content : 'No CCR data received.';
+
+                const pufPrompt = buildPUFPrompt(formData, country, ccrOutput);
                 const pufResponse = demoMode
                     ? getMockPUFResponse(formData, country)
                     : await callAgentWithRetry(
-                        reportTemplateConfig.sections.find(s => s.id === 'document-format').workflowId,
+                        PUF_WORKFLOW_ID,
                         pufPrompt,
-                        `PUF Agent (${country})`,
+                        `Format Agent (${country})`,
                         apiToken,
                         countries.length
                     );
 
                 sections.push({
-                    id: `document-format-${country.toLowerCase().replace(/\s+/g, '-')}`,
-                    title: `Document Format Requirements: ${country}`,
+                    id: `format-details-${country.toLowerCase().replace(/\s+/g, '-')}`,
+                    title: `Document Format Details: ${country}`,
                     content: pufResponse.content || pufResponse,
                     success: true,
                     country: country
                 });
             } catch (error) {
-                console.error(`[Onboarding] PUF Agent failed for ${country}:`, error.message);
+                console.error(`[Onboarding] Format Agent failed for ${country}:`, error.message);
                 sections.push({
-                    id: `document-format-${country.toLowerCase().replace(/\s+/g, '-')}`,
-                    title: `Document Format Requirements: ${country}`,
+                    id: `format-details-${country.toLowerCase().replace(/\s+/g, '-')}`,
+                    title: `Document Format Details: ${country}`,
                     content: null,
                     success: false,
                     error: error.message,
                     country: country
                 });
-                errors.push(`PUF section for ${country}: ${error.message}`);
+                errors.push(`Format section for ${country}: ${error.message}`);
             }
         }
 
-        // 3. Generate unified API Implementation section
+        // 3. Generate unified API Implementation section (v2.2)
         console.log(`[Onboarding] Generating API implementation guide...`);
         try {
             const apiPrompt = buildAPIPrompt(formData, countries, sections);
             const apiResponse = demoMode
                 ? getMockAPIResponse(formData)
                 : await callAgentWithRetry(
-                    reportTemplateConfig.sections.find(s => s.id === 'api-implementation').workflowId,
+                    API_WORKFLOW_ID,
                     apiPrompt,
                     'API Agent',
                     apiToken,
@@ -365,27 +418,9 @@ app.post('/api/generate-report', async (req, res) => {
             errors.push(`API section: ${error.message}`);
         }
 
-        // 4. Generate static sections
-        sections.push({
-            id: 'testing-validation',
-            title: 'Testing & Validation',
-            content: generateTestingSection(formData, countries),
-            success: true
-        });
-
-        sections.push({
-            id: 'production-deployment',
-            title: 'Production Deployment',
-            content: generateDeploymentSection(formData, countries),
-            success: true
-        });
-
-        sections.push({
-            id: 'support-resources',
-            title: 'Support & Resources',
-            content: generateSupportSection(formData, countries),
-            success: true
-        });
+        // 4. Static sections removed in v2.1+
+        // Focus is on agent-generated, customized content only
+        // Removed: Testing & Validation, Production Deployment, Support & Resources
 
         // 5. Generate validation summary
         const validation = generateValidationSummary(sections, countries, formData);
@@ -499,58 +534,150 @@ async function callOpenArena(workflowId, query, systemPrompt, apiToken, timeout 
 }
 
 /**
- * Prompt Builder: CCR Agent
+ * Prompt Builder: CCR Agent (v2.2)
  */
 function buildCCRPrompt(formData, country) {
-    const promptTemplate = reportTemplateConfig.promptTemplates['ccr-country-compliance'];
-    const variables = {
-        country: country,
-        partnerCompanyName: formData.partnerCompanyName,
-        partnershipType: formData.partnershipType,
-        invoiceHandling: formData.invoiceHandling.join(', ').toUpperCase(),
-        invoiceVolume: formData.invoiceVolume
-    };
-    return interpolateTemplate(promptTemplate, variables);
+    // Build prompt from config structure
+    const agentConfig = reportTemplateConfig.agentConfiguration.agents.ccr;
+
+    let prompt = `You are the ${agentConfig.name}.
+
+Role: ${agentConfig.role}
+
+Country: ${country}
+Partner Company: ${formData.partnerCompanyName}
+Partnership Type: ${formData.partnershipType}
+Invoice Handling: ${JSON.stringify(formData.invoiceHandling)}
+Invoice Volume: ${formData.invoiceVolume}
+
+Please generate a comprehensive Country Compliance Requirements section with the following structure:
+
+${agentConfig.outputStructure.subsections.map((s) => `${s}`).join('\n')}
+
+OUTPUT REQUIREMENTS:
+- Format: ${agentConfig.outputStructure.format}
+- Use markdown tables with proper formatting (| column | column |)
+- Citations: ${agentConfig.outputStructure.citations}
+- Include detailed tables for Pre-Integration Checklist, Technical Requirements, Penalties, and Critical Dates
+- Use bullet points and numbered lists where appropriate
+- Focus ONLY on compliance requirements - format specifications will be covered in a separate section
+
+Use RAG sources: ${JSON.stringify(agentConfig.ragSources)}`;
+
+    return prompt;
 }
 
 /**
- * Prompt Builder: PUF Agent
+ * Prompt Builder: Format Agent (v2.2)
  */
-function buildPUFPrompt(formData, country) {
-    const promptTemplate = reportTemplateConfig.promptTemplates['puf-document-format'];
-    const variables = {
-        country: country,
-        systemIntegration: formData.systemIntegration.join(', '),
-        invoiceHandling: formData.invoiceHandling.join(', ').toUpperCase()
-    };
-    return interpolateTemplate(promptTemplate, variables);
+function buildPUFPrompt(formData, country, ccrOutput) {
+    // Build prompt from config structure
+    const agentConfig = reportTemplateConfig.agentConfiguration.agents.format;
+
+    let prompt = `You are the ${agentConfig.name}.
+
+Role: ${agentConfig.role}
+
+Country: ${country}
+System Integration: ${JSON.stringify(formData.systemIntegration)}
+Invoice Handling: ${JSON.stringify(formData.invoiceHandling)}
+
+Please generate a Document Format Specifications section with the following structure:
+${agentConfig.outputStructure.subsections.map((s, i) => `${i + 1}. ${s}`).join('\n')}
+
+OUTPUT REQUIREMENTS:
+- Create detailed markdown tables for Format Overview with columns: Standard Base | Namespace | Customization ID | Schema Location
+- Create Mandatory Fields table with columns: Field Name | XPath | Requirement Level | Description
+- Include complete, valid XML structure examples (minimal but valid)
+- Provide Validation Checklist as a table or bulleted list
+- Include Common Errors & Solutions table (minimum 10 items) with columns: Error | Cause | Solution
+- Citations: ${agentConfig.outputStructure.citations}
+
+CRITICAL: Your output should contain ONLY format specifications (XPath mappings, XML examples, validation rules).
+Do NOT copy the CCR compliance requirements below - they are provided as context so you understand what
+document types and fields are required, but the compliance section already exists separately in the report.
+
+Use RAG sources: ${JSON.stringify(agentConfig.ragSources)}
+
+### Context from CCR Agent (reference only - to understand requirements):
+
+${ccrOutput}`;
+
+    return prompt;
 }
 
 /**
- * Prompt Builder: API Agent
+ * Prompt Builder: API Agent (v2.2)
  */
 function buildAPIPrompt(formData, countries, sections) {
-    const promptTemplate = reportTemplateConfig.promptTemplates['api-implementation'];
+    // Build prompt from config structure
+    const agentConfig = reportTemplateConfig.agentConfiguration.agents.api;
 
-    // Extract CCR summaries for context
-    const ccrSummaries = sections
+    // Extract CCR and Format outputs for verbatim context
+    const ccrOutputs = sections
         .filter(s => s.id.startsWith('country-compliance-') && s.success)
-        .map(s => `## ${s.title}\n${s.content.substring(0, 1000)}...`)
-        .join('\n\n');
+        .map(s => `## ${s.title}\n\n${s.content}`)
+        .join('\n\n---\n\n');
 
-    const variables = {
-        partnerCompanyName: formData.partnerCompanyName,
-        programmingLanguage: formData.programmingLanguage || 'python',
-        systemIntegration: formData.systemIntegration.join(', '),
-        countriesList: countries.join(', '),
-        invoiceHandling: formData.invoiceHandling.join(', ').toUpperCase(),
-        invoiceVolume: formData.invoiceVolume,
-        serviceModel: formData.serviceModel,
-        accountAccess: formData.accountAccess,
-        ccrResponsesSummary: ccrSummaries || 'No CCR context available'
-    };
+    const formatOutputs = sections
+        .filter(s => s.id.startsWith('format-details-') && s.success)
+        .map(s => `## ${s.title}\n\n${s.content}`)
+        .join('\n\n---\n\n');
 
-    return interpolateTemplate(promptTemplate, variables);
+    let prompt = `You are the ${agentConfig.name}.
+
+Role: ${agentConfig.role}
+
+Partner Company: ${formData.partnerCompanyName}
+Programming Language: ${formData.programmingLanguage || 'python'}
+System Integration: ${JSON.stringify(formData.systemIntegration)}
+Countries: ${JSON.stringify(countries)}
+Invoice Handling: ${JSON.stringify(formData.invoiceHandling)}
+Invoice Volume: ${formData.invoiceVolume}
+Service Model: ${formData.serviceModel}
+Account Access: ${formData.accountAccess}
+
+Please generate a comprehensive API Implementation Guide with the following structure:
+${agentConfig.outputStructure.subsections.map((s) => `${s.title}`).join('\n')}
+
+CRITICAL OUTPUT REQUIREMENTS:
+- Core Pattern: ${agentConfig.outputStructure.corePattern}
+- EVERY code section MUST start with a "Requirements Summary" table before any code
+- Requirements Summary table format:
+  | Requirement | Details |
+  |-------------|---------|
+  | API Endpoint | [endpoint] |
+  | Method | [GET/POST] |
+  | Purpose | [what it does] |
+  | Key Parameters | [params] |
+  | Response Format | [format] |
+
+- Include complete, production-ready code examples in ${formData.programmingLanguage || 'python'}
+- Use markdown tables for all requirements, comparisons, and reference information
+- Include flow diagrams using mermaid syntax where appropriate
+- For AR/AP flows: Include polling strategies based on invoice volume (${formData.invoiceVolume}/month)
+- For error handling: Include table with HTTP codes, descriptions, and retry strategies
+- Include step-by-step implementation instructions with code for each subsection
+
+CRITICAL: Your output should contain ONLY API implementation code and guidance.
+The context below provides country requirements and format specifications - use this to inform
+your API code (e.g., which countries to handle, which formats to use), but do NOT copy the
+CCR or Format content into your output. Those sections already exist separately in the report.
+
+You may reference requirements in summary tables (e.g., "Per CCR requirements for Poland, clearance is mandatory")
+but do not repeat full sections of compliance requirements or format specifications.
+
+Use RAG sources: ${JSON.stringify(agentConfig.ragSources)}
+
+### Context from CCR Agents (reference only - to inform API implementation):
+
+${ccrOutputs}
+
+### Context from Format Agents (reference only - to inform API implementation):
+
+${formatOutputs}`;
+
+    return prompt;
 }
 
 /**
@@ -671,12 +798,13 @@ function generateValidationSummary(sections, countries, formData) {
             critical: true
         });
 
-        const pufSection = sections.find(s =>
-            s.id === `document-format-${country.toLowerCase().replace(/\s+/g, '-')}`
+        // v2.2: Checks for "format-details-" section
+        const formatSection = sections.find(s =>
+            s.id === `format-details-${country.toLowerCase().replace(/\s+/g, '-')}`
         );
         checks.push({
-            check: `PUF section for ${country}`,
-            passed: pufSection && pufSection.success,
+            check: `Format Details section for ${country}`,
+            passed: formatSection && formatSection.success,
             critical: true
         });
     });
@@ -694,7 +822,8 @@ function generateValidationSummary(sections, countries, formData) {
         checks.push({
             check: 'API section covers AR (outbound)',
             passed: apiSection.content.toLowerCase().includes('accounts receivable') ||
-                    apiSection.content.toLowerCase().includes('outbound'),
+                    apiSection.content.toLowerCase().includes('outbound') ||
+                    apiSection.content.toLowerCase().includes('ar ('),
             critical: true
         });
     }
@@ -703,20 +832,14 @@ function generateValidationSummary(sections, countries, formData) {
         checks.push({
             check: 'API section covers AP (inbound)',
             passed: apiSection.content.toLowerCase().includes('accounts payable') ||
-                    apiSection.content.toLowerCase().includes('inbound'),
+                    apiSection.content.toLowerCase().includes('inbound') ||
+                    apiSection.content.toLowerCase().includes('ap ('),
             critical: true
         });
     }
 
-    // Check static sections
-    ['testing-validation', 'production-deployment', 'support-resources'].forEach(id => {
-        const section = sections.find(s => s.id === id);
-        checks.push({
-            check: `${section?.title || id}`,
-            passed: section && section.success,
-            critical: false
-        });
-    });
+    // v2.2: Static sections removed - no longer checking for testing-validation,
+    // production-deployment, or support-resources sections
 
     const totalChecks = checks.length;
     const passedChecks = checks.filter(c => c.passed).length;
@@ -1170,9 +1293,17 @@ def submit_with_retry(access_token, company_id, invoice_data, max_retries=3):
 // Start server
 app.listen(PORT, () => {
     console.log(`✅ Server running at http://localhost:${PORT}`);
-    console.log(`📍 AI Chatbot: POST /api/proxy`);
-    console.log(`📍 Partner Onboarding: POST /api/generate-report`);
-    console.log(`📡 CCR Agent ID: ${CCR_WORKFLOW_ID}`);
-    console.log(`📡 API Agent ID: ${API_WORKFLOW_ID}`);
+    console.log(`📍 API Endpoints:`);
+    console.log(`   - Health Check: GET /health`);
+    console.log(`   - Config Status: GET /api/config/status`);
+    console.log(`   - AI Chatbot: POST /api/proxy`);
+    console.log(`   - Partner Onboarding: POST /api/generate-report`);
+    console.log(`📡 Agent Workflow IDs:`);
+    console.log(`   - CCR Agent: ${CCR_WORKFLOW_ID}`);
+    console.log(`   - Format Agent: ${PUF_WORKFLOW_ID}`);
+    console.log(`   - API Agent: ${API_WORKFLOW_ID}`);
+    console.log(`📋 Report Structure: ${reportTemplateConfig.reportSections.length} sections`);
+    console.log(`🎯 Execution Strategy: ${reportTemplateConfig.agentConfiguration.executionStrategy}`);
+    console.log(`📝 Context Passing: Agents receive context for reference only - no duplication`);
     console.log(`================================================\n`);
 });

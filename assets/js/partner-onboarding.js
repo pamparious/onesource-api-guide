@@ -9,6 +9,8 @@
     // State
     let formData = {};
     let autoSaveInterval = null;
+    let isLoggedIn = false;
+    let userProfile = null;
     const API_BASE_URL = 'http://localhost:3000';
 
     // DOM Elements
@@ -34,18 +36,156 @@
     const copyReportBtn = document.getElementById('copyReportBtn');
     const newFormBtn = document.getElementById('newFormBtn');
 
+    // Past Reports Modal
+    const viewPastReportsBtn = document.getElementById('viewPastReportsBtn');
+    const pastReportsModal = document.getElementById('pastReportsModal');
+    const pastReportsModalClose = document.getElementById('pastReportsModalClose');
+    const pastReportsModalCloseBtn = document.getElementById('pastReportsModalCloseBtn');
+    const pastReportsList = document.getElementById('pastReportsList');
+    const pastReportsEmpty = document.getElementById('pastReportsEmpty');
+    const clearAllReportsBtn = document.getElementById('clearAllReportsBtn');
+
     // Demo Mode
     const demoModeToggle = document.getElementById('demoModeToggle');
+
+    // Report Context Manager
+    let reportContextManager = null;
+
+    /**
+     * Check if user is logged in and load profile
+     */
+    function checkLoginState() {
+        try {
+            const profileData = localStorage.getItem('tr_user_profile');
+            if (profileData) {
+                userProfile = JSON.parse(profileData);
+                isLoggedIn = true;
+                console.log('[Onboarding] User is logged in, rendering simplified form');
+                renderSimplifiedForm();
+            } else {
+                isLoggedIn = false;
+                console.log('[Onboarding] User not logged in, showing full form');
+            }
+        } catch (e) {
+            console.error('[Onboarding] Failed to check login state:', e);
+            isLoggedIn = false;
+        }
+    }
+
+    /**
+     * Render simplified form for logged-in users
+     */
+    function renderSimplifiedForm() {
+        // Show profile summary
+        const profileSummary = document.getElementById('profileSummary');
+        if (profileSummary) {
+            profileSummary.style.display = 'block';
+            populateProfileSummary();
+        }
+
+        // Hide sections 1-3, 5-8 (show only countries section)
+        const sectionsToHide = document.querySelectorAll('.form-section');
+        sectionsToHide.forEach((section, index) => {
+            // Keep only section 4 (countries) - it's the 4th section (index 3)
+            // Section indices: 0=Partner Info, 1=Partnership Type, 2=System Integration, 3=Countries, 4=AP/AR, etc.
+            const isCountriesSection = section.id === 'countriesFullSection' || section.id === 'countriesSimplifiedSection';
+            if (!isCountriesSection) {
+                section.style.display = 'none';
+            }
+        });
+
+        // Hide full countries section, show simplified
+        const countriesFullSection = document.getElementById('countriesFullSection');
+        const countriesSimplifiedSection = document.getElementById('countriesSimplifiedSection');
+        if (countriesFullSection) countriesFullSection.style.display = 'none';
+        if (countriesSimplifiedSection) countriesSimplifiedSection.style.display = 'block';
+
+        // Update submit button text
+        if (submitBtn) {
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Generate Report';
+            submitBtn.disabled = false; // Enable by default for simplified form
+        }
+    }
+
+    /**
+     * Populate profile summary with user data
+     */
+    function populateProfileSummary() {
+        if (!userProfile) return;
+
+        const detailsContent = document.getElementById('profileDetailsContent');
+        if (!detailsContent) return;
+
+        const partnershipTypeLabel = userProfile.partnershipType === 'reseller' ? 'Reseller Partner' : 'Referral Partner';
+        const supportLabel = userProfile.firstLineSupport === 'partner' ? 'Partner' : 'Thomson Reuters';
+        const accessLabel = userProfile.accountAccess === 'partner-managed' ? 'Partner Managed' : 'Customer Direct';
+        const serviceLabel = userProfile.serviceModel === 'self-service' ? 'Self-Service' : 'Managed Service';
+
+        detailsContent.innerHTML = `
+            <div class="profile-detail-grid">
+                <div class="profile-detail-item">
+                    <strong>Company:</strong> ${userProfile.partnerCompanyName || 'Not specified'}
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Partnership:</strong> ${partnershipTypeLabel}
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Project Manager:</strong> ${userProfile.projectManagerName || 'Not specified'}
+                </div>
+                <div class="profile-detail-item">
+                    <strong>PM Email:</strong> ${userProfile.projectManagerEmail || 'Not specified'}
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Tech Lead:</strong> ${userProfile.technicalLeadName || 'Not specified'}
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Tech Email:</strong> ${userProfile.technicalLeadEmail || 'Not specified'}
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Programming Language:</strong> ${userProfile.programmingLanguage || 'Python'}
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Systems:</strong> ${Array.isArray(userProfile.systemIntegration) ? userProfile.systemIntegration.join(', ') : userProfile.systemIntegration}
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Invoice Handling:</strong> ${Array.isArray(userProfile.invoiceHandling) ? userProfile.invoiceHandling.join(', ') : userProfile.invoiceHandling}
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Invoice Volume:</strong> ${userProfile.invoiceVolume || 'Not specified'}
+                </div>
+                <div class="profile-detail-item">
+                    <strong>First-Line Support:</strong> ${supportLabel}
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Account Access:</strong> ${accessLabel}
+                </div>
+                <div class="profile-detail-item">
+                    <strong>Service Model:</strong> ${serviceLabel}
+                </div>
+            </div>
+        `;
+    }
 
     /**
      * Initialize application
      */
     function init() {
-        restoreFormData();
+        checkLoginState(); // Check login state first
+
+        if (!isLoggedIn) {
+            restoreFormData();
+            startAutoSave();
+        }
+
+        // Initialize Report Context Manager
+        if (window.ReportContextManager) {
+            reportContextManager = new window.ReportContextManager();
+            console.log('[Onboarding] Report Context Manager initialized');
+        }
+
         setupConditionalInputs();
         setupValidation();
         setupEventListeners();
-        startAutoSave();
         validateForm();
 
         console.log('[Onboarding] Application initialized');
@@ -97,12 +237,27 @@
         if (copyReportBtn) copyReportBtn.addEventListener('click', handleCopyReport);
         if (newFormBtn) newFormBtn.addEventListener('click', handleNewForm);
 
+        // Past Reports Modal
+        if (viewPastReportsBtn) viewPastReportsBtn.addEventListener('click', openPastReportsModal);
+        if (pastReportsModalClose) pastReportsModalClose.addEventListener('click', closePastReportsModal);
+        if (pastReportsModalCloseBtn) pastReportsModalCloseBtn.addEventListener('click', closePastReportsModal);
+        if (clearAllReportsBtn) clearAllReportsBtn.addEventListener('click', handleClearAllReports);
+
         // Close modal on outside click
         apiKeyModal.addEventListener('click', function(e) {
             if (e.target === apiKeyModal) {
                 closeApiKeyModal();
             }
         });
+
+        // Close past reports modal on outside click
+        if (pastReportsModal) {
+            pastReportsModal.addEventListener('click', function(e) {
+                if (e.target === pastReportsModal) {
+                    closePastReportsModal();
+                }
+            });
+        }
     }
 
     /**
@@ -191,14 +346,25 @@
     function validateForm() {
         let isValid = true;
 
-        // Only validate country1 is required
-        const country1 = document.getElementById('country1').value.trim();
-        if (!country1) {
-            isValid = false;
+        if (isLoggedIn) {
+            // For logged-in users, only validate simplified countries input
+            const countriesSimplified = document.getElementById('countriesSimplified');
+            if (countriesSimplified) {
+                const value = countriesSimplified.value.trim();
+                isValid = value.length > 0;
+            }
+        } else {
+            // For logged-out users, only validate country1 is required
+            const country1 = document.getElementById('country1');
+            if (country1) {
+                isValid = country1.value.trim().length > 0;
+            }
         }
 
         // Enable/disable submit button
-        submitBtn.disabled = !isValid;
+        if (submitBtn) {
+            submitBtn.disabled = !isValid;
+        }
 
         return isValid;
     }
@@ -300,6 +466,9 @@
             loadingSpinner.style.display = 'none';
             reportContainer.style.display = 'block';
 
+            // Switch from form TOC to report TOC
+            toggleTOC('report');
+
         } catch (error) {
             console.error('[Onboarding] Submission error:', error);
             alert(`Error generating report: ${error.message}`);
@@ -307,6 +476,9 @@
             // Show form again
             loadingSpinner.style.display = 'none';
             formContainer.style.display = 'block';
+
+            // Switch back to form TOC
+            toggleTOC('form');
         }
     }
 
@@ -314,30 +486,68 @@
      * Collect form data
      */
     function collectFormData() {
-        const systemIntegration = Array.from(form.querySelectorAll('input[name="systemIntegration"]:checked')).map(cb => cb.value);
-        const invoiceHandling = Array.from(form.querySelectorAll('input[name="invoiceHandling"]:checked')).map(cb => cb.value);
+        let data = {};
 
-        const data = {
-            partnerCompanyName: document.getElementById('partnerCompanyName').value.trim() || 'Not specified',
-            projectManagerName: document.getElementById('projectManagerName').value.trim() || 'Not specified',
-            projectManagerEmail: document.getElementById('projectManagerEmail').value.trim() || 'not.specified@example.com',
-            technicalLeadName: document.getElementById('technicalLeadName').value.trim() || 'Not specified',
-            technicalLeadEmail: document.getElementById('technicalLeadEmail').value.trim() || 'not.specified@example.com',
-            partnershipType: form.querySelector('input[name="partnershipType"]:checked')?.value || 'reseller',
-            programmingLanguage: document.getElementById('programmingLanguage').value || 'python',
-            systemIntegration: systemIntegration.length > 0 ? systemIntegration : ['custom'],
-            erpDetails: document.querySelector('input[name="erpDetails"]')?.value || '',
-            otherSystemDetails: document.querySelector('input[name="otherSystemDetails"]')?.value || '',
-            country1: document.getElementById('country1').value.trim(),
-            country2: document.getElementById('country2').value.trim(),
-            country3: document.getElementById('country3').value.trim(),
-            additionalCountries: document.getElementById('additionalCountries').value.trim(),
-            invoiceHandling: invoiceHandling.length > 0 ? invoiceHandling : ['ar', 'ap'],
-            invoiceVolume: document.getElementById('invoiceVolume').value || '1000',
-            firstLineSupport: form.querySelector('input[name="firstLineSupport"]:checked')?.value || 'thomson-reuters',
-            accountAccess: form.querySelector('input[name="accountAccess"]:checked')?.value || 'customer-direct',
-            serviceModel: form.querySelector('input[name="serviceModel"]:checked')?.value || 'managed-service'
-        };
+        // If logged in, use profile data and only collect countries
+        if (isLoggedIn && userProfile) {
+            // Use all data from profile
+            data = {
+                partnerCompanyName: userProfile.partnerCompanyName || 'Not specified',
+                projectManagerName: userProfile.projectManagerName || 'Not specified',
+                projectManagerEmail: userProfile.projectManagerEmail || 'not.specified@example.com',
+                technicalLeadName: userProfile.technicalLeadName || 'Not specified',
+                technicalLeadEmail: userProfile.technicalLeadEmail || 'not.specified@example.com',
+                partnershipType: userProfile.partnershipType || 'reseller',
+                programmingLanguage: userProfile.programmingLanguage || 'python',
+                systemIntegration: userProfile.systemIntegration || ['custom'],
+                erpDetails: userProfile.erpDetails || '',
+                otherSystemDetails: userProfile.otherSystemDetails || '',
+                invoiceHandling: userProfile.invoiceHandling || ['ar', 'ap'],
+                invoiceVolume: userProfile.invoiceVolume || '1000',
+                firstLineSupport: userProfile.firstLineSupport || 'thomson-reuters',
+                accountAccess: userProfile.accountAccess || 'customer-direct',
+                serviceModel: userProfile.serviceModel || 'managed-service'
+            };
+
+            // Get countries from simplified input
+            const countriesInput = document.getElementById('countriesSimplified');
+            if (countriesInput) {
+                const countriesText = countriesInput.value.trim();
+                const countriesList = countriesText.split(',').map(c => c.trim()).filter(c => c);
+
+                // Map to country1, country2, country3, additionalCountries format
+                data.country1 = countriesList[0] || '';
+                data.country2 = countriesList[1] || '';
+                data.country3 = countriesList[2] || '';
+                data.additionalCountries = countriesList.slice(3).join(', ');
+            }
+        } else {
+            // Not logged in - collect all data from form
+            const systemIntegration = Array.from(form.querySelectorAll('input[name="systemIntegration"]:checked')).map(cb => cb.value);
+            const invoiceHandling = Array.from(form.querySelectorAll('input[name="invoiceHandling"]:checked')).map(cb => cb.value);
+
+            data = {
+                partnerCompanyName: document.getElementById('partnerCompanyName').value.trim() || 'Not specified',
+                projectManagerName: document.getElementById('projectManagerName').value.trim() || 'Not specified',
+                projectManagerEmail: document.getElementById('projectManagerEmail').value.trim() || 'not.specified@example.com',
+                technicalLeadName: document.getElementById('technicalLeadName').value.trim() || 'Not specified',
+                technicalLeadEmail: document.getElementById('technicalLeadEmail').value.trim() || 'not.specified@example.com',
+                partnershipType: form.querySelector('input[name="partnershipType"]:checked')?.value || 'reseller',
+                programmingLanguage: document.getElementById('programmingLanguage').value || 'python',
+                systemIntegration: systemIntegration.length > 0 ? systemIntegration : ['custom'],
+                erpDetails: document.querySelector('input[name="erpDetails"]')?.value || '',
+                otherSystemDetails: document.querySelector('input[name="otherSystemDetails"]')?.value || '',
+                country1: document.getElementById('country1').value.trim(),
+                country2: document.getElementById('country2').value.trim(),
+                country3: document.getElementById('country3').value.trim(),
+                additionalCountries: document.getElementById('additionalCountries').value.trim(),
+                invoiceHandling: invoiceHandling.length > 0 ? invoiceHandling : ['ar', 'ap'],
+                invoiceVolume: document.getElementById('invoiceVolume').value || '1000',
+                firstLineSupport: form.querySelector('input[name="firstLineSupport"]:checked')?.value || 'thomson-reuters',
+                accountAccess: form.querySelector('input[name="accountAccess"]:checked')?.value || 'customer-direct',
+                serviceModel: form.querySelector('input[name="serviceModel"]:checked')?.value || 'managed-service'
+            };
+        }
 
         return data;
     }
@@ -384,6 +594,27 @@
         reportContainer.style.display = 'block';
 
         const reportContent = document.getElementById('reportContent');
+
+        // Save report to localStorage using ReportContextManager
+        if (window.ReportContextManager) {
+            const reportManager = new window.ReportContextManager();
+            const reportData = {
+                reportId: response.metadata.reportId || reportManager.generateReportId(),
+                generatedAt: response.metadata.generatedAt || new Date().toISOString(),
+                formData: formData,
+                sections: response.sections,
+                validation: response.validation,
+                metadata: response.metadata
+            };
+
+            const saved = reportManager.saveReport(reportData);
+            if (saved) {
+                console.log('[Onboarding] ✅ Report saved to localStorage');
+                showSaveNotification('Report saved! You can now chat about it.');
+            } else {
+                console.error('[Onboarding] ❌ Failed to save report to localStorage');
+            }
+        }
 
         // Build report HTML
         let html = '';
@@ -519,8 +750,27 @@
         // Generate dynamic right sidebar TOC
         generateReportTOC(response.sections);
 
+        // Add "Chat about this report" button
+        addChatAboutReportButton();
+
         // Scroll to report
         reportContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /**
+     * Toggle between form TOC and report TOC
+     */
+    function toggleTOC(mode) {
+        const formTocContainer = document.querySelector('.toc-container.form-toc');
+        const reportTocContainer = document.querySelector('.toc-container.report-toc');
+
+        if (mode === 'report') {
+            if (formTocContainer) formTocContainer.style.display = 'none';
+            if (reportTocContainer) reportTocContainer.style.display = 'block';
+        } else {
+            if (formTocContainer) formTocContainer.style.display = 'block';
+            if (reportTocContainer) reportTocContainer.style.display = 'none';
+        }
     }
 
     /**
@@ -775,6 +1025,9 @@
             reportContainer.style.display = 'none';
             formContainer.style.display = 'block';
             handleClearForm();
+
+            // Switch back to form TOC
+            toggleTOC('form');
         }
     }
 
@@ -915,6 +1168,100 @@
     }
 
     /**
+     * Add "Chat about this report" button
+     */
+    function addChatAboutReportButton() {
+        // Check if button already exists
+        if (document.getElementById('chatAboutReportBtn')) {
+            return;
+        }
+
+        // Find report actions container
+        const reportActions = document.querySelector('.report-actions');
+        if (!reportActions) {
+            console.warn('[Onboarding] Report actions container not found');
+            return;
+        }
+
+        // Create button
+        const button = document.createElement('button');
+        button.id = 'chatAboutReportBtn';
+        button.className = 'btn-action chat-report-btn';
+        button.innerHTML = '<i class="fas fa-comments"></i> Chat about this report';
+        button.title = 'Open AI assistant with report context';
+
+        // Add click handler
+        button.addEventListener('click', function() {
+            // Open chatbot
+            if (window.openChatbot) {
+                window.openChatbot();
+            } else {
+                // Manually open chat panel
+                const chatPanel = document.getElementById('chatPanel');
+                const chatButton = document.getElementById('chatButton');
+                const chatOverlay = document.getElementById('chatOverlay');
+
+                if (chatPanel) {
+                    chatPanel.classList.add('active');
+                    if (chatButton) chatButton.classList.add('active');
+                    if (chatOverlay) chatOverlay.classList.add('active');
+                }
+            }
+
+            // Enable report mode
+            const reportModeToggle = document.getElementById('reportModeToggle');
+            if (reportModeToggle && !reportModeToggle.classList.contains('active')) {
+                reportModeToggle.click(); // Trigger toggle
+            }
+
+            // Focus chat input
+            setTimeout(() => {
+                const chatInput = document.getElementById('chatInput');
+                if (chatInput) chatInput.focus();
+            }, 300);
+
+            console.log('[Onboarding] Opening chatbot with report context');
+        });
+
+        // Insert before the first button (or append if no buttons)
+        const firstButton = reportActions.querySelector('button');
+        if (firstButton) {
+            reportActions.insertBefore(button, firstButton);
+        } else {
+            reportActions.appendChild(button);
+        }
+    }
+
+    /**
+     * Show save notification
+     */
+    function showSaveNotification(message) {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = 'save-notification';
+        notification.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            <span>${message}</span>
+        `;
+
+        // Add to page
+        document.body.appendChild(notification);
+
+        // Show notification
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+
+        // Hide and remove after 3 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
+
+    /**
      * Report action handlers
      */
     function handlePrintReport() {
@@ -933,6 +1280,177 @@
             console.error('Failed to copy:', err);
             alert('Failed to copy report to clipboard.');
         });
+    }
+
+    /**
+     * Past Reports functionality
+     */
+    function openPastReportsModal() {
+        if (!reportContextManager) {
+            console.error('[Onboarding] Report Context Manager not initialized');
+            return;
+        }
+
+        loadPastReports();
+        pastReportsModal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closePastReportsModal() {
+        pastReportsModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function loadPastReports() {
+        const reports = reportContextManager.getAllReportsMetadata();
+
+        if (reports.length === 0) {
+            pastReportsList.style.display = 'none';
+            pastReportsEmpty.style.display = 'block';
+            return;
+        }
+
+        pastReportsList.style.display = 'block';
+        pastReportsEmpty.style.display = 'none';
+
+        // Render reports
+        pastReportsList.innerHTML = reports.map(report => {
+            const date = new Date(report.generatedAt);
+            const formattedDate = date.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const countries = report.countries && report.countries.length > 0
+                ? report.countries.map(c => `<span class="country-badge">${c}</span>`).join('')
+                : '<span class="country-badge">N/A</span>';
+
+            return `
+                <div class="past-report-item" data-report-id="${report.reportId}">
+                    <div class="report-item-header">
+                        <div class="report-item-title">
+                            <h4>
+                                <i class="fas fa-file-alt"></i>
+                                ${report.partnerCompanyName || 'Unnamed Report'}
+                            </h4>
+                            <div class="report-item-id">${report.reportId}</div>
+                        </div>
+                        <div class="report-item-actions">
+                            <button class="report-action-btn view-report-btn" data-report-id="${report.reportId}" title="View Report">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="report-action-btn delete-btn" data-report-id="${report.reportId}" title="Delete Report">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="report-item-details">
+                        <div class="report-detail">
+                            <span class="report-detail-label">Generated</span>
+                            <span class="report-detail-value">${formattedDate}</span>
+                        </div>
+                        <div class="report-detail">
+                            <span class="report-detail-label">Countries</span>
+                            <div class="report-countries">${countries}</div>
+                        </div>
+                        <div class="report-detail">
+                            <span class="report-detail-label">Language</span>
+                            <span class="report-detail-value">${report.programmingLanguage || 'N/A'}</span>
+                        </div>
+                        <div class="report-detail">
+                            <span class="report-detail-label">Sections</span>
+                            <span class="report-detail-value">${report.sectionCount}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Add event listeners to view and delete buttons
+        pastReportsList.querySelectorAll('.view-report-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const reportId = this.getAttribute('data-report-id');
+                handleViewReport(reportId);
+            });
+        });
+
+        pastReportsList.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const reportId = this.getAttribute('data-report-id');
+                handleDeleteReport(reportId);
+            });
+        });
+    }
+
+    function handleViewReport(reportId) {
+        if (!reportContextManager) return;
+
+        const report = reportContextManager.getReportById(reportId);
+        if (!report) {
+            alert('Report not found');
+            return;
+        }
+
+        // Close modal
+        closePastReportsModal();
+
+        // Hide form, show report
+        formContainer.style.display = 'none';
+        reportContainer.style.display = 'block';
+
+        // Prepare report data in the format displayReport expects
+        const response = {
+            sections: report.sections,
+            validation: report.validation,
+            metadata: report.metadata || {
+                reportId: report.reportId,
+                generatedAt: report.generatedAt,
+                countries: reportContextManager.extractCountriesFromReport(report),
+                duration: 'N/A',
+                demoMode: false
+            }
+        };
+
+        // Display the report with formData
+        displayReport(response, report.formData);
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleDeleteReport(reportId) {
+        if (!reportContextManager) return;
+
+        const confirmed = confirm('Are you sure you want to delete this report?');
+        if (!confirmed) return;
+
+        const success = reportContextManager.deleteReport(reportId);
+        if (success) {
+            showSaveNotification('Report deleted successfully');
+            loadPastReports(); // Refresh the list
+        } else {
+            alert('Failed to delete report');
+        }
+    }
+
+    function handleClearAllReports() {
+        if (!reportContextManager) return;
+
+        const confirmed = confirm('Are you sure you want to delete ALL reports? This action cannot be undone.');
+        if (!confirmed) return;
+
+        const success = reportContextManager.clearAllReports();
+        if (success) {
+            showSaveNotification('All reports cleared');
+            loadPastReports(); // Refresh the list
+        } else {
+            alert('Failed to clear reports');
+        }
     }
 
     // Initialize on DOM ready

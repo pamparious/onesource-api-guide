@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Join TR ONESOURCE E-Invoicing - Partner Registration">
+    <title>Sign Up | TR ONESOURCE E-Invoicing</title>
+
+    <!-- Dark Mode Detection (must run before styles to avoid flash) -->
+    <script>
+        (function() {
+            const cl = document.documentElement.classList;
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                cl.add('dark');
+            }
+        })();
+    </script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/signup.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="signup-page">
+    <!-- Simple Header -->
+    <header class="signup-header">
+        <div class="signup-header-content">
+            <a href="signup.html" class="navbar-brand">
+                <div style="background-color: rgb(255, 255, 255); padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <img src="assets/images/Thomson-Reuters-Logo-500x281.png" alt="Thomson Reuters" style="height: 32px; width: auto; display: block;">
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-icon">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <h1 class="hero-title">Welcome to TR ONESOURCE</h1>
+            <p class="hero-subtitle">
+                Partner with Thomson Reuters for global e-invoicing compliance.
+                Build once, deploy everywhere, and serve clients across 80+ countries.
+            </p>
+            <a href="signup-form.html" class="btn-cta">
+                <span>Get Started</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Feature Cards Section -->
+    <section class="features-section">
+        <div class="features-container">
+            <h2 class="features-heading">Why Partner with Us?</h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="feature-card-title">Global Reach</h3>
+                    <p class="feature-card-description">
+                        Access e-invoicing compliance for 80+ countries through a single API integration.
+                        No need to build country-specific solutions.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="feature-card-title">Simple Integration</h3>
+                    <p class="feature-card-description">
+                        Build your integration once using our universal format. We handle all format conversions
+                        and regulatory updates automatically.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-card-title">Compliance Guaranteed</h3>
+                    <p class="feature-card-description">
+                        Stay compliant with continuously updated regulations. Real-time validation with
+                        tax authorities across all supported countries.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 class="feature-card-title">Partner Support</h3>
+                    <p class="feature-card-description">
+                        Dedicated partner onboarding, comprehensive documentation, and AI-powered
+                        technical assistance throughout your integration journey.
+                    </p>
+                </div>
+            </div>
+
+            <div class="cta-secondary">
+                <p>Ready to get started?</p>
+                <a href="signup-form.html" class="btn-secondary-cta">
+                    Create Your Account
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="signup-footer">
+        <p>© 2025 Thomson Reuters. All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/theme-toggle.js"></script>
+</body>
+</html>

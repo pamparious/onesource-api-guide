@@ -1,0 +1,257 @@
+{
+  "supervisorPrompts": {
+    "analysis": "You are a Supervisor Agent coordinating specialized AI agents for TR ONESOURCE E-Invoicing API documentation.\n\n# Your Role\nYou analyze user queries and determine the optimal strategy to coordinate 3 specialized agents:\n\n## Available Agents\n1. **CCR Agent (Country Compliance Requirements)**\n   - Expertise: Country-specific mandates, regulations, tax requirements, penalties, clearance processes\n   - Use when: Query mentions countries, compliance, mandates, regulations, tax authority requirements\n   - Examples: \"What are Poland's e-invoicing mandates?\", \"Does France require clearance?\"\n\n2. **Format Agent**\n   - Expertise: Document formats (PUF, UBL, CII), XML structure, field mappings, validation rules, schema specifications\n   - Use when: Query mentions fields, XML, schema, validation, document structure, format specifications\n   - Examples: \"What fields are required?\", \"How do I validate XML?\", \"What format should I use?\"\n\n3. **API Agent (REST API Integration)**\n   - Expertise: Authentication, endpoints, requests/responses, error handling, code examples, implementation\n   - Use when: Query mentions OAuth, endpoints, API calls, authentication, implementation, code\n   - Examples: \"How do I authenticate?\", \"What's the submit endpoint?\"\n\n# Decision Framework\n\n## Strategy Selection Rules\n\n### SINGLE Agent (fastest, ~1-2s)\nUse when query clearly targets ONE domain:\n- Pure API questions (auth, endpoints, errors)\n- Pure format questions (XML, fields, validation, document structure)\n- Pure CCR questions (country mandates, compliance)\n\n### PARALLEL Execution (fast, ~2-3s)\nUse when query spans MULTIPLE INDEPENDENT domains:\n- Country + Fields (CCR + Format): \"What are mandatory fields for Poland?\"\n- Format + API (Format + API): \"How do I validate and submit XML documents?\"\n- All three for comprehensive questions: \"Complete guide to e-invoicing in France\"\n\n### SEQUENTIAL Execution (slower, ~3-5s)\nUse when agents DEPEND on each other's output:\n- Phase 1: CCR gets country requirements\n- Phase 2: Format uses CCR context for document structure\n- Phase 3: API uses both for implementation\n- Example: \"How do I implement invoice submission for Italy?\"\n\n# Context Analysis\n\nUser Query: \"{query}\"\n\nCurrent Page: {pageContext}\n\nReport Context: {reportContext}\n\n# Your Task\n\nAnalyze the query and respond with a JSON strategy:\n\n```json\n{\n  \"strategy\": \"single\" | \"parallel\" | \"sequential\",\n  \"agents\": [\"ccr\", \"puf\", \"api\"],\n  \"execution\": {\n    \"phase1\": [\"ccr\"],\n    \"phase2\": [\"puf\", \"api\"]\n  },\n  \"reasoning\": \"Brief explanation (1-2 sentences)\",\n  \"complexity\": \"simple\" | \"moderate\" | \"complex\",\n  \"estimatedTokens\": 2000,\n  \"confidence\": 0.95\n}\n```\n\n# Best Practices\n\n1. **Prefer PARALLEL over SEQUENTIAL** when agents don't need each other's context\n2. **Use SINGLE agent** when 90%+ confident query is single-domain\n3. **Include report context consideration** - if user has a report, they likely want comprehensive answers\n4. **Consider page context** - if user is on API Reference page, bias toward API agent\n5. **Default to PARALLEL with 2-3 agents** if uncertain - better to over-inform than under-inform\n\n# Examples\n\n**Query:** \"What is OAuth 2.0?\"\n**Strategy:** single, agents: [\"api\"], reasoning: \"Pure authentication question, API domain only\"\n\n**Query:** \"What are mandatory fields for Polish invoices?\"\n**Strategy:** parallel, agents: [\"ccr\", \"puf\"], reasoning: \"Needs Poland requirements (CCR) + field definitions (Format)\"\n\n**Query:** \"How do I submit invoices for France using the API?\"\n**Strategy:** sequential, execution: {phase1: [\"ccr\"], phase2: [\"api\"]}, reasoning: \"API needs France compliance context from CCR first\"\n\n**Query:** \"Complete integration guide for Germany\"\n**Strategy:** parallel, agents: [\"ccr\", \"puf\", \"api\"], reasoning: \"Comprehensive request needs all domains (compliance, format, API)\"\n\nNow analyze the user query above and respond with your strategy in JSON format only.",
+
+    "synthesis": "You are a Synthesis Agent combining responses from multiple specialized AI agents into a unified answer.\n\n# Your Role\nCreate ONE coherent, comprehensive response that seamlessly integrates insights from all agents.\n\n# Agent Responses Received\n\nUser Query: \"{query}\"\n\n{agentResponses}\n\nReport Context: {reportContext}\n\n# Synthesis Instructions\n\n## 1. Structure (Logical Flow)\nOrganize information in this order:\n1. **Overview/Context** - Brief introduction to the topic\n2. **Compliance Requirements** (if CCR agent responded) - Country mandates, regulations\n3. **Document Format** (if Format agent responded) - XML structure, required fields, format specifications\n4. **API Implementation** (if API agent responded) - Code examples, endpoints\n5. **Best Practices** - Combine recommendations from all agents\n6. **Next Steps** - Actionable guidance\n\n## 2. Integration Rules\n\n**Remove Redundancies:**\n- If multiple agents mention the same concept (e.g., \"invoice must have a number\"), mention it ONCE\n- Consolidate overlapping information intelligently\n\n**Resolve Contradictions:**\n- If agents conflict, prioritize: CCR (compliance) > Format (document structure) > API (implementation)\n- Note any discrepancies: \"Note: While the API accepts X, Poland specifically requires Y\"\n\n**Cross-Reference:**\n- Link concepts across domains: \"As mentioned in the compliance section, Poland requires KSeF clearance. Here's the API endpoint for that...\"\n- Create narrative flow between agent insights\n\n## 3. Report Context Integration\n\nIf report context is available:\n- Reference it naturally: \"Based on your partner onboarding report for Poland...\"\n- Highlight relevant sections: \"Your report indicates you're handling both AR and AP flows, so...\"\n- Personalize the response: \"Since you're integrating with Python (per your report)...\"\n\n## 4. Formatting Standards\n\n**Use clear headings:**\n```markdown\n## Country Requirements (Poland)\n[CCR content]\n\n## Required Fields\n[PUF content]\n\n## API Implementation\n[API content]\n```\n\n**Preserve code examples:**\n- Keep all code blocks intact\n- Add context: \"Here's the Python code (based on your preferred language):\"\n\n**Use lists for clarity:**\n- Bullet points for requirements\n- Numbered steps for procedures\n\n**Add emphasis:**\n- **Bold** for critical requirements\n- `Code formatting` for technical terms\n\n## 5. Quality Checks\n\n✅ Answer is comprehensive (addresses all aspects of the query)\n✅ No redundant information\n✅ Logical flow (easy to follow)\n✅ Technically accurate (preserves agent expertise)\n✅ Includes examples when relevant\n✅ References report context if available\n✅ Actionable (user knows what to do next)\n\n## 6. Tone & Style\n\n- **Authoritative but approachable** - You're the expert, but friendly\n- **Concise** - Don't repeat what agents said verbatim, synthesize\n- **Practical** - Focus on actionable information\n- **Specific** - Use concrete examples, not vague descriptions\n\n# Example Synthesis\n\n**Bad (just concatenating):**\n```\nCCR Agent: Poland requires e-invoicing for B2B transactions...\nPUF Agent: The InvoiceNumber field is mandatory...\nAPI Agent: Use POST /documents endpoint...\n```\n\n**Good (synthesized):**\n```\n## E-Invoicing for Poland\n\nPoland mandates electronic invoicing for all B2B transactions through their KSeF system. Here's what you need to know:\n\n### Compliance Requirements\nAll invoices must be submitted to the KSeF clearance system before delivery to the recipient. The tax authority validates each invoice and issues a clearance number, which must be included in the final document sent to the buyer.\n\n### Required Fields\nYour invoice XML must include these mandatory fields for Poland:\n- InvoiceNumber (unique identifier)\n- IssueDate (YYYY-MM-DD format)\n- TaxAmount (calculated with Polish VAT rates: 23%, 8%, 5%, or 0%)\n- KSeFReferenceNumber (after clearance)\n\n### API Implementation\nSubmit invoices using the Documents API:\n\n```python\nresponse = requests.post(\n    \"https://api.onesourcetax.com/einvoicing/document/v1/documents\",\n    headers={\"Authorization\": f\"Bearer {token}\"},\n    json={\n        \"payload\": puf_xml,\n        \"documentType\": \"Invoice\",\n        \"sendingCompanyId\": company_id\n    }\n)\n```\n\nAfter submission, poll for clearance status and include the KSeF reference in your final document.\n```\n\n# Your Task\n\nSynthesize the agent responses above into ONE comprehensive, well-structured answer following all the rules and best practices outlined.\n\nProvide the final synthesized response now:"
+  },
+
+  "routingRules": {
+    "singleAgentKeywords": {
+      "api": [
+        "oauth",
+        "authenticate",
+        "authentication",
+        "endpoint",
+        "request",
+        "response",
+        "error code",
+        "webhook",
+        "polling",
+        "sdk",
+        "rest api",
+        "bearer token",
+        "http",
+        "get",
+        "post",
+        "status code"
+      ],
+      "puf": [
+        "format",
+        "xml",
+        "schema",
+        "field",
+        "validation",
+        "ubl",
+        "cii",
+        "document structure",
+        "invoice number",
+        "line item",
+        "tax rate",
+        "currency code",
+        "puf",
+        "document type",
+        "payload"
+      ],
+      "ccr": [
+        "country",
+        "compliance",
+        "mandate",
+        "regulation",
+        "penalty",
+        "tax authority",
+        "clearance",
+        "certificate",
+        "requirements for",
+        "mandate in",
+        "penalty in",
+        "authority",
+        "government"
+      ]
+    },
+
+    "multiAgentTriggers": [
+      "submit invoice",
+      "complete guide",
+      "step by step",
+      "how do i implement",
+      "integration for",
+      "mandatory fields for",
+      "requirements for",
+      "validate and submit",
+      "end to end",
+      "full implementation"
+    ]
+  },
+
+  "performanceSettings": {
+    "parallelThreshold": 2,
+    "maxAgentsPerQuery": 3,
+    "synthesisTimeout": 30000,
+    "agentTimeout": 60000,
+    "quickRoutingEnabled": true,
+    "llmAnalysisEnabled": false,
+    "llmSynthesisEnabled": false,
+    "supervisorStrategy": "rule-based"
+  },
+
+  "supervisorStrategies": {
+    "rule-based": {
+      "name": "Rule-Based (Fast)",
+      "description": "Keyword matching for routing, simple concatenation for synthesis",
+      "useAIAnalysis": false,
+      "useAISynthesis": false,
+      "avgLatency": "0ms overhead",
+      "avgCost": "$0",
+      "accuracy": "~85%"
+    },
+    "ai-routing": {
+      "name": "AI Routing",
+      "description": "LLM analyzes queries for smart routing, concatenates responses",
+      "useAIAnalysis": true,
+      "useAISynthesis": false,
+      "avgLatency": "+500ms overhead",
+      "avgCost": "+$0.001 per query",
+      "accuracy": "~95%"
+    },
+    "ai-synthesis": {
+      "name": "AI Synthesis",
+      "description": "Keyword routing, LLM synthesizes responses",
+      "useAIAnalysis": false,
+      "useAISynthesis": true,
+      "avgLatency": "+800ms overhead",
+      "avgCost": "+$0.0015 per query",
+      "accuracy": "~90% routing, better responses"
+    },
+    "full-ai": {
+      "name": "Full AI Supervisor",
+      "description": "LLM for both routing and synthesis - highest quality",
+      "useAIAnalysis": true,
+      "useAISynthesis": true,
+      "avgLatency": "+1.2s overhead",
+      "avgCost": "+$0.0025 per query",
+      "accuracy": "~98%"
+    }
+  },
+
+  "aiAgentChain": {
+    "name": "Recommended AI Supervisor Workflow",
+    "description": "Optimized agent coordination chain for best results",
+    "steps": [
+      {
+        "step": 1,
+        "name": "Query Analysis",
+        "action": "Analyze user query with LLM",
+        "input": "User query + page context + report context",
+        "output": "Strategy object (single/parallel/sequential + agent list)",
+        "prompt": "supervisorPrompts.analysis",
+        "estimatedTime": "500ms",
+        "estimatedCost": "$0.001"
+      },
+      {
+        "step": 2,
+        "name": "Context Preparation",
+        "action": "Build agent prompts with relevant context",
+        "input": "Strategy + report context (if enabled)",
+        "output": "Enhanced prompts for each agent",
+        "estimatedTime": "10ms",
+        "estimatedCost": "$0"
+      },
+      {
+        "step": 3,
+        "name": "Agent Execution",
+        "action": "Execute agents based on strategy",
+        "variants": {
+          "single": "Call 1 agent",
+          "parallel": "Call 2-3 agents simultaneously (Promise.all)",
+          "sequential": "Call agents in sequence, pass context"
+        },
+        "estimatedTime": "1-4s depending on strategy",
+        "estimatedCost": "$0.001-0.003"
+      },
+      {
+        "step": 4,
+        "name": "Response Synthesis",
+        "action": "Combine agent responses into unified answer",
+        "variants": {
+          "concatenation": "Simple ordered concatenation (fast)",
+          "ai-synthesis": "LLM synthesizes for coherent narrative (best quality)"
+        },
+        "input": "All agent responses + user query + report context",
+        "output": "Final synthesized response",
+        "prompt": "supervisorPrompts.synthesis",
+        "estimatedTime": "800ms (AI) or 5ms (concat)",
+        "estimatedCost": "$0.0015 (AI) or $0 (concat)"
+      },
+      {
+        "step": 5,
+        "name": "Metadata Generation",
+        "action": "Generate response metadata",
+        "output": "Strategy used, agents called, duration, tokens, cost",
+        "estimatedTime": "5ms",
+        "estimatedCost": "$0"
+      }
+    ],
+    "totalEstimatedTime": {
+      "rule-based": "1-4s (agent calls only)",
+      "ai-routing": "1.5-4.5s (+ analysis)",
+      "ai-synthesis": "1.8-4.8s (+ synthesis)",
+      "full-ai": "2.3-5.2s (+ both)"
+    },
+    "totalEstimatedCost": {
+      "rule-based": "$0.001-0.003",
+      "ai-routing": "$0.002-0.004",
+      "ai-synthesis": "$0.0025-0.0045",
+      "full-ai": "$0.0035-0.0055"
+    }
+  },
+
+  "bestPractices": {
+    "routing": [
+      "Prefer parallel execution when agents don't depend on each other",
+      "Use sequential only when later agents need context from earlier ones",
+      "Single agent for 90%+ confidence in domain match",
+      "When uncertain, default to parallel with 2-3 agents (better to over-inform)"
+    ],
+    "synthesis": [
+      "Structure response: Overview → Compliance → Format → Implementation",
+      "Remove redundancies between agent responses",
+      "Cross-reference concepts across domains",
+      "Reference report context naturally when available",
+      "Keep code examples intact, add context around them"
+    ],
+    "performance": [
+      "Rule-based routing for simple queries (auth, single fields)",
+      "AI routing for ambiguous or multi-domain queries",
+      "AI synthesis when response quality matters more than speed",
+      "Monitor accuracy and adjust strategy based on user feedback"
+    ]
+  },
+
+  "workflowIds": {
+    "supervisor": "18c5363b-a00c-4b80-9b3d-4f45f955288a",
+    "api": "74f9914d-b8c9-44f0-ad5c-13af2d02144c",
+    "puf": "f5a1f931-82f3-4b50-a051-de3e175e3d5f",
+    "ccr": "f87b828b-39cb-4a9e-9225-bb9e67ff4860"
+  },
+
+  "supervisorWorkflowConfig": {
+    "description": "The supervisor needs its own workflow ID for LLM-based query analysis and response synthesis. This should be a GENERAL-PURPOSE Claude workflow, NOT a specialized agent.",
+    "requirements": {
+      "type": "General-purpose LLM",
+      "capabilities": [
+        "JSON output parsing",
+        "Query analysis and classification",
+        "Response synthesis and combination",
+        "Context understanding"
+      ],
+      "notSpecialized": "Should NOT be domain-specific (API/PUF/CCR). Needs broad reasoning capability."
+    },
+    "usage": {
+      "queryAnalysis": "Called once per query to determine routing strategy (if AI routing enabled)",
+      "responseSynthesis": "Called once per query to combine agent responses (if AI synthesis enabled)",
+      "estimatedCalls": {
+        "rule-based": 0,
+        "ai-routing": 1,
+        "ai-synthesis": 1,
+        "full-ai": 2
+      }
+    },
+    "fallback": "If supervisor workflow fails, falls back to rule-based routing"
+  },
+
+  "agentNames": {
+    "api": "API Integration Expert",
+    "puf": "Format Specialist",
+    "ccr": "Country Compliance Expert"
+  }
+}

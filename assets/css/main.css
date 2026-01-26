@@ -85,8 +85,8 @@ html.dark {
     --color-white: #FFFFFF;           /* Pure white for headlines */
 
     /* Link color for dark mode */
-    --color-link: #3B82F6;            /* Blue links in dark mode */
-    --color-link-hover: #60A5FA;      /* Lighter blue on hover */
+    --color-link: #FF8000;            /* Orange links in dark mode */
+    --color-link-hover: #FFA347;      /* Lighter orange on hover */
 
     /* Adjusted shadows for dark mode */
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);

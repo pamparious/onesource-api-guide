@@ -29,18 +29,30 @@
 <body>
     <!-- Fixed Header -->
     <header class="site-header">
-        <div class="container" style="display: flex; align-items: center; justify-content: space-between; height: 100%; padding: 0 1.5rem;">
+        <!-- Mobile Header (< 1024px) -->
+        <div class="mobile-header-wrapper">
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
                     <i class="fas fa-bars"></i>
                 </button>
-                <a href="index.html" class="navbar-brand" style="display: flex; align-items: center; gap: 1rem; text-decoration: none;">
-                    <div style="background-color: white; padding: 4px 8px; border-radius: 4px; display: flex; align-items: center;">
-                        <img src="assets/images/Thomson-Reuters-Logo-500x281.png" alt="Thomson Reuters" style="height: 24px; width: auto;">
+                <a href="index.html" class="mobile-brand">
+                    <div class="mobile-logo-box">
+                        <span class="mobile-logo-text">TR</span>
                     </div>
-                    <div style="border-left: 2px solid #444; height: 32px; margin: 0 0.25rem;"></div>
-                    <span style="font-size: 0.875rem; color: #cccccc; font-weight: 500; white-space: nowrap;">ONESOURCE API Guide</span>
+                    <span class="mobile-brand-text">ONESOURCE</span>
                 </a>
+            </div>
+            <a href="index.html" class="mobile-doc-link">Documentation</a>
+        </div>
+
+        <!-- Desktop Header (>= 1024px) -->
+        <div class="container" style="display: flex; align-items: center; justify-content: space-between; height: 100%; padding: 0 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <a href="index.html" class="navbar-brand navbar-brand-desktop" style="display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                    <div style="background-color: white; padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <img src="assets/images/Thomson-Reuters-Logo-500x281.png" alt="Thomson Reuters" style="height: 32px; width: auto; display: block;">
+                    </div>
+                    </a>
             </div>
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <button id="headerAIButton" class="header-ai-button" aria-label="Open AI Assistant">
@@ -573,6 +585,8 @@
     <script src="assets/js/navigation.js"></script>
     <script src="assets/js/chatbot-ui.js"></script>
     <script src="assets/js/openarena-client.js"></script>
+    <script src="assets/js/report-context-manager.js"></script>
+    <script src="assets/js/supervisor-agent.js"></script>
     <script src="assets/js/chatbot-controller.js"></script>
 
     <!-- FAQ Accordion Script -->

@@ -53,8 +53,8 @@ This site provides comprehensive documentation and tools for partners integratin
 - ✅ Responsive design for all devices
 
 ### AI-Powered Tools
-- ✅ **AI Chatbot**: 3 specialized agents (API, PUF, CCR)
-  - Ask questions about integration, authentication, PUF format, error handling
+- ✅ **AI Chatbot**: 3 specialized agents (API, Format, CCR)
+  - Ask questions about integration, authentication, document formats, error handling
   - Context-aware responses based on current page
   - Conversation history and markdown formatting
 
@@ -104,7 +104,7 @@ You should see:
 📍 Partner Onboarding: POST /api/generate-report
 📡 CCR Agent ID: f87b828b-39cb-4a9e-9225-bb9e67ff4860
 📡 API Agent ID: 74f9914d-b8c9-44f0-ad5c-13af2d02144c
-📡 PUF Agent ID: f5a1f931-82f3-4b50-a051-de3e175e3d5f
+📡 Format Agent ID: f5a1f931-82f3-4b50-a051-de3e175e3d5f
 ================================================
 ```
 
@@ -122,11 +122,11 @@ Open your browser to: **http://localhost:3000**
 2. Click the **settings icon (⚙️)** to configure API token
 3. Choose your agent:
    - **API Agent**: API integration, authentication, endpoints
-   - **PUF Agent**: PUF document format, field mappings
+   - **Format Agent**: Document formats (PUF, UBL, CII), field mappings, validation
    - **CCR Agent**: Country compliance, e-invoicing mandates
 4. Ask questions like:
    - "How do I authenticate with the API?"
-   - "What is PUF format?"
+   - "What document formats are supported?"
    - "How do I handle recipient not found errors?"
 
 ### 2. Partner Onboarding

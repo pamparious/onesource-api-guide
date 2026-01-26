@@ -290,6 +290,73 @@ html.dark .toc-link.active {
     padding-left: 3.5rem;
 }
 
+/* === Mobile Header === */
+.mobile-header-wrapper {
+    display: none;
+}
+
+@media (max-width: 1024px) {
+    .mobile-header-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Hide entire desktop header container on mobile */
+    .site-header > .container {
+        display: none !important;
+    }
+
+    /* Hide desktop logo/text on mobile */
+    .navbar-brand-desktop {
+        display: none !important;
+    }
+}
+
+.mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    text-decoration: none;
+}
+
+.mobile-logo-box {
+    width: 32px;
+    height: 32px;
+    background: var(--color-primary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(255, 128, 0, 0.3);
+}
+
+.mobile-logo-text {
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #000000;
+    letter-spacing: 0.5px;
+}
+
+.mobile-brand-text {
+    font-weight: 500;
+    color: var(--color-white);
+    font-size: 0.875rem;
+}
+
+.mobile-doc-link {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.mobile-doc-link:hover {
+    color: rgba(255, 255, 255, 0.6);
+}
+
 /* === Mobile Menu Toggle === */
 .mobile-menu-toggle {
     display: none;
@@ -299,13 +366,18 @@ html.dark .toc-link.active {
     .mobile-menu-toggle {
         display: flex;
         align-items: center;
-        justify-center: center;
+        justify-content: center;
         width: 40px;
         height: 40px;
         background: none;
         border: none;
         cursor: pointer;
-        color: var(--color-text);
+        color: rgba(255, 255, 255, 0.7);
+        transition: color var(--transition-fast);
+    }
+
+    .mobile-menu-toggle:hover {
+        color: var(--color-white);
     }
 }
 
@@ -345,6 +417,25 @@ html {
 .main-content-area h1:first-child,
 .main-content-area h2:first-child {
     margin-top: 0;
+}
+
+/* === No-Nav Page Styles (for Sign-Up Flow) === */
+.no-nav-page .sidebar-left,
+.no-nav-page .sidebar-right,
+.no-nav-page .sidebar-overlay,
+.no-nav-page .mobile-menu-toggle {
+    display: none !important;
+}
+
+.no-nav-page .main-wrapper {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+}
+
+.no-nav-page .main-content-area {
+    margin-left: 0;
+    margin-right: 0;
 }
 
 /* === Print Styles === */

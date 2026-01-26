@@ -1,0 +1,626 @@
+{
+  "reportMetadata": {
+    "title": "TR ONESOURCE Partner Implementation Guide",
+    "version": "2.2",
+    "generatedBy": "Multi-Agent System with Context-Based Collaboration",
+    "audience": "ERP vendors, workflow providers, technology partners integrating TR ONESOURCE APIs",
+    "lastUpdated": "2026-01-22"
+  },
+
+  "agentConfiguration": {
+    "executionStrategy": "layered-with-context",
+    "description": "CCR agents run first, Format agents receive CCR context for reference, API agent receives all context for reference. Each agent produces ONLY their own content without copying previous outputs.",
+
+    "agents": {
+      "ccr": {
+        "name": "Country Compliance Requirements Agent",
+        "role": "Extract country-specific e-invoicing mandates, registration requirements, penalties, and compliance workflows",
+        "scope": "per-country",
+        "ragSources": ["CCR documentation with 'CCR' in filename"],
+        "timeout": 120000,
+        "runsFirst": true,
+        "outputStructure": {
+          "name": "Country Compliance Requirements",
+          "description": "Comprehensive country-specific e-invoicing mandates and compliance requirements",
+          "subsections": [
+            "1. Mandate Overview",
+            "2. Pre-Integration Checklist",
+            "3. Technical Requirements",
+            "4. AR (Outbound) Process",
+            "5. AP (Inbound) Process",
+            "6. Penalties & Sanctions",
+            "7. Critical Dates",
+            "8. Resources"
+          ],
+          "format": "markdown with tables",
+          "citations": "Required - inline (CCR {country}, Section X.Y)"
+        },
+        "systemPromptEmbedded": false
+      },
+
+      "format": {
+        "name": "Document Format Agent",
+        "role": "Provide detailed document format specifications, XML structure, field mappings, and validation rules",
+        "scope": "per-country",
+        "ragSources": [
+          "PUF specifications: https://pagero.github.io/puf/",
+          "PEPPOL BIS: https://docs.peppol.eu/poacc/billing/3.0/",
+          "Pagero Business Documents: https://pagero.github.io/business-documents/",
+          "Country-specific formats: FatturaPA, XRechnung, SAF-T variants"
+        ],
+        "timeout": 120000,
+        "dependsOn": ["ccr"],
+        "receivesContext": {
+          "ccrOutput": "CCR agent output for same country (for reference only)",
+          "purpose": "Understand compliance requirements to provide accurate format specifications"
+        },
+        "outputStructure": {
+          "name": "Document Format Specifications",
+          "description": "Detailed format specifications, field mappings, and validation rules for documents identified in CCR requirements",
+          "subsections": [
+            "Format Overview (table: Standard Base, Namespace, Customization ID, Schema Location)",
+            "Mandatory Fields for {country} (table with XPath mappings)",
+            "Country-Specific Extensions",
+            "XML Structure Example (complete, minimal but valid)",
+            "Validation Checklist",
+            "Common Errors & Solutions (min 10 items)"
+          ],
+          "citations": "Required - (PUF Billing 2.0, Section X.Y) or (PEPPOL BIS 3.0, Section X.Y)",
+          "note": "Reference CCR context to understand requirements, but produce ONLY format specifications. Do NOT copy CCR content."
+        },
+        "systemPromptEmbedded": false
+      },
+
+      "api": {
+        "name": "API Implementation Agent",
+        "role": "Generate production-ready API integration guide with complete, runnable code in partner's programming language",
+        "scope": "all-countries",
+        "ragSources": [
+          "ONESOURCE E-Invoicing API documentation",
+          "https://pagero.github.io/partners/partner-integration-guidelines/"
+        ],
+        "timeout": 180000,
+        "dependsOn": ["ccr", "format"],
+        "receivesContext": {
+          "ccrOutputs": "All CCR agent outputs (per country) for reference",
+          "formatOutputs": "All Format agent outputs (per country) for reference",
+          "purpose": "Understand country-specific requirements and formats to generate accurate API implementation code",
+          "aggregationMethod": "Pass full context from all countries to enable multi-country routing logic"
+        },
+        "outputStructure": {
+          "name": "API Implementation Guide",
+          "corePattern": "requirements-first",
+          "description": "Production-ready API integration code with requirements summary before each section. Reference CCR and Format context to inform implementation, but do NOT copy their content.",
+          "subsections": [
+              {
+                "id": "auth-setup",
+                "title": "1. Authentication Setup & Configuration",
+                "subsections": [
+                  "1.1 Prerequisites",
+                  "1.2 Creating Machine Application (One-Time Setup)",
+                  "1.3 Credential Management Models",
+                  "1.4 OAuth 2.0 Implementation"
+                ],
+                "includes": [
+                  "Step-by-step credential creation instructions",
+                  "Security notes (environment variables, secrets manager)",
+                  "Token request/response format",
+                  "OnesourceAuthenticator class implementation"
+                ]
+              },
+              {
+                "id": "company-mgmt",
+                "title": "2. Company Management",
+                "includes": [
+                  "Requirements summary table",
+                  "Account model context (partner-managed vs customer-direct)",
+                  "CompanyManager class with companyId mapping",
+                  "Cache implementation (24-hour TTL)"
+                ]
+              },
+              {
+                "id": "ar-flow",
+                "title": "3. AR (Outbound) Flow",
+                "conditional": "Only if {invoiceHandling} includes 'ar'",
+                "subsections": [
+                  "Requirements Summary (from CCR)",
+                  "Format Requirements (PUF for invoices, country-specific for tax reports)",
+                  "Flow Diagram",
+                  "Step 1: Submit Document",
+                  "Step 2: Poll for Status",
+                  "Step 3: Handle Errors and Actions"
+                ],
+                "criticalNotes": [
+                  "ALWAYS use PUF for AR invoices - ONESOURCE handles conversion",
+                  "Tax reports use country-specific formats per CCR",
+                  "Volume-based polling strategies"
+                ]
+              },
+              {
+                "id": "ap-flow",
+                "title": "4. AP (Inbound) Flow",
+                "conditional": "Only if {invoiceHandling} includes 'ap'",
+                "subsections": [
+                  "Requirements Summary",
+                  "Flow Diagram",
+                  "Step 1: Poll for New Documents",
+                  "Step 2: Download Document Content",
+                  "Step 3: Confirm Processing (External Status)"
+                ],
+                "criticalNotes": [
+                  "MUST set external status after processing",
+                  "Documents retained only 90 days",
+                  "Volume-based polling intervals"
+                ]
+              },
+              {
+                "id": "invoice-response",
+                "title": "5. Invoice Response (Application Response)",
+                "conditional": "Only if CCR indicates lifecycle requirements",
+                "includes": [
+                  "When Required table (by country)",
+                  "ResponseClient class implementation",
+                  "Status codes per network (Peppol: AB, AP, RE, IP)"
+                ]
+              },
+              {
+                "id": "error-handling",
+                "title": "6. Error Handling",
+                "includes": [
+                  "HTTP Error Reference table",
+                  "Custom exception classes",
+                  "Retry strategies (exponential backoff)",
+                  "Token refresh on 401"
+                ]
+              },
+              {
+                "id": "complete-client",
+                "title": "7. Complete Integration Client",
+                "includes": [
+                  "OnesourceClient class composing all modules",
+                  "Complete usage example showing AR + AP flows",
+                  "Context manager support"
+                ]
+              },
+              {
+                "id": "config-best-practices",
+                "title": "8. Configuration & Best Practices",
+                "includes": [
+                  "Volume-based recommendations table",
+                  "Multi-country configuration object",
+                  "Security checklist",
+                  "SAF-T note if applicable"
+                ]
+              }
+            ],
+          "codingRules": {
+              "language": "{programmingLanguage} - ALL code must be in this language",
+              "exceptions": "XML examples for PUF/PEPPOL format",
+              "style": "Complete, runnable code (not pseudocode)",
+              "errorHandling": "Every code block includes try/catch or equivalent",
+              "comments": "Requirements header before each module explaining what needs to be implemented",
+              "bestPractices": "Use language-specific idioms and patterns",
+              "typeHints": "Include where language supports"
+            },
+          "criticalFormatRules": {
+            "ar-invoices": "ALWAYS use PUF Billing 2.0 - ONESOURCE converts to country formats (Peppol BIS, FatturaPA, Factur-X, UBL, etc.)",
+            "tax-reports": "Use country-specific format as defined by CCR Agent (SAF-T, SII, etc.)",
+            "ap-invoices": "Received in country-native format; use /target-document for standardized XML"
+          }
+        },
+        "systemPromptEmbedded": false
+      }
+    }
+  },
+
+  "partnerInputVariables": {
+    "identity": {
+      "partnerCompanyName": { "type": "string", "required": true }
+    },
+    "technical": {
+      "programmingLanguage": {
+        "type": "enum",
+        "values": ["python", "java", "csharp", "javascript", "php", "ruby", "go", "other"],
+        "required": true,
+        "usedBy": ["api"],
+        "purpose": "ALL API code examples must be in this language"
+      },
+      "systemIntegration": {
+        "type": "array",
+        "values": ["erp", "tax", "workflow", "procurement", "custom", "other"],
+        "required": true
+      }
+    },
+    "scope": {
+      "countriesList": {
+        "type": "array",
+        "required": true,
+        "usedBy": ["ccr", "format", "api"],
+        "purpose": "Each CCR/Format agent runs per country; API agent receives all"
+      },
+      "invoiceHandling": {
+        "type": "array",
+        "values": ["ar", "ap"],
+        "required": true,
+        "conditionalSections": true,
+        "purpose": "Determines which process flows to generate"
+      },
+      "invoiceVolume": {
+        "type": "number",
+        "required": true,
+        "usedBy": ["api"],
+        "purpose": "Affects polling vs webhook recommendations and intervals"
+      }
+    },
+    "businessModel": {
+      "accountAccess": {
+        "type": "enum",
+        "values": ["partner-managed", "customer-direct"],
+        "required": true,
+        "usedBy": ["api"],
+        "purpose": "Determines company management implementation pattern and credential model"
+      },
+      "serviceModel": {
+        "type": "enum",
+        "values": ["self-service", "managed-service"],
+        "required": true
+      }
+    }
+  },
+
+  "executionPhases": {
+    "description": "Layered execution with verbatim context passing",
+
+    "phase1_ccr": {
+      "name": "Country Compliance Requirements (Parallel per country)",
+      "agents": ["ccr"],
+      "execution": "parallel",
+      "perCountry": true,
+      "inputs": [
+        "{country}",
+        "{partnerCompanyName}",
+        "{invoiceHandling}",
+        "{invoiceVolume}"
+      ],
+      "outputs": [
+        "Country Mandate Summary (8 subsections)"
+      ],
+      "passToNextPhase": "full output as context for reference"
+    },
+
+    "phase2_format": {
+      "name": "Document Format Details (Parallel per country)",
+      "agents": ["format"],
+      "execution": "parallel",
+      "perCountry": true,
+      "dependsOn": "phase1_ccr",
+      "inputs": [
+        "{country}",
+        "{systemIntegration}",
+        "{invoiceHandling}",
+        "CCR output for {country} (for reference)"
+      ],
+      "outputs": [
+        "Document Format Specifications (detailed format specifications, field mappings, XML examples, validation rules)"
+      ],
+      "passToNextPhase": "full output as context for reference"
+    },
+
+    "phase3_api": {
+      "name": "API Implementation Guide (Single, all countries)",
+      "agents": ["api"],
+      "execution": "single",
+      "aggregatesAllCountries": true,
+      "dependsOn": ["phase1_ccr", "phase2_format"],
+      "inputs": [
+        "{partnerCompanyName}",
+        "{programmingLanguage}",
+        "{countriesList}",
+        "{invoiceHandling}",
+        "{invoiceVolume}",
+        "{accountAccess}",
+        "{serviceModel}",
+        "{systemIntegration}",
+        "All CCR outputs (for reference, per country)",
+        "All Format outputs (for reference, per country)"
+      ],
+      "outputs": [
+        "API Implementation Guide (8 subsections with requirements-first code, authentication, AR/AP flows, error handling, complete integration client)"
+      ],
+      "note": "Uses CCR and Format context to generate accurate country-specific API code, but does NOT copy their content"
+    }
+  },
+
+  "reportSections": [
+    {
+      "id": "executive-summary",
+      "title": "Executive Summary",
+      "order": 1,
+      "type": "auto-generated",
+      "countrySpecific": false,
+      "generatedBy": "Report orchestrator using CCR summaries",
+      "description": "High-level overview aggregated from all country CCR outputs"
+    },
+    {
+      "id": "country-compliance",
+      "title": "Country Compliance Requirements: {country}",
+      "order": 2,
+      "type": "agent-generated",
+      "agent": "ccr",
+      "countrySpecific": true,
+      "phase": "phase1_ccr",
+      "content": "Country-specific e-invoicing mandates, registration requirements, technical requirements, AR/AP processes, penalties, critical dates, and resources"
+    },
+    {
+      "id": "format-details",
+      "title": "Document Format Details: {country}",
+      "order": 3,
+      "type": "agent-generated",
+      "agent": "format",
+      "countrySpecific": true,
+      "phase": "phase2_format",
+      "content": "Detailed format specifications including format overview, mandatory field mappings with XPath, country-specific extensions, XML structure examples, validation checklist, and common errors with solutions"
+    },
+    {
+      "id": "api-implementation",
+      "title": "API Implementation Guide",
+      "order": 4,
+      "type": "agent-generated",
+      "agent": "api",
+      "countrySpecific": false,
+      "phase": "phase3_api",
+      "content": "Production-ready API implementation with complete code examples in partner's programming language, covering all countries",
+      "subsections": [
+        "1. Authentication Setup & Configuration",
+        "2. Company Management",
+        "3. AR (Outbound) Flow",
+        "4. AP (Inbound) Flow",
+        "5. Invoice Response (Application Response)",
+        "6. Error Handling",
+        "7. Complete Integration Client",
+        "8. Configuration & Best Practices"
+      ]
+    }
+  ],
+
+  "contextPassingRules": {
+    "description": "Rules for passing context between agents for reference",
+    "rules": [
+      {
+        "from": "ccr",
+        "to": "format",
+        "instruction": "Format agent receives CCR output as reference context to understand compliance requirements. Format agent produces ONLY format specifications - does NOT copy CCR content."
+      },
+      {
+        "from": "ccr",
+        "to": "api",
+        "instruction": "API agent receives ALL CCR outputs as reference context to understand country-specific requirements. API agent produces ONLY API implementation code - does NOT copy CCR content."
+      },
+      {
+        "from": "format",
+        "to": "api",
+        "instruction": "API agent receives ALL Format outputs as reference context to understand format requirements. API agent produces ONLY API implementation code - does NOT copy Format content."
+      }
+    ],
+    "validation": {
+      "checkNoDuplication": true,
+      "method": "Verify each section contains only content from its designated agent, with no duplication of previous agent outputs",
+      "tolerance": "Agents may reference or summarize context in tables/requirements sections, but should not copy full content blocks"
+    }
+  },
+
+  "citationRequirements": {
+    "ccr": {
+      "format": "(CCR {country}, Section X.Y)",
+      "required": true,
+      "applyTo": ["mandate status", "dates", "penalties", "mandatory fields", "clearance model"]
+    },
+    "format": {
+      "format": "(PUF Billing 2.0, Section X.Y) or (PEPPOL BIS 3.0, Section X.Y)",
+      "required": true,
+      "applyTo": ["namespace URIs", "XPath expressions", "validation rules", "schema locations"]
+    },
+    "api": {
+      "format": "(OEI API, {endpoint}) or (CCR {country}, Section X.Y)",
+      "required": true,
+      "applyTo": ["endpoint descriptions", "parameter requirements", "status codes", "error messages"]
+    }
+  },
+
+  "productAssignmentRules": {
+    "description": "Rules for assigning ONESOURCE products to document formats",
+    "rules": [
+      {
+        "condition": "Format name contains 'SAF-T' OR document type is 'TaxDataReport'",
+        "product": "ONESOURCE VAT Compliance",
+        "rationale": "Tax reporting and compliance formats - handled by separate VAT Compliance product, not E-Invoicing APIs"
+      },
+      {
+        "condition": "All other formats (PUF, PEPPOL, UBL, country e-invoice formats)",
+        "product": "ONESOURCE Pagero",
+        "rationale": "Transactional e-invoicing formats"
+      }
+    ],
+    "validation": {
+      "checkProductAssignment": true,
+      "errorIfMissing": "Every format recommendation must include Product column"
+    }
+  },
+
+  "apiReference": {
+    "baseUrl": "https://api-emea.onesourcetax.com/einvoicing",
+    "authEndpoint": "/oauth2/token",
+    "authDetails": {
+      "grantType": "client_credentials",
+      "scope": "urn:tr:onesource:auth:api:einvoicing",
+      "tokenLifetime": "1800 seconds (30 minutes)",
+      "refreshStrategy": "Refresh at 75% lifetime or 5 minutes before expiry"
+    },
+    "coreEndpoints": {
+      "authentication": {
+        "path": "/oauth2/token",
+        "method": "POST",
+        "contentType": "application/x-www-form-urlencoded",
+        "purpose": "Get access token"
+      },
+      "companies": {
+        "path": "/company/v1/companies",
+        "method": "GET",
+        "purpose": "List accessible companies"
+      },
+      "datalists": {
+        "path": "/company/v1/datalists",
+        "method": "GET",
+        "purpose": "Get code lists"
+      },
+      "documents_list": {
+        "path": "/document/v1/documents",
+        "method": "GET",
+        "purpose": "List/search documents"
+      },
+      "documents_submit": {
+        "path": "/document/v1/documents",
+        "method": "POST",
+        "contentType": "multipart/form-data",
+        "purpose": "Submit document"
+      },
+      "document_get": {
+        "path": "/document/v1/documents/{id}",
+        "method": "GET",
+        "purpose": "Get single document"
+      },
+      "document_action": {
+        "path": "/document/v1/documents/{id}/action",
+        "method": "POST",
+        "purpose": "Restart/Cancel document"
+      },
+      "external_status": {
+        "path": "/document/v1/documents/external-status",
+        "method": "POST",
+        "purpose": "Set external status (CRITICAL for AP flow)"
+      },
+      "source_document": {
+        "path": "/document/v1/documents/{id}/source-document",
+        "method": "GET",
+        "purpose": "Get source XML"
+      },
+      "target_document": {
+        "path": "/document/v1/documents/{id}/target-document",
+        "method": "GET",
+        "purpose": "Get target XML (standardized)"
+      },
+      "presentation": {
+        "path": "/document/v1/documents/{id}/presentation",
+        "method": "GET",
+        "purpose": "Get PDF"
+      }
+    },
+    "documentTypes": ["Invoice", "ApplicationResponse", "Order", "TaxDataReport", "ItalianInvoiceReport", "ReportNotification"],
+    "documentSubtypes": ["Debit", "Credit"],
+    "sendStatuses": ["Done", "Processing", "Error", "Cancelled"],
+    "directions": ["Sent", "Received"],
+    "transactionTypes": ["AR", "AP"],
+    "externalStatuses": ["Success", "Failure"],
+    "systemTypes": ["Oracle", "SAP", "SAP Ariba", "Other"],
+    "criticalConstraints": {
+      "senderReference": "Must be unique per company - duplicate returns 409 Conflict",
+      "documentRetention": "90 days only",
+      "rateLimits": "Apply - implement retry with exponential backoff",
+      "tokenLifetime": "30 minutes, must refresh",
+      "externalStatus": "MUST set after processing AP documents to confirm receipt"
+    }
+  },
+
+  "formatRules": {
+    "ar-invoices": {
+      "mandatoryFormat": "PUF Billing 2.0",
+      "rationale": "ONESOURCE handles conversion to country-specific formats (Peppol BIS, FatturaPA, Factur-X, UBL, etc.)",
+      "conversionNote": "Partner submits PUF XML only; conversion is automatic",
+      "xmlExample": "Use PUF Billing 2.0 XML structure"
+    },
+    "tax-reports": {
+      "format": "Country-specific as defined by CCR Agent",
+      "examples": "SAF-T (Norway, Poland), SII (Spain), FEC (France)",
+      "product": "ONESOURCE VAT Compliance (separate product, not E-Invoicing APIs)"
+    },
+    "ap-invoices": {
+      "receivedFormat": "Country-native format",
+      "processingRecommendation": "Use /target-document endpoint for standardized XML",
+      "retention": "90 days"
+    }
+  },
+
+  "volumeBasedRecommendations": {
+    "description": "Polling intervals and strategies based on invoice volume",
+    "brackets": {
+      "low": {
+        "range": "< 1,000/month",
+        "ar_poll_initial": "30 seconds",
+        "ar_poll_interval": "2 minutes",
+        "ap_poll_interval": "60 minutes",
+        "concurrency": "1 thread",
+        "batch_size": 100
+      },
+      "medium": {
+        "range": "1,000-10,000/month",
+        "ar_poll_initial": "15 seconds",
+        "ar_poll_interval": "exponential backoff (2s, 4s, 8s... max 30s)",
+        "ap_poll_interval": "30 minutes",
+        "concurrency": "5 threads",
+        "batch_size": 500
+      },
+      "high": {
+        "range": "> 10,000/month",
+        "ar_poll_initial": "10 seconds",
+        "ar_poll_interval": "exponential backoff",
+        "ap_poll_interval": "10 minutes",
+        "concurrency": "10+ threads",
+        "batch_size": 1000,
+        "note": "Consider webhooks or batch polling"
+      }
+    }
+  },
+
+  "validationRules": {
+    "description": "Validation rules for agent outputs",
+    "ccrAgent": [
+      "All 8 subsections present or marked 'Not specified in available CCR documentation'",
+      "AR process only if invoiceHandling includes 'ar'",
+      "AP process only if invoiceHandling includes 'ap'",
+      "Every factual claim has inline citation",
+      "Specific examples provided (Tax ID format, field examples)",
+      "All dates in YYYY-MM-DD format",
+      "Source footer lists all referenced CCR sections",
+      "Output contains ONLY compliance requirements - no format specifications or API code"
+    ],
+    "formatAgent": [
+      "ALL document types from CCR context addressed in format specifications",
+      "AR invoices → PUF Billing 2.0 specifications",
+      "AP invoices → PEPPOL BIS 3.0 specifications",
+      "SAF-T → Country standard specifications + ONESOURCE VAT Compliance",
+      "Mandatory fields mapped with XPath",
+      "XML example provided for primary format",
+      "Common errors listed (min 10)",
+      "All citations included",
+      "Output contains ONLY format specifications - does NOT copy CCR compliance content"
+    ],
+    "apiAgent": [
+      "Output contains ONLY API implementation code - does NOT copy CCR or Format content",
+      "May include requirements summary tables that reference CCR/Format context",
+      "Authentication setup includes step-by-step credential creation instructions",
+      "Requirements Summary before every code section",
+      "All code in {programmingLanguage} (except XML examples)",
+      "AR flow uses PUF format for invoices (not country-specific)",
+      "Tax reports use country-specific formats per CCR context",
+      "AR flow only if invoiceHandling includes 'ar'",
+      "AP flow only if invoiceHandling includes 'ap'",
+      "External status confirmation emphasized for AP flow",
+      "Country-specific handling for ALL countries in {countriesList}",
+      "Error handling in every code block",
+      "Volume-based recommendations ({invoiceVolume})",
+      "Account model ({accountAccess}) correctly implemented",
+      "SAF-T note included if applicable based on CCR context",
+      "Invoice Response section only if CCR context indicates lifecycle requirements"
+    ]
+  }
+}

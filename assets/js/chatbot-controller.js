@@ -7,6 +7,9 @@
     'use strict';
 
     let openArenaClient = null;
+    let supervisorAgent = null;
+    let reportContextManager = null;
+    let reportModeActive = false;
 
     /**
      * Get workflow ID based on selected agent
@@ -17,7 +20,7 @@
         // Workflow IDs for each agent
         const workflowIds = {
             'api': '74f9914d-b8c9-44f0-ad5c-13af2d02144c',
-            'puf': 'f5a1f931-82f3-4b50-a051-de3e175e3d5f',  // PUF AI Agent
+            'puf': 'f5a1f931-82f3-4b50-a051-de3e175e3d5f',  // Format Agent
             'ccr': 'f87b828b-39cb-4a9e-9225-bb9e67ff4860'   // Country CCR Expert
         };
 
@@ -28,11 +31,23 @@
      * Initialize chatbot controller
      */
     function initializeChatbot() {
+        // Initialize report context manager
+        if (window.ReportContextManager) {
+            reportContextManager = new window.ReportContextManager();
+            console.log('[Chatbot] Report Context Manager initialized');
+        }
+
         // Listen for send message events from chatbot-ui.js
         document.addEventListener('chatbot:sendMessage', handleSendMessage);
 
         // Listen for agent switch events to reinitialize client
         document.addEventListener('chatbot:agentSwitched', handleAgentSwitch);
+
+        // Listen for report mode toggle events
+        document.addEventListener('chatbot:toggleReportMode', handleToggleReportMode);
+
+        // Listen for mode change events
+        document.addEventListener('chatbot:modeChanged', handleModeChange);
 
         console.log('[Chatbot] Controller initialized');
     }
@@ -64,35 +79,100 @@
             return;
         }
 
-        // Get workflow ID based on selected agent
-        const workflowId = getWorkflowIdForAgent();
+        // Extract current page context
+        const pageContext = extractPageContext();
 
-        // Initialize client if needed
-        if (!openArenaClient) {
-            openArenaClient = new window.OpenArenaClient(apiToken, workflowId);
-            console.log('[Chatbot] OpenArena client initialized with workflow ID:', workflowId);
+        // Load report context if toggle is ON
+        let reportContext = null;
+        if (reportModeActive && reportContextManager) {
+            const report = reportContextManager.getLatestReport();
+            if (report) {
+                reportContext = reportContextManager.extractRelevantSections(message, report);
+                console.log('[Chatbot] Report context loaded:', reportContext);
+            } else {
+                console.log('[Chatbot] Report mode ON but no report found');
+            }
         }
 
-        // Extract current page context
-        const context = extractPageContext();
-
-        console.log('[Chatbot] Context extracted:', context);
-
         try {
-            // Call OpenArena API
-            const response = await openArenaClient.infer(message, context);
+            let response;
 
-            if (response.success && response.content) {
-                // Display AI response
-                if (window.addAIMessage) {
-                    window.addAIMessage(response.content);
+            // Check mode preference (default to supervisor)
+            const mode = sessionStorage.getItem('assistant_mode') || 'supervisor';
+
+            if (mode === 'supervisor') {
+                // Use Supervisor mode
+                console.log('[Chatbot] Using Supervisor mode');
+
+                // Initialize supervisor if needed
+                if (!supervisorAgent || !window.SupervisorAgent) {
+                    console.log('[Chatbot] Initializing Supervisor Agent');
+                    supervisorAgent = new window.SupervisorAgent(apiToken);
                 }
+
+                // Call supervisor
+                response = await supervisorAgent.handleQuery(message, pageContext, reportContext);
+
+                if (response.success && response.content) {
+                    // Display AI response with metadata
+                    if (window.addAIMessage) {
+                        window.addAIMessage(response.content, 'supervisor', response.metadata);
+                    }
+                } else {
+                    // Display error
+                    if (window.showChatError) {
+                        window.showChatError(response.error_message || 'Unknown error occurred');
+                    }
+                }
+
             } else {
-                // Display error
-                if (window.showChatError) {
-                    window.showChatError(response.error_message || 'Unknown error occurred');
+                // Use Manual mode (existing single-agent behavior)
+                console.log('[Chatbot] Using Manual mode');
+
+                // Get workflow ID based on selected agent
+                const workflowId = getWorkflowIdForAgent();
+
+                // Initialize client if needed
+                if (!openArenaClient) {
+                    openArenaClient = new window.OpenArenaClient(apiToken, workflowId);
+                    console.log('[Chatbot] OpenArena client initialized with workflow ID:', workflowId);
+                }
+
+                // Build enhanced message with report context if available
+                let enhancedMessage = message;
+                if (reportContext && reportContext.relevantSections) {
+                    enhancedMessage += '\n\n--- User\'s Report Context ---\n';
+                    enhancedMessage += `Report ID: ${reportContext.reportId}\n`;
+                    enhancedMessage += `Countries: ${reportContext.countries.join(', ')}\n\n`;
+
+                    reportContext.relevantSections.forEach(section => {
+                        enhancedMessage += `**${section.title}**\n`;
+                        enhancedMessage += section.summary + '\n\n';
+                    });
+
+                    enhancedMessage += '--- End Report Context ---\n';
+                }
+
+                // Call OpenArena API
+                response = await openArenaClient.infer(enhancedMessage, pageContext);
+
+                if (response.success && response.content) {
+                    // Display AI response
+                    if (window.addAIMessage) {
+                        const metadata = {
+                            reportContextUsed: !!reportContext,
+                            mode: 'manual'
+                        };
+                        window.addAIMessage(response.content, 'agent', metadata);
+                    }
+                } else {
+                    // Display error
+                    if (window.showChatError) {
+                        window.showChatError(response.error_message || 'Unknown error occurred');
+                    }
                 }
             }
+
         } catch (error) {
             console.error('[Chatbot] Error:', error);
             if (window.showChatError) {
@@ -151,6 +231,38 @@
     }
 
     /**
+     * Handle report mode toggle
+     */
+    function handleToggleReportMode(event) {
+        const { enabled } = event.detail;
+        reportModeActive = enabled;
+        console.log('[Chatbot] Report mode:', reportModeActive ? 'ON' : 'OFF');
+
+        // Check if report exists
+        if (enabled && reportContextManager && !reportContextManager.hasReport()) {
+            console.warn('[Chatbot] Report mode enabled but no report available');
+            if (window.showReportWarning) {
+                window.showReportWarning('No report found. Please generate a partner onboarding report first.');
+            }
+        }
+    }
+
+    /**
+     * Handle mode change (supervisor vs manual)
+     */
+    function handleModeChange(event) {
+        const { mode } = event.detail;
+        console.log('[Chatbot] Mode changed to:', mode);
+
+        // Reset client when switching modes
+        if (mode === 'manual') {
+            openArenaClient = null;
+        } else {
+            supervisorAgent = null;
+        }
+    }
+
+    /**
      * Test OpenArena connection
      */
     window.testOpenArenaConnection = async function() {
@@ -167,6 +279,21 @@
 
         console.log('[Chatbot] Health check result:', isHealthy);
         return isHealthy;
+    };
+
+    /**
+     * Public API for setting mode (for debugging/testing)
+     */
+    window.setChatbotMode = function(mode) {
+        if (mode !== 'supervisor' && mode !== 'manual') {
+            console.error('[Chatbot] Invalid mode:', mode);
+            return;
+        }
+        sessionStorage.setItem('assistant_mode', mode);
+        document.dispatchEvent(new CustomEvent('chatbot:modeChanged', {
+            detail: { mode }
+        }));
+        console.log('[Chatbot] Mode set to:', mode);
     };
 
     // Initialize when DOM is ready

@@ -6,6 +6,15 @@
 
     // Generate Table of Contents from page headings
     function generateTOC() {
+        // Skip TOC generation on partner-onboarding page (has custom TOC)
+        const currentPath = window.location.pathname;
+        if (currentPath.includes('partner-onboarding.html')) {
+            // Ensure sidebar is visible for partner-onboarding
+            const sidebar = document.querySelector('.sidebar-right');
+            if (sidebar) sidebar.style.display = 'block';
+            return;
+        }
+
         const content = document.querySelector('.main-content-area');
         const tocList = document.querySelector('.toc-list');
 
@@ -152,6 +161,63 @@
         });
     }
 
+    // Check if user is logged in
+    function isUserLoggedIn() {
+        try {
+            const userProfile = localStorage.getItem('tr_user_profile');
+            return userProfile !== null;
+        } catch (e) {
+            console.error('[Layout] Failed to check login state:', e);
+            return false;
+        }
+    }
+
+    // Filter navigation for logged-in users
+    function filterNavigationForLoggedInUser() {
+        if (!isUserLoggedIn()) return;
+
+        // Pages to hide when logged in
+        const hiddenPages = ['getting-started.html', 'einvoicing-integration.html', 'faq.html'];
+
+        const navSections = document.querySelectorAll('.nav-section');
+        navSections.forEach(section => {
+            const link = section.querySelector('a');
+            const href = link?.getAttribute('href');
+
+            if (href && hiddenPages.includes(href)) {
+                section.style.display = 'none';
+            }
+        });
+
+        // Show logout button if it exists
+        const logoutButton = document.getElementById('logoutButton');
+        if (logoutButton) {
+            logoutButton.style.display = 'flex';
+        }
+    }
+
+    // Handle logout
+    function handleLogout() {
+        if (confirm('Are you sure you want to log out?')) {
+            try {
+                localStorage.removeItem('tr_user_profile');
+                console.log('[Layout] User logged out');
+                window.location.href = 'signup.html';
+            } catch (e) {
+                console.error('[Layout] Logout failed:', e);
+                alert('Failed to log out. Please try again.');
+            }
+        }
+    }
+
+    // Setup logout button listener
+    function setupLogoutButton() {
+        const logoutButton = document.getElementById('logoutButton');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', handleLogout);
+        }
+    }
+
     // Initialize on DOM ready
     function init() {
         generateTOC();
@@ -159,6 +225,8 @@
         setActiveNavItem();
         setupMobileMenu();
         setupSmoothScroll();
+        filterNavigationForLoggedInUser();
+        setupLogoutButton();
     }
 
     // Run on DOM ready

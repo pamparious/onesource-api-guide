@@ -18,34 +18,67 @@
     </script>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/layout.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/chatbot.css">
+    <link rel="stylesheet" href="assets/css/main.css?v=2">
+    <link rel="stylesheet" href="assets/css/layout.css?v=2">
+    <link rel="stylesheet" href="assets/css/components.css?v=2">
+    <link rel="stylesheet" href="assets/css/chatbot.css?v=2">
 
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Entry Check - Redirect to signup if not logged in -->
+    <script>
+        (function() {
+            try {
+                const userProfile = localStorage.getItem('tr_user_profile');
+                const currentPath = window.location.pathname;
+
+                // Only redirect from index.html
+                if (!userProfile && (currentPath.endsWith('index.html') || currentPath === '/' || currentPath.endsWith('/'))) {
+                    window.location.replace('signup.html');
+                }
+            } catch (e) {
+                console.error('Entry check failed:', e);
+            }
+        })();
+    </script>
 </head>
 <body>
     <!-- Fixed Header -->
     <header class="site-header">
-        <div class="container" style="display: flex; align-items: center; justify-content: space-between; height: 100%; padding: 0 1.5rem;">
+        <!-- Mobile Header (< 1024px) -->
+        <div class="mobile-header-wrapper">
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
                     <i class="fas fa-bars"></i>
                 </button>
-                <a href="index.html" class="navbar-brand" style="display: flex; align-items: center; gap: 1rem; text-decoration: none;">
-                    <div style="background-color: white; padding: 4px 8px; border-radius: 4px; display: flex; align-items: center;">
-                        <img src="assets/images/Thomson-Reuters-Logo-500x281.png" alt="Thomson Reuters" style="height: 24px; width: auto;">
+                <a href="index.html" class="mobile-brand">
+                    <div class="mobile-logo-box">
+                        <span class="mobile-logo-text">TR</span>
                     </div>
-                    <div style="border-left: 2px solid #444; height: 32px; margin: 0 0.25rem;"></div>
-                    <span style="font-size: 0.875rem; color: #cccccc; font-weight: 500; white-space: nowrap;">ONESOURCE API Guide</span>
+                    <span class="mobile-brand-text">ONESOURCE</span>
+                </a>
+            </div>
+            <a href="index.html" class="mobile-doc-link">Documentation</a>
+        </div>
+
+        <!-- Desktop Header (>= 1024px) -->
+        <div class="container" style="display: flex; align-items: center; justify-content: space-between; height: 100%; padding: 0 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <a href="index.html" class="navbar-brand navbar-brand-desktop" style="display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                    <div style="background-color: white; padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <img src="assets/images/Thomson-Reuters-Logo-500x281.png" alt="Thomson Reuters" style="height: 32px; width: auto; display: block;">
+                    </div>
                 </a>
             </div>
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <button id="headerAIButton" class="header-ai-button" aria-label="Open AI Assistant">
                     <i class="fas fa-robot"></i>
                     <span class="ai-button-text">AI Assistant</span>
+                </button>
+                <button id="logoutButton" class="header-ai-button" aria-label="Logout" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="ai-button-text">Logout</span>
                 </button>
             </div>
         </div>
@@ -107,10 +140,11 @@
         <div class="main-wrapper">
             <main class="main-content-area">
                 <h1 id="overview">TR ONESOURCE E-Invoicing</h1>
-                <p style="font-size: 1.5rem; font-weight: 300; color: var(--color-gray); margin-bottom: 1rem;">Partner Integration Guide</p>
+                <p style="font-size: 1.5rem; font-weight: 300; color: var(--color-gray); margin-bottom: 1rem;">Partner Integration Guide <span class="architecture-version">v2.1</span></p>
                 <p style="font-size: 1.125rem; color: var(--color-gray); margin-bottom: 2rem;">
                     Build compliant e-invoicing solutions with Thomson Reuters ONESOURCE.
                     Seamless integration, global compliance, and automated document exchange across 80+ countries.
+                    Now featuring our enhanced AI multi-agent system with layered verbatim context passing.
                 </p>
                 <div style="display: flex; gap: 1rem; margin-bottom: 3rem;">
                     <a href="getting-started.html" class="btn btn-primary">Get Started</a>
@@ -275,6 +309,8 @@
     <script src="assets/js/navigation.js"></script>
     <script src="assets/js/chatbot-ui.js"></script>
     <script src="assets/js/openarena-client.js"></script>
+    <script src="assets/js/report-context-manager.js"></script>
+    <script src="assets/js/supervisor-agent.js"></script>
     <script src="assets/js/chatbot-controller.js"></script>
 </body>
 </html>

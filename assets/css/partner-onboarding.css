@@ -4,27 +4,40 @@
 
 /* Page Header */
 .page-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 2px solid var(--color-medium-gray);
+    text-align: center;
+    margin-bottom: 2.5rem;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .page-header h1 {
-    font-size: var(--font-size-3xl);
+    font-size: 2rem;
     font-weight: 700;
     color: var(--color-white);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.75rem;
 }
 
 .page-header h1 i {
     color: var(--color-primary);
+    font-size: 1.75rem;
 }
 
 .page-header .subtitle {
-    font-size: var(--font-size-lg);
+    font-size: 1.05rem;
     color: var(--color-gray);
     margin: 0;
 }
@@ -32,9 +45,12 @@
 /* Form Container */
 .onboarding-form-container {
     background: var(--color-bg-secondary);
+    border: 1px solid var(--color-medium-gray);
     border-radius: var(--radius-lg);
-    padding: 2rem;
+    padding: 2.5rem;
     margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.6s ease-out 0.2s both;
 }
 
 html.dark .onboarding-form-container {
@@ -197,12 +213,14 @@ html.dark .checkbox-label {
 
 .radio-label input[type="radio"],
 .checkbox-label input[type="checkbox"] {
-    margin-right: 0.75rem;
-    margin-top: 0.25rem;
-    width: 18px;
-    height: 18px;
+    margin-right: 1rem;
+    margin-top: 0.2rem;
+    width: 20px;
+    height: 20px;
     cursor: pointer;
     accent-color: var(--color-primary);
+    flex-shrink: 0;
+    order: -1;
 }
 
 .radio-text,
@@ -211,6 +229,7 @@ html.dark .checkbox-label {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    text-align: left;
 }
 
 .radio-text strong,
@@ -218,12 +237,14 @@ html.dark .checkbox-label {
     color: var(--color-white);
     font-size: var(--font-size-base);
     font-weight: 600;
+    line-height: 1.4;
 }
 
 .radio-text small,
 .checkbox-text small {
     color: var(--color-gray);
     font-size: var(--font-size-sm);
+    line-height: 1.4;
 }
 
 .radio-label:has(input:checked),
@@ -1236,7 +1257,25 @@ html.dark .modal-warning {
 /* Responsive */
 @media (max-width: 768px) {
     .onboarding-form-container {
-        padding: 1.5rem 1rem;
+        padding: 1.75rem;
+    }
+
+    .no-nav-page .onboarding-form-container {
+        padding: 1.75rem;
+    }
+
+    .no-nav-page .page-header h1 {
+        font-size: 1.5rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .no-nav-page .page-header h1 i {
+        font-size: 1.5rem;
+    }
+
+    .no-nav-page .page-header .subtitle {
+        font-size: 0.95rem;
     }
 
     .report-content {
@@ -1265,8 +1304,141 @@ html.dark .modal-warning {
     }
 }
 
+@media (max-width: 480px) {
+    .no-nav-page .onboarding-form-container {
+        padding: 1.5rem;
+    }
+
+    .no-nav-page .page-header h1 {
+        font-size: 1.35rem;
+    }
+
+    .no-nav-page .page-header .subtitle {
+        font-size: 0.9rem;
+    }
+}
+
 /* ============================================
-   NEW STYLES FOR ENHANCED REPORT TEMPLATE
+   NEW STYLES FOR ENHANCED REPORT TEMPLATE v2.1
+   ============================================ */
+
+/* Verbatim Section Indicator (for sections copied from upstream agents) */
+.verbatim-tag {
+    display: inline-block;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #3b82f6;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+html.dark .verbatim-tag {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.4);
+    color: #60a5fa;
+}
+
+/* Agent Section Styling */
+.agent-section {
+    position: relative;
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-medium-gray);
+}
+
+html.dark .agent-section {
+    background: #0A0A0A;
+}
+
+.agent-section-1 {
+    border-left: 4px solid #ef4444; /* CCR Section - Red */
+}
+
+.agent-section-2 {
+    border-left: 4px solid #f59e0b; /* Format Section - Orange */
+}
+
+.agent-section-3 {
+    border-left: 4px solid #10b981; /* API Section - Green */
+}
+
+/* Requirements Summary Tables (API Agent's requirements-first pattern) */
+.requirements-summary {
+    background: rgba(255, 128, 0, 0.05);
+    border-left: 3px solid var(--color-primary);
+    padding: 1rem 1.25rem;
+    margin: 1rem 0 1.5rem 0;
+    border-radius: var(--radius-sm);
+}
+
+.requirements-summary h4 {
+    font-size: var(--font-size-base);
+    color: var(--color-primary);
+    margin: 0 0 0.75rem 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+html.dark .requirements-summary {
+    background: rgba(255, 128, 0, 0.08);
+}
+
+/* Phase Indicators (for multi-phase report generation) */
+.phase-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.875rem;
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+}
+
+.phase-indicator i {
+    font-size: 0.875rem;
+}
+
+.phase-1 {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.phase-2 {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.phase-3 {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* Architecture Version Badge */
+.architecture-version {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
+    padding: 0.375rem 0.875rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 1rem;
+}
+
+/* ============================================
+   EXISTING STYLES BELOW
    ============================================ */
 
 /* Validation Summary */
@@ -1687,4 +1859,424 @@ html.dark .sidebar-right .toc-list a.active {
 
 .sidebar-right .toc-container::-webkit-scrollbar-thumb:hover {
     background: var(--color-primary);
+}
+
+/* Form TOC and Report TOC - same styling as toc-list */
+.sidebar-right .form-toc-list,
+.sidebar-right .report-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-right .form-toc-list li,
+.sidebar-right .report-toc-list li {
+    margin-bottom: 0;
+}
+
+.sidebar-right .form-toc-list a,
+.sidebar-right .report-toc-list a {
+    display: block;
+    padding: 0.5rem 1.5rem;
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    transition: all var(--transition-fast);
+    border-left: 3px solid transparent;
+    border-radius: 0;
+}
+
+html.dark .sidebar-right .form-toc-list a,
+html.dark .sidebar-right .report-toc-list a {
+    color: #9ca3af;
+}
+
+.sidebar-right .form-toc-list a:hover,
+.sidebar-right .report-toc-list a:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.08);
+    text-decoration: none;
+}
+
+html.dark .sidebar-right .form-toc-list a:hover,
+html.dark .sidebar-right .report-toc-list a:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.sidebar-right .form-toc-list a.active,
+.sidebar-right .report-toc-list a.active {
+    color: #ffffff;
+    font-weight: 600;
+    border-left-color: var(--color-primary);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+html.dark .sidebar-right .form-toc-list a.active,
+html.dark .sidebar-right .report-toc-list a.active {
+    color: #ffffff;
+    border-left-color: var(--color-primary);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ========================================
+   Profile Summary Styles (Logged-In Users)
+   ======================================== */
+
+.profile-summary {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-medium-gray);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+.profile-summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.profile-summary-header h3 {
+    font-size: var(--font-size-xl);
+    color: var(--color-white);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.profile-summary-header h3 i {
+    color: var(--color-primary);
+}
+
+.profile-summary-message {
+    color: var(--color-gray);
+    font-size: var(--font-size-base);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.profile-details {
+    margin-top: 1rem;
+}
+
+.profile-details summary {
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    color: var(--color-primary);
+    font-weight: 600;
+    padding: 0.5rem 0;
+    user-select: none;
+    list-style: none;
+}
+
+.profile-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.profile-details summary::before {
+    content: '\25B6';
+    display: inline-block;
+    margin-right: 0.5rem;
+    transition: transform var(--transition-fast);
+}
+
+.profile-details[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.profile-details summary:hover {
+    color: var(--color-primary-dark);
+}
+
+.profile-details-content {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-medium-gray);
+}
+
+.profile-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.profile-detail-item {
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    line-height: 1.6;
+}
+
+.profile-detail-item strong {
+    color: var(--color-white);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+/* Responsive adjustments for profile summary */
+@media (max-width: 768px) {
+    .profile-summary-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .profile-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* === Save Notification === */
+.save-notification {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: var(--color-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    z-index: 10000;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.save-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.save-notification i {
+    font-size: 1.25rem;
+}
+
+/* === Chat About Report Button === */
+.chat-report-btn {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: var(--color-white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.chat-report-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 128, 0, 0.3);
+}
+
+.chat-report-btn i {
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .save-notification {
+        top: 70px;
+        right: 10px;
+        left: 10px;
+        max-width: calc(100% - 20px);
+    }
+}
+
+/* === Past Reports Modal === */
+.past-reports-modal-content {
+    max-width: 900px;
+    max-height: 80vh;
+}
+
+.past-reports-body {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.past-reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.past-report-item {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-medium-gray);
+    border-radius: 8px;
+    padding: 1.25rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.past-report-item:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(255, 128, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.report-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    gap: 1rem;
+}
+
+.report-item-title {
+    flex: 1;
+}
+
+.report-item-title h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-white);
+    margin: 0 0 0.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.report-item-title h4 i {
+    color: var(--color-primary);
+    font-size: 1rem;
+}
+
+.report-item-id {
+    font-size: 0.875rem;
+    color: var(--color-gray);
+    font-family: 'Courier New', monospace;
+}
+
+.report-item-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.report-action-btn {
+    background: transparent;
+    border: 1px solid var(--color-medium-gray);
+    color: var(--color-gray);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.report-action-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: rgba(255, 128, 0, 0.1);
+}
+
+.report-action-btn.delete-btn:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.report-item-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-medium-gray);
+}
+
+.report-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.report-detail-label {
+    font-size: 0.75rem;
+    color: var(--color-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.report-detail-value {
+    font-size: 0.875rem;
+    color: var(--color-white);
+    font-weight: 500;
+}
+
+.report-countries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+}
+
+.country-badge {
+    background: rgba(255, 128, 0, 0.1);
+    color: var(--color-primary);
+    padding: 0.25rem 0.625rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid rgba(255, 128, 0, 0.3);
+}
+
+.past-reports-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--color-gray);
+}
+
+.past-reports-empty i {
+    font-size: 4rem;
+    color: var(--color-medium-gray);
+    margin-bottom: 1rem;
+}
+
+.past-reports-empty p {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin: 0.5rem 0;
+    color: var(--color-white);
+}
+
+.past-reports-empty small {
+    font-size: 0.875rem;
+    color: var(--color-gray);
+}
+
+@media (max-width: 768px) {
+    .past-reports-modal-content {
+        max-width: 100%;
+        max-height: 90vh;
+    }
+
+    .report-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .report-item-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .report-item-details {
+        grid-template-columns: 1fr;
+    }
 }

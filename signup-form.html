@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TR ONESOURCE Partner Sign Up - Create your account">
+    <title>Sign Up Form | TR ONESOURCE E-Invoicing</title>
+
+    <!-- Dark Mode Detection -->
+    <script>
+        (function() {
+            const cl = document.documentElement.classList;
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                cl.add('dark');
+            }
+        })();
+    </script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/partner-onboarding.css">
+    <link rel="stylesheet" href="assets/css/signup.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="no-nav-page">
+    <!-- Simple Header -->
+    <header class="signup-header">
+        <div class="signup-header-content">
+            <a href="index.html" class="navbar-brand">
+                <div class="logo-container">
+                    <img src="assets/images/Thomson-Reuters-Logo-500x281.png" alt="Thomson Reuters">
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-wrapper">
+        <div class="main-content-area">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1><i class="fas fa-user-plus"></i> Create Your Account</h1>
+                <p class="subtitle">Tell us about your integration needs (all fields optional)</p>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div class="onboarding-form-container">
+                <form id="signupForm" novalidate>
+                    <!-- Section 1: Partner & Contact Information -->
+                    <div class="form-section">
+                        <h2><i class="fas fa-building"></i> Partner & Contact Information</h2>
+
+                        <div class="form-group">
+                            <label for="partnerCompanyName">Partner Company Name</label>
+                            <input type="text" id="partnerCompanyName" name="partnerCompanyName" placeholder="Enter your company name">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="projectManagerName">Project Manager Name</label>
+                                <input type="text" id="projectManagerName" name="projectManagerName" placeholder="Full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="projectManagerEmail">Project Manager Email</label>
+                                <input type="email" id="projectManagerEmail" name="projectManagerEmail" placeholder="email@company.com">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="technicalLeadName">Technical Lead/Developer Name</label>
+                                <input type="text" id="technicalLeadName" name="technicalLeadName" placeholder="Full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="technicalLeadEmail">Technical Lead/Developer Email</label>
+                                <input type="email" id="technicalLeadEmail" name="technicalLeadEmail" placeholder="email@company.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Partnership Type -->
+                    <div class="form-section">
+                        <h2><i class="fas fa-users"></i> Partnership Type</h2>
+                        <div class="form-group radio-group">
+                            <label>Select Partnership Type</label>
+                            <div class="radio-options">
+                                <label class="radio-label">
+                                    <input type="radio" name="partnershipType" value="reseller" id="partnershipReseller">
+                                    <span class="radio-text">
+                                        <strong>Reseller Partner</strong>
+                                        <small>You sell and support TR ONESOURCE to end customers</small>
+                                    </span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="partnershipType" value="referral" id="partnershipReferral">
+                                    <span class="radio-text">
+                                        <strong>Referral Partner (Recommended)</strong>
+                                        <small>You refer customers to Thomson Reuters</small>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: System Integration -->
+                    <div class="form-section">
+                        <h2><i class="fas fa-plug"></i> System Integration</h2>
+
+                        <div class="form-group">
+                            <label for="programmingLanguage">Primary Programming Language</label>
+                            <select id="programmingLanguage" name="programmingLanguage">
+                                <option value="">Select programming language...</option>
+                                <option value="python">Python</option>
+                                <option value="javascript">JavaScript / Node.js</option>
+                                <option value="java">Java</option>
+                                <option value="csharp">C# / .NET</option>
+                                <option value="php">PHP</option>
+                                <option value="ruby">Ruby</option>
+                                <option value="go">Go</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <small style="color: var(--color-gray); margin-top: 0.5rem; display: block;">Code examples will use this language</small>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label>Select Systems to Integrate (select all that apply)</label>
+                            <div class="checkbox-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="systemIntegration" value="erp" id="systemErp">
+                                    <span class="checkbox-text">
+                                        <strong>ERP System</strong>
+                                        <small>Enterprise Resource Planning</small>
+                                    </span>
+                                </label>
+                                <div class="conditional-input" id="erpDetails" style="display: none;">
+                                    <input type="text" name="erpDetails" placeholder="Specify ERP name & version (e.g., SAP S/4HANA 2021)">
+                                </div>
+
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="systemIntegration" value="tax">
+                                    <span class="checkbox-text">
+                                        <strong>Tax Technology Platform</strong>
+                                        <small>Tax calculation and compliance systems</small>
+                                    </span>
+                                </label>
+
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="systemIntegration" value="workflow">
+                                    <span class="checkbox-text">
+                                        <strong>Workflow/Approval System</strong>
+                                        <small>Document approval and routing</small>
+                                    </span>
+                                </label>
+
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="systemIntegration" value="procurement">
+                                    <span class="checkbox-text">
+                                        <strong>Procurement Platform</strong>
+                                        <small>Purchase order and procurement systems</small>
+                                    </span>
+                                </label>
+
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="systemIntegration" value="custom">
+                                    <span class="checkbox-text">
+                                        <strong>Custom-built System</strong>
+                                        <small>Proprietary or internally developed systems</small>
+                                    </span>
+                                </label>
+
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="systemIntegration" value="other" id="systemOther">
+                                    <span class="checkbox-text">
+                                        <strong>Other</strong>
+                                        <small>Other system types</small>
+                                    </span>
+                                </label>
+                                <div class="conditional-input" id="otherSystemDetails" style="display: none;">
+                                    <input type="text" name="otherSystemDetails" placeholder="Please specify the system type">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 5: AP/AR Handling -->
+                    <div class="form-section">
+                        <h2><i class="fas fa-file-invoice-dollar"></i> AP/AR Handling</h2>
+
+                        <div class="form-group checkbox-group">
+                            <label>Select Invoice Handling Type (select all that apply)</label>
+                            <div class="checkbox-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="invoiceHandling" value="ar">
+                                    <span class="checkbox-text">
+                                        <strong>Accounts Receivable (AR)</strong>
+                                        <small>Sending invoices to customers</small>
+                                    </span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="invoiceHandling" value="ap">
+                                    <span class="checkbox-text">
+                                        <strong>Accounts Payable (AP)</strong>
+                                        <small>Receiving invoices from suppliers</small>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="invoiceVolume">Estimated Monthly Invoice Volume</label>
+                            <input type="number" id="invoiceVolume" name="invoiceVolume" min="1" placeholder="Enter estimated number of invoices per month">
+                        </div>
+                    </div>
+
+                    <!-- Section 6: First-Line Support -->
+                    <div class="form-section">
+                        <h2><i class="fas fa-headset"></i> First-Line Support</h2>
+                        <div class="form-group radio-group">
+                            <label>Who will provide first-line support to end customers?</label>
+                            <div class="radio-options">
+                                <label class="radio-label" id="supportTRLabel">
+                                    <input type="radio" name="firstLineSupport" value="thomson-reuters" id="supportTR">
+                                    <span class="radio-text">
+                                        <strong>Thomson Reuters (Recommended)</strong>
+                                        <small>TR provides direct support to end customers</small>
+                                    </span>
+                                </label>
+                                <label class="radio-label" id="supportPartnerLabel">
+                                    <input type="radio" name="firstLineSupport" value="partner" id="supportPartner">
+                                    <span class="radio-text">
+                                        <strong>Partner</strong>
+                                        <small>Partner provides first-line support, escalates to TR as needed</small>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 7: Service Model & Account Management -->
+                    <div class="form-section">
+                        <h2><i class="fas fa-cogs"></i> Service Model & Account Management</h2>
+                        <div class="form-group radio-group">
+                            <label>Select Your Service Model</label>
+                            <div class="radio-options">
+                                <label class="radio-label">
+                                    <input type="radio" name="serviceModel" value="self-service">
+                                    <span class="radio-text">
+                                        <strong>Self-Service</strong>
+                                        <small>Partner manages implementation independently and manages all customer accounts</small>
+                                    </span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="serviceModel" value="managed-service">
+                                    <span class="radio-text">
+                                        <strong>Managed Service (Recommended)</strong>
+                                        <small>Thomson Reuters provides ongoing support and customers have direct access</small>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <a href="signup.html" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                        <button type="submit" id="submitBtn" class="btn btn-primary">
+                            <i class="fas fa-check-circle"></i> Complete Sign Up
+                        </button>
+                    </div>
+
+                    <!-- Helper Text -->
+                    <div class="helper-text">
+                        <i class="fas fa-info-circle"></i> You can skip any field - we'll use defaults to get you started quickly
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="signup-footer">
+            <p>© 2025 Thomson Reuters. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/theme-toggle.js"></script>
+    <script src="assets/js/signup-form.js"></script>
+</body>
+</html>

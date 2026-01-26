@@ -40,6 +40,35 @@
                         </div>
                     </div>
                     <div class="chat-header-actions">
+                        <div class="mode-selector-container">
+                            <button class="chat-header-btn mode-selector-btn" id="modeSelectorBtn" aria-label="Select mode" title="Assistant Mode">
+                                <i class="fas fa-layer-group"></i>
+                                <span class="mode-label">Supervisor</span>
+                                <i class="fas fa-chevron-down mode-arrow"></i>
+                            </button>
+                            <div class="mode-dropdown" id="modeDropdown">
+                                <div class="mode-option active" data-mode="supervisor">
+                                    <div class="mode-option-header">
+                                        <i class="fas fa-layer-group"></i>
+                                        <span>Supervisor Mode</span>
+                                        <i class="fas fa-check mode-check"></i>
+                                    </div>
+                                    <div class="mode-option-desc">Automatically coordinates all agents for best results</div>
+                                    <span class="mode-badge recommended">Recommended</span>
+                                </div>
+                                <div class="mode-option" data-mode="manual">
+                                    <div class="mode-option-header">
+                                        <i class="fas fa-hand-pointer"></i>
+                                        <span>Manual Mode</span>
+                                        <i class="fas fa-check mode-check"></i>
+                                    </div>
+                                    <div class="mode-option-desc">Choose a specific agent (API, PUF, or CCR)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="chat-header-btn" id="reportModeToggle" aria-label="Toggle report context mode" title="Report Context Mode">
+                            <i class="fas fa-file-alt"></i>
+                        </button>
                         <button class="chat-header-btn" id="chatConfigBtn" aria-label="Configure API settings" title="API Settings">
                             <i class="fas fa-cog"></i>
                         </button>
@@ -48,7 +77,12 @@
                         </button>
                     </div>
                 </div>
-                <div class="agent-switcher">
+                <div class="supervisor-activity" id="supervisorActivity">
+                    <div class="supervisor-spinner"></div>
+                    <span class="supervisor-text">Coordinating agents...</span>
+                    <div class="active-agents" id="activeAgents"></div>
+                </div>
+                <div class="agent-switcher" id="agentSwitcher">
                     <button class="agent-tab active" data-agent="api">
                         <i class="fas fa-code"></i> API
                     </button>
@@ -66,15 +100,40 @@
                     <i class="fas fa-robot"></i>
                     <h4>Welcome to the ONESOURCE API Assistant!</h4>
                     <p>I can help you with integration questions, API documentation, and troubleshooting.</p>
+
+                    <div class="welcome-features">
+                        <div class="welcome-feature">
+                            <i class="fas fa-layer-group"></i>
+                            <div>
+                                <strong>Supervisor Mode (Default)</strong>
+                                <span>AI coordinates API, PUF, and CCR agents for comprehensive answers</span>
+                            </div>
+                        </div>
+                        <div class="welcome-feature">
+                            <i class="fas fa-brain"></i>
+                            <div>
+                                <strong>4 AI Strategies Available</strong>
+                                <span>Choose from Rule-Based (fast), AI Routing, AI Synthesis, or Full AI (highest quality)</span>
+                            </div>
+                        </div>
+                        <div class="welcome-feature">
+                            <i class="fas fa-file-alt"></i>
+                            <div>
+                                <strong>Report Context</strong>
+                                <span>Generate a partner report and I'll reference it in my answers</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="chat-suggestions">
                         <div class="chat-suggestion" data-question="How do I authenticate with the API?">
                             <i class="fas fa-key"></i> How do I authenticate with the API?
                         </div>
-                        <div class="chat-suggestion" data-question="What is PUF format?">
-                            <i class="fas fa-file-code"></i> What is PUF format?
+                        <div class="chat-suggestion" data-question="What are the mandatory fields for Poland?">
+                            <i class="fas fa-globe"></i> What are the mandatory fields for Poland?
                         </div>
-                        <div class="chat-suggestion" data-question="How do I handle recipient not found errors?">
-                            <i class="fas fa-exclamation-triangle"></i> How do I handle errors?
+                        <div class="chat-suggestion" data-question="How do I validate PUF XML?">
+                            <i class="fas fa-file-code"></i> How do I validate PUF XML?
                         </div>
                     </div>
                 </div>
@@ -111,15 +170,19 @@
         apiKeyModal.innerHTML = `
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Configure API Settings</h3>
+                    <h3>Configure AI Assistant</h3>
                     <button class="modal-close" id="modalCloseBtn" aria-label="Close modal">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>To use the AI assistant, please enter your TR OpenArena API Token:</p>
+                    <p>Configure your AI assistant settings:</p>
+                    <div class="modal-success">
+                        <i class="fas fa-check-circle"></i>
+                        <strong>Ready to use:</strong> Supervisor AI is pre-configured. All AI strategies are available.
+                    </div>
                     <div class="modal-warning">
-                        <strong>POC Notice:</strong> This is a proof-of-concept implementation. Your credentials are stored in your browser session only and will be cleared when you close the browser.
+                        <strong>POC Notice:</strong> Settings are stored in your browser session only.
                     </div>
                     <div class="form-group">
                         <label for="apiTokenInput">API Token (ESSO):</label>
@@ -129,10 +192,53 @@
                             placeholder="Enter your TR OpenArena API token"
                             autocomplete="off">
                     </div>
+
+                    <!-- Supervisor Workflow ID is now hardcoded in config, no user input needed -->
+                    <div class="form-group" style="display: none;">
+                        <label for="supervisorWorkflowInput">
+                            Supervisor Workflow ID:
+                            <span class="field-optional">(pre-configured)</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="supervisorWorkflowInput"
+                            value="18c5363b-a00c-4b80-9b3d-4f45f955288a"
+                            disabled
+                            autocomplete="off">
+                        <p class="field-help">
+                            <i class="fas fa-check-circle"></i>
+                            Supervisor workflow is pre-configured. AI modes ready to use.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="supervisorStrategySelect">Supervisor Strategy:</label>
+                        <select id="supervisorStrategySelect" class="form-select">
+                            <option value="rule-based">Rule-Based (Fast) - Keyword routing</option>
+                            <option value="ai-routing">AI Routing - Smart query analysis</option>
+                            <option value="ai-synthesis">AI Synthesis - Better responses</option>
+                            <option value="full-ai">Full AI - Highest quality (slower)</option>
+                        </select>
+                        <div class="strategy-info" id="strategyInfo">
+                            <div class="strategy-detail">
+                                <i class="fas fa-clock"></i>
+                                <span id="strategyLatency">0ms overhead</span>
+                            </div>
+                            <div class="strategy-detail">
+                                <i class="fas fa-dollar-sign"></i>
+                                <span id="strategyCost">$0 extra</span>
+                            </div>
+                            <div class="strategy-detail">
+                                <i class="fas fa-chart-line"></i>
+                                <span id="strategyAccuracy">~85% accuracy</span>
+                            </div>
+                        </div>
+                        <p class="strategy-desc" id="strategyDesc">Keyword matching for routing, simple concatenation for synthesis</p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn-modal btn-modal-secondary" id="modalCancelBtn">Cancel</button>
-                    <button class="btn-modal btn-modal-primary" id="modalSaveBtn">Save & Connect</button>
+                    <button class="btn-modal btn-modal-primary" id="modalSaveBtn">Save Settings</button>
                 </div>
             </div>
         `;
@@ -165,6 +271,53 @@
         const modalSaveBtn = document.getElementById('modalSaveBtn');
         const chatInput = document.getElementById('chatInput');
         const chatSendBtn = document.getElementById('chatSendBtn');
+        const reportModeToggle = document.getElementById('reportModeToggle');
+        const modeSelectorBtn = document.getElementById('modeSelectorBtn');
+        const modeDropdown = document.getElementById('modeDropdown');
+        const supervisorStrategySelect = document.getElementById('supervisorStrategySelect');
+
+        // Toggle report mode
+        if (reportModeToggle) {
+            reportModeToggle.addEventListener('click', toggleReportMode);
+        }
+
+        // Supervisor strategy selector
+        if (supervisorStrategySelect) {
+            // Load saved strategy
+            const savedStrategy = sessionStorage.getItem('supervisor_strategy') || 'rule-based';
+            supervisorStrategySelect.value = savedStrategy;
+            updateStrategyInfo(savedStrategy);
+
+            // Handle strategy change
+            supervisorStrategySelect.addEventListener('change', function() {
+                const strategy = this.value;
+                updateStrategyInfo(strategy);
+            });
+        }
+
+        // Mode selector dropdown
+        if (modeSelectorBtn) {
+            modeSelectorBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                modeDropdown.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.mode-selector-container')) {
+                    modeDropdown.classList.remove('active');
+                }
+            });
+
+            // Handle mode selection
+            document.querySelectorAll('.mode-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const mode = this.getAttribute('data-mode');
+                    switchMode(mode);
+                    modeDropdown.classList.remove('active');
+                });
+            });
+        }
 
         // Toggle chat panel (floating button)
         if (chatButton) {
@@ -273,7 +426,72 @@
     }
 
     /**
-     * Switch active agent
+     * Switch mode (supervisor vs manual)
+     */
+    function switchMode(mode) {
+        // Update active mode option
+        document.querySelectorAll('.mode-option').forEach(option => {
+            option.classList.remove('active');
+            if (option.getAttribute('data-mode') === mode) {
+                option.classList.add('active');
+            }
+        });
+
+        // Update mode label in button
+        const modeLabel = document.querySelector('.mode-label');
+        if (modeLabel) {
+            modeLabel.textContent = mode === 'supervisor' ? 'Supervisor' : 'Manual';
+        }
+
+        // Store mode preference
+        sessionStorage.setItem('assistant_mode', mode);
+
+        // Show/hide agent switcher based on mode
+        const agentSwitcher = document.getElementById('agentSwitcher');
+        const supervisorActivity = document.getElementById('supervisorActivity');
+
+        if (mode === 'supervisor') {
+            // Supervisor mode: hide agent tabs
+            if (agentSwitcher) {
+                agentSwitcher.style.display = 'none';
+            }
+            // Update subtitle
+            updateSubtitle('Supervisor coordinates all agents');
+        } else {
+            // Manual mode: show agent tabs
+            if (agentSwitcher) {
+                agentSwitcher.style.display = 'flex';
+            }
+            // Update subtitle based on selected agent
+            const selectedAgent = sessionStorage.getItem('selected_agent') || 'api';
+            const agentNames = {
+                'api': 'API Integration Expert',
+                'puf': 'PUF Format Specialist',
+                'ccr': 'CCR Country Guide'
+            };
+            updateSubtitle(agentNames[selectedAgent] || 'Powered by OpenArena');
+        }
+
+        // Dispatch event to notify controller
+        document.dispatchEvent(new CustomEvent('chatbot:modeChanged', {
+            detail: { mode }
+        }));
+
+        console.log(`[Chatbot] Switched to ${mode} mode`);
+    }
+
+    /**
+     * Update header subtitle
+     */
+    function updateSubtitle(text) {
+        const subtitle = document.querySelector('.chat-header-subtitle');
+        if (subtitle) {
+            subtitle.textContent = text;
+        }
+    }
+
+    /**
+     * Switch active agent (for manual mode)
      */
     function switchAgent(agent) {
         // Update active tab
@@ -287,15 +505,15 @@
         // Store selected agent
         sessionStorage.setItem('selected_agent', agent);
 
-        // Update header subtitle
-        const subtitle = document.querySelector('.chat-header-subtitle');
-        if (subtitle) {
+        // Update header subtitle if in manual mode
+        const mode = sessionStorage.getItem('assistant_mode') || 'supervisor';
+        if (mode === 'manual') {
             const agentNames = {
                 'api': 'API Integration Expert',
                 'puf': 'PUF Format Specialist',
                 'ccr': 'CCR Country Guide'
             };
-            subtitle.textContent = agentNames[agent] || 'Powered by OpenArena';
+            updateSubtitle(agentNames[agent] || 'Powered by OpenArena');
         }
 
         // Dispatch event to notify controller to reinitialize client
@@ -325,6 +543,10 @@
             const icon = chatButton.querySelector('i');
             if (icon) icon.className = 'fas fa-times';
         }
+
+        // Restore mode preference (default to supervisor)
+        const savedMode = sessionStorage.getItem('assistant_mode') || 'supervisor';
+        switchMode(savedMode);
 
         // Check if API credentials are set, if not show modal
         if (!hasApiCredentials() && !hasMessages()) {
@@ -370,12 +592,18 @@
     function openApiKeyModal() {
         const apiKeyModal = document.getElementById('apiKeyModal');
         const apiTokenInput = document.getElementById('apiTokenInput');
+        const supervisorWorkflowInput = document.getElementById('supervisorWorkflowInput');
 
         // Pre-fill with existing values if any
         const storedToken = sessionStorage.getItem('openarena_token');
+        const storedSupervisorWorkflow = sessionStorage.getItem('supervisor_workflow_id');
 
         if (apiTokenInput && storedToken) {
             apiTokenInput.value = storedToken;
+        }
+
+        if (supervisorWorkflowInput && storedSupervisorWorkflow) {
+            supervisorWorkflowInput.value = storedSupervisorWorkflow;
         }
 
         apiKeyModal.classList.add('active');
@@ -395,10 +623,12 @@
     }
 
     /**
-     * Save API credentials
+     * Save API credentials and settings
      */
     function saveApiCredentials() {
         const apiTokenInput = document.getElementById('apiTokenInput');
+        const supervisorWorkflowInput = document.getElementById('supervisorWorkflowInput');
+        const supervisorStrategySelect = document.getElementById('supervisorStrategySelect');
 
         const apiToken = apiTokenInput.value.trim();
 
@@ -407,13 +637,73 @@
             return;
         }
 
-        // Store in sessionStorage
+        // Store API token in sessionStorage
         sessionStorage.setItem('openarena_token', apiToken);
+
+        // Store supervisor workflow ID if provided
+        if (supervisorWorkflowInput) {
+            const supervisorWorkflow = supervisorWorkflowInput.value.trim();
+            if (supervisorWorkflow) {
+                sessionStorage.setItem('supervisor_workflow_id', supervisorWorkflow);
+                console.log('[Chatbot] Supervisor workflow ID set:', supervisorWorkflow);
+            }
+        }
+
+        // Store supervisor strategy
+        if (supervisorStrategySelect) {
+            const strategy = supervisorStrategySelect.value;
+            sessionStorage.setItem('supervisor_strategy', strategy);
+            console.log('[Chatbot] Supervisor strategy set to:', strategy);
+        }
 
         closeApiKeyModal();
 
         // Show success message
-        addSystemMessage('✓ API credentials configured successfully!');
+        addSystemMessage('✓ Settings saved successfully!');
+    }
+
+    /**
+     * Update strategy info display
+     */
+    function updateStrategyInfo(strategy) {
+        const strategyConfig = {
+            'rule-based': {
+                latency: '0ms overhead',
+                cost: '$0 extra',
+                accuracy: '~85% accuracy',
+                desc: 'Keyword matching for routing, simple concatenation for synthesis. Fastest option.'
+            },
+            'ai-routing': {
+                latency: '+500ms overhead',
+                cost: '+$0.001 per query',
+                accuracy: '~95% accuracy',
+                desc: 'LLM analyzes queries for smart routing decisions. Better agent selection.'
+            },
+            'ai-synthesis': {
+                latency: '+800ms overhead',
+                cost: '+$0.0015 per query',
+                accuracy: '~90% routing, better responses',
+                desc: 'Keyword routing with LLM-synthesized responses. Coherent, well-structured answers.'
+            },
+            'full-ai': {
+                latency: '+1.2s overhead',
+                cost: '+$0.0025 per query',
+                accuracy: '~98% accuracy',
+                desc: 'LLM for both routing and synthesis. Highest quality, smartest coordination.'
+            }
+        };
+
+        const config = strategyConfig[strategy] || strategyConfig['rule-based'];
+
+        const latencyEl = document.getElementById('strategyLatency');
+        const costEl = document.getElementById('strategyCost');
+        const accuracyEl = document.getElementById('strategyAccuracy');
+        const descEl = document.getElementById('strategyDesc');
+
+        if (latencyEl) latencyEl.textContent = config.latency;
+        if (costEl) costEl.textContent = config.cost;
+        if (accuracyEl) accuracyEl.textContent = config.accuracy;
+        if (descEl) descEl.textContent = config.desc;
     }
 
     /**
@@ -491,10 +781,10 @@
     /**
      * Add AI message to chat
      */
-    window.addAIMessage = function(message) {
+    window.addAIMessage = function(message, source = 'ai', metadata = null) {
         hideTyping();
         const chatMessages = document.getElementById('chatMessages');
-        const messageEl = createMessageElement('ai', message);
+        const messageEl = createMessageElement('ai', message, source, metadata);
         chatMessages.appendChild(messageEl);
         scrollToBottom();
     };
@@ -514,7 +804,7 @@
     /**
      * Create message element
      */
-    function createMessageElement(type, message) {
+    function createMessageElement(type, message, source = 'ai', metadata = null) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `chat-message ${type}`;
 
@@ -525,11 +815,47 @@
 
         const icon = type === 'ai' ? 'fa-robot' : 'fa-user';
 
+        // Build metadata badges
+        let badgesHtml = '';
+        if (metadata) {
+            if (metadata.supervisorStrategy) {
+                const strategyIcons = {
+                    'rule-based': '⚡',
+                    'ai-routing': '🤖',
+                    'ai-synthesis': '✨',
+                    'full-ai': '🧠'
+                };
+                const icon = strategyIcons[metadata.supervisorStrategy] || '⚡';
+                const strategyNames = {
+                    'rule-based': 'Rule-Based',
+                    'ai-routing': 'AI Routing',
+                    'ai-synthesis': 'AI Synthesis',
+                    'full-ai': 'Full AI'
+                };
+                const name = strategyNames[metadata.supervisorStrategy] || metadata.supervisorStrategy;
+                badgesHtml += `<span class="message-badge supervisor-badge" title="Supervisor: ${name}">${icon} ${name}</span>`;
+            }
+            if (metadata.reportContextUsed) {
+                badgesHtml += '<span class="message-badge report-badge" title="Using your report context"><i class="fas fa-file-alt"></i> Report</span>';
+            }
+            if (metadata.strategy) {
+                badgesHtml += `<span class="message-badge strategy-badge" title="Execution: ${metadata.strategy}">${metadata.strategy}</span>`;
+            }
+            if (metadata.agentsUsed && metadata.agentsUsed.length > 0) {
+                const agentNames = metadata.agentsUsed.map(a => a.toUpperCase()).join(', ');
+                badgesHtml += `<span class="message-badge agents-badge" title="Agents: ${agentNames}">${metadata.agentsUsed.length} agent${metadata.agentsUsed.length > 1 ? 's' : ''}</span>`;
+            }
+            if (metadata.duration) {
+                badgesHtml += `<span class="message-badge time-badge" title="Response time">${metadata.duration}</span>`;
+            }
+        }
+
         messageDiv.innerHTML = `
             <div class="chat-message-avatar">
                 <i class="fas ${icon}"></i>
             </div>
             <div class="chat-message-content">
+                ${badgesHtml ? `<div class="message-badges">${badgesHtml}</div>` : ''}
                 <div class="chat-message-text">${formatMessage(message)}</div>
                 <div class="chat-message-time">${time}</div>
             </div>
@@ -606,6 +932,84 @@
      */
     window.showTimeoutMessage = function() {
         addSystemMessage('⏳ Response is taking longer than expected. Retrying with extended timeout (up to 3 minutes)...');
+    };
+
+    /**
+     * Toggle report context mode
+     */
+    function toggleReportMode() {
+        const button = document.getElementById('reportModeToggle');
+        const isActive = button.classList.contains('active');
+
+        if (isActive) {
+            // Turn OFF
+            button.classList.remove('active');
+            button.setAttribute('title', 'Report Context Mode: OFF');
+        } else {
+            // Turn ON
+            button.classList.add('active');
+            button.setAttribute('title', 'Report Context Mode: ON');
+        }
+
+        // Dispatch event to controller
+        document.dispatchEvent(new CustomEvent('chatbot:toggleReportMode', {
+            detail: { enabled: !isActive }
+        }));
+
+        console.log('[Chatbot UI] Report mode:', !isActive ? 'ON' : 'OFF');
+    }
+
+    /**
+     * Show supervisor activity indicator
+     */
+    window.showSupervisorActivity = function(agents) {
+        const supervisorActivity = document.getElementById('supervisorActivity');
+        const activeAgentsDiv = document.getElementById('activeAgents');
+
+        if (!supervisorActivity) return;
+
+        // Build agent badges
+        let badgesHtml = '';
+        if (agents && agents.length > 0) {
+            agents.forEach(agent => {
+                const agentNames = {
+                    'api': 'API',
+                    'puf': 'PUF',
+                    'ccr': 'CCR'
+                };
+                badgesHtml += `<span class="agent-badge ${agent}">${agentNames[agent] || agent.toUpperCase()}</span>`;
+            });
+        }
+
+        activeAgentsDiv.innerHTML = badgesHtml;
+        supervisorActivity.classList.add('active');
+    };
+
+    /**
+     * Hide supervisor activity indicator
+     */
+    window.hideSupervisorActivity = function() {
+        const supervisorActivity = document.getElementById('supervisorActivity');
+        if (supervisorActivity) {
+            supervisorActivity.classList.remove('active');
+        }
+    };
+
+    /**
+     * Update supervisor status text
+     */
+    window.updateSupervisorStatus = function(status) {
+        const supervisorText = document.querySelector('.supervisor-text');
+        if (supervisorText) {
+            supervisorText.textContent = status;
+        }
+    };
+
+    /**
+     * Show report warning
+     */
+    window.showReportWarning = function(message) {
+        addSystemMessage(`⚠️ ${message}`);
     };
 
     // Initialize chatbot UI when DOM is ready

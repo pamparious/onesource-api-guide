@@ -26,27 +26,50 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Signup Styles -->
+    <link rel="stylesheet" href="assets/css/signup.css">
 </head>
 <body>
     <!-- Fixed Header -->
     <header class="site-header">
-        <div class="container" style="display: flex; align-items: center; justify-content: space-between; height: 100%; padding: 0 1.5rem;">
+        <!-- Mobile Header (< 1024px) -->
+        <div class="mobile-header-wrapper">
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
                     <i class="fas fa-bars"></i>
                 </button>
-                <a href="index.html" class="navbar-brand" style="display: flex; align-items: center; gap: 1rem; text-decoration: none;">
-                    <div style="background-color: white; padding: 4px 8px; border-radius: 4px; display: flex; align-items: center;">
-                        <img src="assets/images/Thomson-Reuters-Logo-500x281.png" alt="Thomson Reuters" style="height: 24px; width: auto;">
+                <a href="index.html" class="mobile-brand">
+                    <div class="mobile-logo-box">
+                        <span class="mobile-logo-text">TR</span>
                     </div>
-                    <div style="border-left: 2px solid #444; height: 32px; margin: 0 0.25rem;"></div>
-                    <span style="font-size: 0.875rem; color: #cccccc; font-weight: 500; white-space: nowrap;">ONESOURCE API Guide</span>
+                    <span class="mobile-brand-text">ONESOURCE</span>
+                </a>
+            </div>
+            <a href="index.html" class="mobile-doc-link">Documentation</a>
+        </div>
+
+        <!-- Desktop Header (>= 1024px) -->
+        <div class="container" style="display: flex; align-items: center; justify-content: space-between; height: 100%; padding: 0 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <a href="index.html" class="navbar-brand navbar-brand-desktop" style="display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+                    <div style="background-color: white; padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <img src="assets/images/Thomson-Reuters-Logo-500x281.png" alt="Thomson Reuters" style="height: 32px; width: auto; display: block;">
+                    </div>
                 </a>
             </div>
             <div style="display: flex; align-items: center; gap: 1rem;">
+                <button id="viewPastReportsBtn" class="header-ai-button" aria-label="View Past Reports">
+                    <i class="fas fa-history"></i>
+                    <span class="ai-button-text">Past Reports</span>
+                </button>
                 <button id="headerAIButton" class="header-ai-button" aria-label="Open AI Assistant">
                     <i class="fas fa-robot"></i>
                     <span class="ai-button-text">AI Assistant</span>
+                </button>
+                <button id="logoutButton" class="header-ai-button" aria-label="Logout" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="ai-button-text">Logout</span>
                 </button>
             </div>
         </div>
@@ -106,18 +129,35 @@
 
         <!-- Main Content Area -->
         <div class="main-wrapper">
-            <div class="main-content-area">
+            <main class="main-content-area">
                 <!-- Page Header -->
                 <div class="page-header">
                     <h1><i class="fas fa-handshake"></i> Partner Onboarding</h1>
-                    <p class="subtitle">Complete this form to generate your personalized implementation guide powered by AI</p>
+                    <p class="subtitle">Complete this form to generate your personalized implementation guide powered by our enhanced AI multi-agent system (v2.1)</p>
+                </div>
+
+                <!-- Profile Summary Card (shown only for logged-in users) -->
+                <div id="profileSummary" class="profile-summary" style="display: none;">
+                    <div class="profile-summary-header">
+                        <h3><i class="fas fa-user-check"></i> Your Profile</h3>
+                        <a href="signup-form.html?mode=edit" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </a>
+                    </div>
+                    <p class="profile-summary-message">Your profile information has been pre-filled. Just select the countries below to generate your report.</p>
+                    <details class="profile-details">
+                        <summary>View Profile Details</summary>
+                        <div class="profile-details-content" id="profileDetailsContent">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </details>
                 </div>
 
                 <!-- Main Form -->
                 <div id="formContainer" class="onboarding-form-container">
                     <form id="onboardingForm" novalidate>
                         <!-- Section 1: Partner & Contact Information -->
-                        <div class="form-section">
+                        <div class="form-section" id="section-partner-contact">
                             <h2><i class="fas fa-building"></i> Partner & Contact Information</h2>
 
                             <div class="form-group">
@@ -154,7 +194,7 @@
                         </div>
 
                         <!-- Section 2: Partnership Type -->
-                        <div class="form-section">
+                        <div class="form-section" id="section-partnership-type">
                             <h2><i class="fas fa-users"></i> Partnership Type</h2>
                             <div class="form-group radio-group">
                                 <label>Select Partnership Type</label>
@@ -179,7 +219,7 @@
                         </div>
 
                         <!-- Section 3: System Integration -->
-                        <div class="form-section">
+                        <div class="form-section" id="section-system-integration">
                             <h2><i class="fas fa-plug"></i> System Integration</h2>
 
                             <div class="form-group">
@@ -260,8 +300,8 @@
                             </div>
                         </div>
 
-                        <!-- Section 4: Countries in Scope -->
-                        <div class="form-section">
+                        <!-- Section 4: Countries in Scope (Full Form) -->
+                        <div class="form-section" id="countriesFullSection">
                             <h2><i class="fas fa-globe"></i> Countries in Scope</h2>
 
                             <div class="form-group">
@@ -301,8 +341,28 @@
                             </div>
                         </div>
 
+                        <!-- Section 4: Countries in Scope (Simplified for Logged-In Users) -->
+                        <div class="form-section" id="countriesSimplifiedSection" style="display: none;">
+                            <h2><i class="fas fa-globe"></i> Countries for Report</h2>
+                            <div class="form-group">
+                                <label for="countriesSimplified" class="required">Countries (comma-separated)</label>
+                                <input
+                                    type="text"
+                                    id="countriesSimplified"
+                                    name="countriesSimplified"
+                                    placeholder="e.g., Germany, France, Italy, Spain"
+                                    list="countryList"
+                                    required
+                                />
+                                <small style="color: var(--color-gray); margin-top: 0.5rem; display: block;">
+                                    Enter multiple countries separated by commas
+                                </small>
+                                <span class="error-message"></span>
+                            </div>
+                        </div>
+
                         <!-- Section 5: AP/AR Handling -->
-                        <div class="form-section">
+                        <div class="form-section" id="section-ap-ar">
                             <h2><i class="fas fa-file-invoice-dollar"></i> AP/AR Handling</h2>
 
                             <div class="form-group checkbox-group">
@@ -334,7 +394,7 @@
                         </div>
 
                         <!-- Section 6: First-Line Support -->
-                        <div class="form-section">
+                        <div class="form-section" id="section-first-line-support">
                             <h2><i class="fas fa-headset"></i> First-Line Support</h2>
                             <div class="form-group radio-group">
                                 <label>Who will provide first-line support to end customers?</label>
@@ -359,7 +419,7 @@
                         </div>
 
                         <!-- Section 7: Account Access Management -->
-                        <div class="form-section">
+                        <div class="form-section" id="section-account-access">
                             <h2><i class="fas fa-key"></i> Account Access Management</h2>
                             <div class="form-group radio-group">
                                 <label>How will customer accounts be managed?</label>
@@ -384,7 +444,7 @@
                         </div>
 
                         <!-- Section 8: Service Model -->
-                        <div class="form-section">
+                        <div class="form-section" id="section-service-model">
                             <h2><i class="fas fa-cogs"></i> Service Model</h2>
                             <div class="form-group radio-group">
                                 <label>Select Your Service Model</label>
@@ -437,8 +497,10 @@
                 <div id="loadingSpinner" class="loading-spinner" style="display: none;">
                     <div class="spinner"></div>
                     <p>Generating your implementation report...</p>
-                    <small>Consulting our AI agents for country compliance and API guidance</small>
-                    <small id="loadingTimeEstimate" style="margin-top: 10px;">This may take 3-5 minutes...</small>
+                    <small>Phase 1: Analyzing country compliance requirements (CCR Agents)</small>
+                    <small>Phase 2: Generating format specifications (Format Agents)</small>
+                    <small>Phase 3: Creating API implementation code (API Agent)</small>
+                    <small id="loadingTimeEstimate" style="margin-top: 10px; font-weight: 600;">This may take 3-5 minutes for multi-country reports...</small>
                 </div>
 
                 <!-- Report Display -->
@@ -459,31 +521,42 @@
                     </div>
                     <div id="reportContent" class="report-content"></div>
                 </div>
-            </div>
+
+                <!-- Footer -->
+                <footer class="site-footer">
+                    <p>© 2025 Thomson Reuters. All rights reserved.</p>
+                </footer>
+            </main>
         </div>
 
         <!-- Right Sidebar (Table of Contents) -->
         <aside class="sidebar-right">
-            <!-- Form TOC (shown when filling out form) -->
+            <!-- Form TOC (shown by default, manually populated) -->
             <div class="toc-container form-toc">
-                <h3 class="toc-title">On This Page</h3>
-                <ul class="toc-list">
-                    <li><a href="#" data-section="partner-info">Partner Information</a></li>
-                    <li><a href="#" data-section="partnership-type">Partnership Type</a></li>
-                    <li><a href="#" data-section="system-integration">System Integration</a></li>
-                    <li><a href="#" data-section="countries">Countries in Scope</a></li>
-                    <li><a href="#" data-section="ap-ar">AP/AR Handling</a></li>
-                    <li><a href="#" data-section="support">Support Model</a></li>
-                    <li><a href="#" data-section="account-mgmt">Account Management</a></li>
-                    <li><a href="#" data-section="service-model">Service Model</a></li>
+                <div class="toc-title">Form Sections</div>
+                <ul class="form-toc-list">
+                    <li><a href="#profileSummary">Your Profile</a></li>
+                    <li><a href="#countriesSimplifiedSection">Countries for Report</a></li>
                 </ul>
             </div>
 
-            <!-- Report TOC (dynamically populated when report is generated) -->
-            <div class="toc-container report-toc">
-                <h3 class="toc-title">On This Page</h3>
-                <ul class="toc-list" id="reportTocList">
-                    <!-- Dynamically populated by JavaScript -->
+            <!-- Report TOC (shown when report is generated, populated by partner-onboarding.js) -->
+            <div class="toc-container report-toc" style="display: none;">
+                <div class="toc-title">Report Contents</div>
+                <ul class="report-toc-list" id="reportTocList">
+                    <!-- Populated dynamically by partner-onboarding.js based on generated report -->
+                    <!-- Structure from report-template-config-v2.1.json:
+                        1. Executive Summary (auto-generated)
+                        2. Country Compliance Requirements: {country} (CCR Agent - per country)
+                        3. Document Format Details: {country} (Format Agent - per country)
+                        4. API Implementation Guide (API Agent - all countries aggregated)
+
+                        v2.1 Changes:
+                        - Removed: Testing & Validation (static section)
+                        - Removed: Production Deployment (static section)
+                        - Removed: Support & Resources (static section)
+                        - Focus on agent-generated, customized content only
+                    -->
                 </ul>
             </div>
         </aside>
@@ -515,13 +588,45 @@
         </div>
     </div>
 
+    <!-- Past Reports Modal -->
+    <div id="pastReportsModal" class="modal">
+        <div class="modal-content past-reports-modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-history"></i> Past Reports</h3>
+                <button class="modal-close" id="pastReportsModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body past-reports-body">
+                <div id="pastReportsList" class="past-reports-list">
+                    <!-- Populated dynamically by JavaScript -->
+                </div>
+                <div id="pastReportsEmpty" class="past-reports-empty" style="display: none;">
+                    <i class="fas fa-inbox"></i>
+                    <p>No past reports found</p>
+                    <small>Generate your first report using the form</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="clearAllReportsBtn">
+                    <i class="fas fa-trash"></i> Clear All Reports
+                </button>
+                <button class="btn btn-primary" id="pastReportsModalCloseBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Chatbot Container -->
     <div id="chatbot-container"></div>
 
     <!-- Scripts -->
+    <script src="assets/js/theme-toggle.js"></script>
+    <script src="assets/js/layout.js"></script>
     <script src="assets/js/navigation.js"></script>
     <script src="assets/js/chatbot-ui.js"></script>
     <script src="assets/js/openarena-client.js"></script>
+    <script src="assets/js/report-context-manager.js"></script>
+    <script src="assets/js/supervisor-agent.js"></script>
     <script src="assets/js/chatbot-controller.js"></script>
     <script src="assets/js/partner-onboarding.js"></script>
 </body>
